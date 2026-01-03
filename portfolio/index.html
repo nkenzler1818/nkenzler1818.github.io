@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nathanael Kenzler | M.S. in Marketing Candidate</title>
+    <meta name="description" content="Aspiring Enterprise & Product Marketer with a focus on AI-first, data-driven marketing.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 0) {
+                nav.classList.add('shrunk');
+            } else {
+                nav.classList.remove('shrunk');
+            }
+        });
+    </script>
+</head>
+<body class="text-white font-sans">
+    <header class="sticky top-6 z-10">
+        <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
+            <a href="index.html" class="text-xl font-bold text-purple-400">Nathanael Kenzler</a>
+            <div class="flex items-center space-x-6">
+                <a href="about.html" class="nav-link">About</a>
+                <a href="projects.html" class="nav-link">Projects</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="uses.html" class="nav-link">Uses</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-24 px-4 max-w-4xl mx-auto">
+        <section id="intro" class="mb-16">
+            <div class="hero-container p-6">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-shrink-0">
+                        <img src="headshot.jpg" alt="Nathanael Kenzler" class="w-48 h-48 rounded-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <h1 class="text-4xl font-bold text-white mb-4">👋 Hello, world!</h1>
+                        <h2 class="text-2xl font-semibold mb-4"><span class="text-white">I am</span> <span class="text-purple-400">Nathanael Kenzler</span></h2>
+                        <p class="text-lg mb-4">M.S. in Marketing Candidate | Aspiring Business and Marketing Professional</p>
+                        <p class="mb-6">I'm a first-generation graduate student pursuing a Master of Science in Marketing at the University of Arizona. My background spans marketing support, operations, and client-facing roles, with a focus on clarity, execution, and data-driven storytelling.</p>
+                        <div class="flex flex-wrap gap-4 mb-6">
+                            <a href="about.html" class="btn-dark-purple">More about me</a>
+                            <a href="https://www.linkedin.com/in/nathanael-kenzler/" class="icon-btn" title="LinkedIn"><img src="../Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn"></a>
+                            <a href="mailto:nkenzler@arizona.edu" class="icon-btn" title="Email"><img src="../Project Files/Link Icons/icons8-email-48.png" alt="Email"></a>
+                            <a href="Kenzler_CV2025.pdf" download class="icon-btn" title="Resume"><img src="../Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="Resume"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="mb-16">
+            <h2 class="text-3xl font-bold mb-8">Featured Projects</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="project-pane p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">AI-Assisted Marketing Workflow Exploration</h3>
+                    <p class="text-gray-300 mb-4">Explored how AI tools can support marketing research, content ideation, and workflow efficiency. Evaluated where AI adds value vs. human judgment. Focused on AI-first thinking in marketing operations.</p>
+                </div>
+                <div class="project-pane p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">Data-Driven Client Engagement – VASA Fitness</h3>
+                    <p class="text-gray-300 mb-4">Managed 27 concurrent client relationships. Used storytelling and data insights to reinforce trust and engagement. Applied consultative selling and performance tracking.</p>
+                </div>
+                <div class="project-pane p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">Brand & Go-To-Market Support – Bay Area K9 Association</h3>
+                    <p class="text-gray-300 mb-4">Supported early-stage branding and visual identity. Created marketing content and campaigns. Coordinated client communications and operations.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="blog" class="mb-16">
+            <h2 class="text-3xl font-bold mb-8">From the Blog</h2>
+            <div class="space-y-6">
+                <article class="blog-card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">Post Title 1</h3>
+                    <p class="text-gray-300 mb-2">Brief description of the blog post.</p>
+                    <span class="text-sm text-gray-500">Date • Read time</span>
+                </article>
+                <article class="blog-card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">Post Title 2</h3>
+                    <p class="text-gray-300 mb-2">Brief description of the blog post.</p>
+                    <span class="text-sm text-gray-500">Date • Read time</span>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-bg mt-16 py-8">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Nathanael Kenzler</h3>
+                    <p class="text-gray-400 mb-4">Aspiring Enterprise & Product Marketer</p>
+                    <div class="flex gap-4">
+                        <a href="https://www.linkedin.com/in/nathanael-kenzler/" class="icon-btn" title="LinkedIn"><img src="../Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn"></a>
+                        <a href="mailto:nkenzler@arizona.edu" class="icon-btn" title="Email"><img src="../Project Files/Link Icons/icons8-email-48.png" alt="Email"></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4 text-gray-400">Navigate</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">About</a></li>
+                        <li><a href="projects.html" class="text-gray-400 hover:text-white">Projects</a></li>
+                        <li><a href="blog.html" class="text-gray-400 hover:text-white">Blog</a></li>
+                        <li><a href="uses.html" class="text-gray-400 hover:text-white">Uses</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

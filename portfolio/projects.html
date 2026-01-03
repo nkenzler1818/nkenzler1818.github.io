@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Nathanael Kenzler</title>
+    <meta name="description" content="Explore Nathanael Kenzler's featured projects in marketing, AI, and operations.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 0) {
+                nav.classList.add('shrunk');
+            } else {
+                nav.classList.remove('shrunk');
+            }
+        });
+    </script>
+</head>
+<body class="text-white font-sans">
+    <header class="sticky top-6 z-10">
+        <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
+            <a href="index.html" class="text-xl font-bold text-purple-400">Nathanael Kenzler</a>
+            <div class="flex items-center space-x-6">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="projects.html" class="nav-link">Projects</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="uses.html" class="nav-link">Uses</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-24 px-4 max-w-4xl mx-auto">
+        <section class="mb-16">
+            <h1 class="text-4xl font-bold mb-8">Featured Projects</h1>
+            <div class="space-y-12">
+                <div class="project-pane p-8 rounded-lg">
+                    <h2 class="text-2xl font-semibold mb-4">AI-Assisted Marketing Workflow Exploration</h2>
+                    <p class="text-gray-300 mb-6">Explored how AI tools can support marketing research, content ideation, and workflow efficiency. Evaluated where AI adds value vs. human judgment. Focused on AI-first thinking in marketing operations.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-purple-200 text-gray-800 px-3 py-1 rounded-full text-sm">AI</span>
+                        <span class="bg-purple-200 text-gray-800 px-3 py-1 rounded-full text-sm">Marketing Research</span>
+                        <span class="bg-purple-200 text-gray-800 px-3 py-1 rounded-full text-sm">Workflow Optimization</span>
+                    </div>
+                </div>
+
+                <div class="project-pane p-8 rounded-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Data-Driven Client Engagement – VASA Fitness</h2>
+                    <p class="text-gray-300 mb-6">Managed 27 concurrent client relationships. Used storytelling and data insights to reinforce trust and engagement. Applied consultative selling and performance tracking.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-purple-300 text-gray-800 px-3 py-1 rounded-full text-sm">Client Management</span>
+                        <span class="bg-purple-300 text-gray-800 px-3 py-1 rounded-full text-sm">Data Analytics</span>
+                        <span class="bg-purple-300 text-gray-800 px-3 py-1 rounded-full text-sm">Consultative Selling</span>
+                    </div>
+                </div>
+
+                <div class="project-pane p-8 rounded-lg">
+                    <h2 class="text-2xl font-semibold mb-4">Brand & Go-To-Market Support – Bay Area K9 Association</h2>
+                    <p class="text-gray-300 mb-6">Supported early-stage branding and visual identity. Created marketing content and campaigns. Coordinated client communications and operations.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-purple-400 text-white px-3 py-1 rounded-full text-sm">Brand Development</span>
+                        <span class="bg-purple-400 text-white px-3 py-1 rounded-full text-sm">Content Creation</span>
+                        <span class="bg-purple-400 text-white px-3 py-1 rounded-full text-sm">Operations</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-bg mt-16 py-8">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Nathanael Kenzler</h3>
+                    <p class="text-gray-400 mb-4">Aspiring Enterprise & Product Marketer</p>
+                    <div class="flex gap-4">
+                        <a href="https://www.linkedin.com/in/nathanael-kenzler/" class="icon-btn" title="LinkedIn"><img src="../Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn"></a>
+                        <a href="mailto:nkenzler@arizona.edu" class="icon-btn" title="Email"><img src="../Project Files/Link Icons/icons8-email-48.png" alt="Email"></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4 text-gray-400">Navigate</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">About</a></li>
+                        <li><a href="projects.html" class="text-gray-400 hover:text-white">Projects</a></li>
+                        <li><a href="blog.html" class="text-gray-400 hover:text-white">Blog</a></li>
+                        <li><a href="uses.html" class="text-gray-400 hover:text-white">Uses</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
