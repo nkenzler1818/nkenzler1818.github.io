@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Nathanael Kenzler</title>
+    <meta name="description" content="Explore Nathanael Kenzler's featured projects in marketing, AI, and operations.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css">
+    <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        // Capstone modal functionality - simplified and stable
+        document.addEventListener('DOMContentLoaded', function() {
+            const capstoneCard = document.querySelector('.capstone-card');
+            const focusOverlay = document.querySelector('.capstone-focus-overlay');
+            const closeBtn = document.querySelector('.capstone-close-btn');
+            let isCapstoneOpen = false;
+            let modalBackdrop = null;
+
+            function updateHoverState() {
+                // Disable hover effects when capstone is open
+                if (isCapstoneOpen) {
+                    capstoneCard.style.transform = 'none';
+                    capstoneCard.style.transition = 'none';
+                    capstoneCard.classList.add('capstone-open');
+                } else {
+                    capstoneCard.style.transition = '';
+                    capstoneCard.classList.remove('capstone-open');
+                }
+            }
+
+            function showCapstone() {
+                if (isCapstoneOpen) return;
+
+                isCapstoneOpen = true;
+
+                // Initialize custom scrollbar
+                new SimpleBar(document.querySelector('.capstone-scroll-inner'));
+
+                // Create and add backdrop
+                modalBackdrop = document.createElement('div');
+                modalBackdrop.className = 'modal-backdrop';
+                document.body.appendChild(modalBackdrop);
+
+                // Update hover state
+                updateHoverState();
+
+                // Show overlay
+                focusOverlay.classList.remove('hidden');
+                focusOverlay.classList.add('active');
+
+                // Disable scroll
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeCapstone() {
+                if (!isCapstoneOpen) return;
+
+                isCapstoneOpen = false;
+
+                // Remove backdrop
+                if (modalBackdrop) {
+                    modalBackdrop.remove();
+                    modalBackdrop = null;
+                }
+
+                // Hide overlay
+                focusOverlay.classList.remove('active');
+                focusOverlay.classList.add('hidden');
+
+                // Re-enable scroll
+                document.body.style.overflow = '';
+
+                // Restore hover state
+                updateHoverState();
+            }
+
+            // Card click to open
+            capstoneCard.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (!isCapstoneOpen && !focusOverlay.contains(e.target)) {
+                    showCapstone();
+                }
+            });
+
+            // Close button
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeCapstone();
+            });
+
+            // Backdrop click to close
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-backdrop') && isCapstoneOpen) {
+                    closeCapstone();
+                }
+            });
+
+            // Modal content click - prevent closing
+            focusOverlay.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Initialize
+            updateHoverState();
+        });
+
+        // Image lightbox functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            let lightboxOverlay = null;
+            let isLightboxOpen = false;
+
+            function createLightbox() {
+                if (lightboxOverlay) return;
+
+                lightboxOverlay = document.createElement('div');
+                lightboxOverlay.className = 'image-lightbox-overlay';
+                lightboxOverlay.innerHTML = `
+                    <div class="image-lightbox-content">
+                        <img>
+                        <p class="image-lightbox-caption"></p>
+                        <button class="image-lightbox-close-btn" aria-label="Close image view">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(lightboxOverlay);
+
+                // Close button
+                const closeBtn = lightboxOverlay.querySelector('.image-lightbox-close-btn');
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeLightbox();
+                });
+
+                // Click outside to close
+                lightboxOverlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (e.target === lightboxOverlay) {
+                        closeLightbox();
+                    }
+                });
+            }
+
+            function openLightbox(imgSrc, altText, captionText) {
+                if (isLightboxOpen) return;
+
+                if (!lightboxOverlay) createLightbox();
+
+                const content = lightboxOverlay.querySelector('.image-lightbox-content');
+                const img = content.querySelector('img');
+                const caption = content.querySelector('.image-lightbox-caption');
+
+                img.src = imgSrc;
+                img.alt = altText;
+                img.loading = 'lazy';
+                caption.textContent = captionText;
+
+                // Disable capstone modal interaction when lightbox is open
+                const capstoneOverlay = document.querySelector('.capstone-focus-overlay');
+                if (capstoneOverlay) {
+                    capstoneOverlay.style.pointerEvents = 'none';
+                }
+
+                lightboxOverlay.classList.add('active');
+                isLightboxOpen = true;
+            }
+
+            function closeLightbox() {
+                if (!isLightboxOpen) return;
+
+                // Re-enable capstone modal interaction when lightbox closes
+                const capstoneOverlay = document.querySelector('.capstone-focus-overlay');
+                if (capstoneOverlay) {
+                    capstoneOverlay.style.pointerEvents = '';
+                }
+
+                lightboxOverlay.classList.remove('active');
+                isLightboxOpen = false;
+            }
+
+            // ESC key to close
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isLightboxOpen) {
+                    e.preventDefault();
+                    closeLightbox();
+                }
+            });
+
+            // Add click handlers to all BSG images
+            const mediaItems = document.querySelectorAll('.capstone-media-item img');
+            mediaItems.forEach(img => {
+                img.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const caption = this.nextElementSibling ? this.nextElementSibling.textContent : '';
+                    openLightbox(this.src, this.alt, caption);
+                });
+            });
+        });
+
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            const projectsHeading = document.querySelector('.projects-heading');
+            const scrollY = window.scrollY;
+
+            // Nav shrink logic (same as other pages)
+            if (scrollY > 0) {
+                nav.classList.add('shrunk');
+            } else {
+                nav.classList.remove('shrunk');
+            }
+
+            // Projects heading fade effect
+            const fadeDistance = 280; // pixels of scroll for full fade
+            const progress = Math.min(scrollY / fadeDistance, 1);
+            const opacity = Math.max(1 - progress, 0);
+
+            if (projectsHeading) {
+                projectsHeading.style.opacity = opacity;
+            }
+        });
+    </script>
+</head>
+<body class="text-white font-sans">
+    <header class="sticky top-6 z-10">
+        <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
+            <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
+            <div class="flex items-center space-x-6">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="projects.html" class="nav-link">Projects</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="uses.html" class="nav-link">Uses</a>
+            </div>
+        </nav>
+    </header>
+
+    <main id="projects-page" class="pt-24 px-4 max-w-4xl mx-auto">
+        <section class="mb-16">
+            <div class="page-title-wrap">
+                <h1 class="projects-heading text-center text-white mb-8">Project Portfolio</h1>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold mb-2 accent-purple">Star Projects</h2>
+                <p class="text-gray-400 mb-6">Handpicked highlights of my best work.</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Messaging Strategy</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                    </div>
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">GTM Launch Plan</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                    </div>
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Tech to Business</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold mb-2 accent-purple">Undergrad Work</h2>
+                <p class="text-gray-400 mb-6">Key projects from my academic journey.</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="project-pane p-6 rounded-lg capstone-card" data-project="capstone">
+                        <h3 class="text-xl font-semibold mb-2">Capstone Project</h3>
+                        <p class="text-gray-300">BSBA Graduation Project</p>
+                    </div>
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Market Analysis</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                    </div>
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Capstone Presentation</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold mb-2 accent-purple">Independent Projects</h2>
+                <p class="text-gray-400 mb-6">Self-driven projects, personal experiments, and in general more creative personal works.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Photography</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                    </div>
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Writing</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold mb-2 accent-purple">In Progress / Learning</h2>
+                <p class="text-gray-400 mb-6">Skills and projects I'm currently building.</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Building My Website</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                    </div>
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">SQL Practice</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                    </div>
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Tableau Project</h3>
+                        <p class="text-gray-300">Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-bg py-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <hr class="footer-divider">
+        </div>
+        <div class="footer-inner">
+            <div class="footer-section identity-section">
+                <h3>Nathanael Kenzler</h3>
+                <p class="footer-description">
+                    <span>Enterprise-focused business &</span>
+                    <span>marketing professional passionate</span>
+                    <span>about turning strategy into impact.</span>
+                </p>
+                <div class="social-icons">
+                    <a href="https://github.com/nkenzler1818" title="GitHub"><img src="Project Files/Link Icons/icons8-github-24.png" alt="GitHub" width="22" height="22"></a>
+                    <a href="https://www.linkedin.com/in/nathanael-kenzler/" title="LinkedIn"><img src="Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn" width="22" height="22"></a>
+                    <a href="mailto:nkenzler@arizona.edu" title="Email"><img src="Project Files/Link Icons/icons8-email-48.png" alt="Email" width="22" height="22"></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Navigate</h4>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="projects.html">Projects</a>
+                <a href="blog.html">Blog</a>
+                <a href="uses.html">Uses</a>
+            </div>
+            <div class="footer-section">
+                <h4>Misc</h4>
+                <a href="#">Links</a>
+                <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
+                <a href="#">RSS Feed</a>
+                <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Scroll to Top</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Capstone Project Modal (outside grid, position fixed) -->
+    <div class="capstone-focus-overlay capstone-modal hidden">
+    <div class="capstone-focus-content">
+            <button class="capstone-close-btn" aria-label="Close focused view">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="capstone-scroll-inner">
+                <div class="capstone-focus-header">
+                    <div class="capstone-badge">
+                        <a href="https://www.bsg-online.com" target="_blank" rel="noopener noreferrer" title="View Business Strategy Game">
+                            <img src="Project Files/Link Icons/bsg-icon.png" alt="Business Strategy Game" class="bsg-logo">
+                        </a>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Capstone Project</h2>
+                    <p class="text-gray-300 text-lg text-center">A dynamic business simulation showcasing market strategy, competition, and adaptive decision-making over time.</p>
+                </div>
+
+                <div class="capstone-focus-main">
+                <div class="capstone-focus-article">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Project Overview</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">In this capstone, we participated in a weekly business simulation called the Business Strategy Game (BSG), where teams operated virtual athletic footwear companies and competed directly against one another for market share. Each Sunday, the simulation processed all team decisions and generated performance reports, which we then analyzed before submitting updated strategies for the following week.</p>
+                    <p class="text-gray-300 mb-6 leading-relaxed">At the outset, teams selected a strategic positioning, choosing whether to compete as a high-quality, premium brand or a lower-cost, higher-volume producer. I served as the designated decision coordinator, responsible for consolidating team input and submitting a unified strategy each week to avoid conflicting changes and ensure consistency in execution.</p>
+
+                    <h4 class="text-lg font-medium mb-2 text-gray-200">Weekly Competitive Adjustments</h4>
+                    <p class="text-gray-300 mb-4 leading-relaxed">Each week, I analyzed the Sunday performance reports to assess how our decisions compared against competing teams. By Year 13, execution issues began to surface, particularly around quality planning and channel alignment. These challenges resulted in a sharp decline in our ranking, as shown in the early scoreboard results (Image A).</p>
+
+                    <h4 class="text-lg font-medium mb-2 text-gray-200">Identifying the Underlying Problem</h4>
+                    <p class="text-gray-300 mb-4 leading-relaxed">To diagnose the root cause of our decline, I conducted a deeper competitive analysis using Comparative Competitive Efforts reports (Image B). This analysis revealed that:</p>
+                    <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                        <li>• Our private-label S/Q rating fell below retailer requirements, eliminating sales in that segment</li>
+                        <li>• Pricing and celebrity appeal lagged behind competitors with similar product quality</li>
+                        <li>• An aggressive growth strategy, supported by short-term debt, assumed revenue that did not materialize</li>
+                    </ul>
+                    <p class="text-gray-300 mb-6 leading-relaxed">This comparative benchmarking clarified that the issue was not a single decision, but a misalignment between production quality, channel requirements, and financial assumptions.</p>
+
+                    <h4 class="text-lg font-medium mb-2 text-gray-200">Finding the Strategic Opportunity</h4>
+                    <p class="text-gray-300 mb-4 leading-relaxed">As I expanded the analysis to include subsequent rounds (Image C), a broader industry pattern became clear. Most teams were aggressively competing in internet sales, creating a saturated and highly competitive environment. In contrast, wholesale distribution was significantly underutilized across the industry.</p>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Recognizing this gap, I identified wholesale as a strategic opportunity to scale volume, reduce direct competition, and stabilize performance while maintaining selective internet sales.</p>
+
+                    <h4 class="text-lg font-medium mb-2 text-gray-200">Strategy Shift and Execution</h4>
+                    <p class="text-gray-300 mb-4 leading-relaxed">Based on these insights, our team devised and implemented a coordinated strategy shift focused on execution discipline and channel alignment:</p>
+                    <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                        <li>• Corrected S/Q ratings to meet retailer thresholds</li>
+                        <li>• Adjusted TQM and Six Sigma investments to stabilize quality</li>
+                        <li>• Repositioned pricing to emphasize affordability at scale</li>
+                        <li>• Increased marketing and celebrity appeal to reinforce brand credibility</li>
+                        <li>• Shifted production emphasis toward wholesale distribution</li>
+                    </ul>
+                    <p class="text-gray-300 mb-6 leading-relaxed">These changes were executed over multiple rounds, with each decision cycle aligned to reinforce the broader strategy (Image D).</p>
+
+                    <h4 class="text-lg font-medium mb-2 text-gray-200">Recovery and Performance Outcomes</h4>
+                    <p class="text-gray-300 mb-4 leading-relaxed">The impact of the strategy shift became visible quickly. By Year 15, our ranking rebounded sharply, jumping from near the bottom of the scoreboard to the top tier in a single year (Image E). Performance gains continued through the final rounds of the simulation.</p>
+                    <p class="text-gray-300 mb-6 leading-relaxed">By Year 20, our company achieved:</p>
+                    <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                        <li>• Stock price of $559, compared to competitors as low as $21</li>
+                        <li>• Earnings per share of $23, the highest in the industry</li>
+                        <li>• Return on equity of 43 percent</li>
+                        <li>• A+ credit rating and A+ image rating</li>
+                        <li>• $1.8 million in total sales (Image F)</li>
+                        <li>• Second place finish in the class</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Key Takeaway</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Beyond the results, this project reinforced my confidence in stepping into a leadership role, guiding a team through uncertainty, and driving performance improvement under pressure. There was so much more than just the big problem aforementioned, so many oppurtunities to make mistakes, but learn from them and how to respond to become better as a result. Navigating early setbacks, identifying the right strategic pivot, and coordinating execution across multiple rounds demonstrated my ability to lead data-driven decision-making and elevate group performance to a high level.</p>
+                </div>
+                <div class="capstone-focus-media">
+                    <div class="capstone-media-grid">
+                        <div class="capstone-media-item">
+                            <img src="BSG/year-13-scoreboard.png" alt="Year 13 Scoreboard showing early performance decline" class="w-full h-48 object-cover rounded-lg">
+                            <p class="text-gray-400 text-sm mt-2 text-center">Image A – Year 13 Scoreboard</p>
+                        </div>
+                        <div class="capstone-media-item">
+                            <img src="BSG/comparative-competitive-efforts-year-13.png" alt="Comparative Competitive Efforts analysis for Year 13" class="w-full h-48 object-cover rounded-lg">
+                            <p class="text-gray-400 text-sm mt-2 text-center">Image B – Comparative Competitive Efforts (Year 13)</p>
+                        </div>
+                        <div class="capstone-media-item">
+                            <img src="BSG/comparative-competitive-efforts-year-14.png" alt="Comparative Competitive Efforts analysis for Year 14" class="w-full h-48 object-cover rounded-lg">
+                            <p class="text-gray-400 text-sm mt-2 text-center">Image C – Comparative Competitive Efforts (Year 14)</p>
+                        </div>
+                        <div class="capstone-media-item">
+                            <img src="BSG/year-14-scoreboard.png" alt="Year 14 Scoreboard showing lowest ranking point" class="w-full h-48 object-cover rounded-lg">
+                            <p class="text-gray-400 text-sm mt-2 text-center">Image D – Year 14 Scoreboard</p>
+                        </div>
+                        <div class="capstone-media-item">
+                            <img src="BSG/year-15-scoreboard.png" alt="Year 15 Scoreboard showing post-strategy recovery" class="w-full h-48 object-cover rounded-lg">
+                            <p class="text-gray-400 text-sm mt-2 text-center">Image E – Year 15 Scoreboard</p>
+                        </div>
+                        <div class="capstone-media-item">
+                            <img src="BSG/performance-highlights-year-20.png" alt="Performance Highlights for Year 20 final outcomes" class="w-full h-48 object-cover rounded-lg">
+                            <p class="text-gray-400 text-sm mt-2 text-center">Image F – Performance Highlights (Year 20)</p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

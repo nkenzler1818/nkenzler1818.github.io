@@ -4,21 +4,21 @@
 
 @font-face {
     font-family: "Plus Jakarta Sans";
-    src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Regular.ttf") format("truetype");
+    src: url("Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Regular.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Plus Jakarta Sans";
-    src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Medium.ttf") format("truetype");
+    src: url("Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Medium.ttf") format("truetype");
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: "Plus Jakarta Sans";
-    src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf") format("truetype");
+    src: url("Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf") format("truetype");
     font-weight: 600;
     font-style: normal;
 }
@@ -180,8 +180,8 @@ code {
     padding-left: 32px;
     padding-right: 32px;
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
-    column-gap: 32px;
+    grid-template-columns: 1.4fr 1.2fr 0.8fr;
+    column-gap: 24px;
     align-items: start;
 }
 
@@ -278,19 +278,32 @@ code {
     color: #ffffff;
 }
 
+/* Modal backdrop */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 998;
+}
+
+/* Capstone modal container */
+.capstone-modal {
+    position: fixed;
+    z-index: 999;
+    pointer-events: auto;
+}
+
 /* Capstone focused overlay canvas */
 .capstone-focus-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
-    backdrop-filter: blur(2px);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -300,27 +313,92 @@ code {
 }
 
 .capstone-focus-content {
-    background: linear-gradient(145deg, #1F1F1F 0%, #2A2A2A 100%);
-    border-radius: 1rem;
-    padding: 2.5rem;
-    max-width: 1200px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6);
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
-    border: 1px solid rgba(192, 132, 252, 0.1);
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 85vh;
+    margin: auto;
+    background: #141414;
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    padding-left: 0;
+    padding-right: 24px;
+}
+
+.capstone-scroll-inner {
+    flex: 1;
+    min-height: 0;
+    padding: 0 2.5rem 2.5rem 4rem;
+    margin-top: 0;
+    direction: ltr;
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0px,
+        black 24px,
+        black 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0px,
+        black 24px,
+        black 100%
+    );
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.capstone-scroll-inner .simplebar-track.simplebar-vertical {
+    background: transparent;
+    left: 0 !important;
+    right: auto !important;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.capstone-scroll-inner .simplebar-scrollbar:before {
+    background: #767676;
+}
+
+.capstone-scroll-inner {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.capstone-scroll-inner::-webkit-scrollbar {
+    display: none;
 }
 
 .capstone-focus-overlay.active .capstone-focus-content {
-    transform: scale(1);
+    /* transform: scale(1); */
 }
 
 .capstone-focus-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
+    position: relative;
+    margin-bottom: 20px;
+    margin-top: 0;
     border-bottom: 1px solid rgba(192, 132, 252, 0.2);
-    padding-bottom: 2rem;
+    padding-bottom: 20px;
+    padding-top: 70px;
+    direction: ltr;
+}
+
+.capstone-focus-header + * {
+    border-top: none !important;
+    margin-top: 0;
+}
+
+.capstone-focus-header + *::before {
+    content: none !important;
+    display: none !important;
+}
+
+.capstone-focus-header + hr {
+    display: none !important;
 }
 
 .capstone-focus-main {
@@ -328,10 +406,15 @@ code {
     grid-template-columns: 1fr 300px;
     gap: 3rem;
     align-items: start;
+    border-top: none;
+    margin-top: 0;
+    direction: ltr;
 }
 
 .capstone-focus-article {
     color: #e5e5e5;
+    border-top: none;
+    margin-top: 0;
 }
 
 .capstone-focus-media {
@@ -354,25 +437,155 @@ code {
 
 .capstone-close-btn {
     position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    background: rgba(255, 255, 255, 0.1);
+    top: 12.5px;
+    right: 12.5px;
+    background: none;
     border: none;
-    color: #e5e5e5;
-    font-size: 2rem;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
+    color: rgba(229, 229, 229, 0.6);
+    font-size: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: color 0.15s ease, opacity 0.15s ease;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    border-radius: 0 24px 0 0;
 }
 
 .capstone-close-btn:hover {
-    background: rgba(192, 132, 252, 0.2);
     color: #c084fc;
+    text-shadow: none;
+}
+
+.capstone-close-btn:focus {
+    outline: 2px solid rgba(192, 132, 252, 0.5);
+    outline-offset: 2px;
+}
+
+.capstone-close-btn:active {
+    transform: none;
+}
+
+/* Capstone tile background when modal is open */
+.capstone-card.capstone-open {
+    background-color: #2A2A2A;
+}
+
+/* Image lightbox overlay */
+.image-lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-lightbox-overlay.active {
+    opacity: 1;
+}
+
+.image-lightbox-content {
+    position: relative;
+    background-color: #1F1F1F;
+    border-radius: 0.5rem;
+    padding: 4rem 1rem 2rem 1rem;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.image-lightbox-caption {
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    text-align: center;
+    margin-top: 1rem;
+    max-width: 100%;
+}
+
+.image-lightbox-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 0.25rem;
+}
+
+.image-lightbox-close-btn {
+    position: absolute;
+    top: 13px;
+    right: 18px;
+    background: none;
+    border: none;
+    color: rgba(229, 229, 229, 0.6);
+    font-size: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, opacity 0.15s ease;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    z-index: 1101;
+}
+
+.image-lightbox-close-btn:hover {
+    color: #c084fc;
+    text-shadow: none;
+}
+
+.image-lightbox-close-btn:focus {
+    outline: 2px solid rgba(192, 132, 252, 0.5);
+    outline-offset: 2px;
+}
+
+.image-lightbox-close-btn:active {
+    transform: none;
+}
+
+/* Inactive lightbox should not capture events */
+.image-lightbox-overlay:not(.active) {
+    pointer-events: none;
+}
+
+/* Capstone badge container */
+.capstone-badge {
+    position: absolute;
+    top: -23px;
+    left: -16px;
+}
+
+/* Capstone heading text */
+.capstone-heading-text {
+    flex: 1;
+}
+
+.bsg-logo {
+    width: 275px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.8;
+    cursor: pointer;
+    transition: opacity 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.bsg-logo:hover {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.4));
+    transform: scale(1.04);
 }
 
 /* Responsive adjustments */
@@ -396,15 +609,6 @@ code {
         margin: 1rem;
         padding: 1.5rem;
         max-height: 95vh;
-    }
-
-    .capstone-focus-header {
-        margin-bottom: 2rem;
-        padding-bottom: 1.5rem;
-    }
-
-    .capstone-focus-main {
-        gap: 1.5rem;
     }
 }
 
