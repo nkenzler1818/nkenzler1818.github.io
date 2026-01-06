@@ -14,7 +14,7 @@
 <body class="bg-gray-900 text-white font-sans">
     <header class="fixed top-0 left-0 right-0 bg-gray-800/90 backdrop-blur-sm z-10">
         <nav class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-xl font-bold text-purple-400">Nathanael Kenzler</a>
+            <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
             <ul class="flex space-x-6">
                 <li><a href="index.html" class="text-gray-300 hover:text-white">Home</a></li>
                 <li><a href="about.html" class="text-gray-300 hover:text-white">About</a></li>
@@ -59,26 +59,36 @@
         </section>
     </main>
 
-    <footer class="bg-gray-800 mt-16 py-8">
+    <footer class="footer-bg py-12">
         <div class="max-w-4xl mx-auto px-4">
-            <div class="grid md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Nathanael Kenzler</h3>
-                    <p class="text-gray-300 mb-4">Aspiring Enterprise & Product Marketer</p>
-                    <div class="flex gap-4">
-                        <a href="https://www.linkedin.com/in/nathanael-kenzler/" class="btn-pastel-purple">LinkedIn</a>
-                        <a href="mailto:nkenzler@arizona.edu" class="btn-pastel-purple">Email</a>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="footer-section identity-section">
+                    <h3>Nathanael Kenzler</h3>
+                    <p class="footer-description">
+                        <span>Enterprise-focused business &</span>
+                        <span>marketing professional passionate</span>
+                        <span>about turning strategy into impact.</span>
+                    </p>
+                    <div class="social-icons">
+                        <a href="https://github.com/nkenzler1818" title="GitHub"><img src="../Project Files/Link Icons/icons8-github-24.png" alt="GitHub" width="20" height="20"></a>
+                        <a href="https://www.linkedin.com/in/nathanael-kenzler/" title="LinkedIn"><img src="../Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn" width="20" height="20"></a>
+                        <a href="mailto:nkenzler@arizona.edu" title="Email"><img src="../Project Files/Link Icons/icons8-email-48.png" alt="Email" width="20" height="20"></a>
                     </div>
                 </div>
-                <div>
-                    <h4 class="font-semibold mb-4">Navigate</h4>
-                    <ul class="space-y-2">
-                        <li><a href="index.html" class="text-gray-300 hover:text-white">Home</a></li>
-                        <li><a href="about.html" class="text-gray-300 hover:text-white">About</a></li>
-                        <li><a href="projects.html" class="text-gray-300 hover:text-white">Projects</a></li>
-                        <li><a href="blog.html" class="text-gray-300 hover:text-white">Blog</a></li>
-                        <li><a href="uses.html" class="text-gray-300 hover:text-white">Uses</a></li>
-                    </ul>
+                <div class="footer-section">
+                    <h4>Navigate</h4>
+                    <a href="index.html">Home</a>
+                    <a href="about.html">About</a>
+                    <a href="projects.html">Projects</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="uses.html">Uses</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Misc</h4>
+                    <a href="#">Links</a>
+                    <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
+                    <a href="#">RSS Feed</a>
+                    <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Scroll to Top</a>
                 </div>
             </div>
         </div>

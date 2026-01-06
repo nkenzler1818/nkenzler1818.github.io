@@ -1,11 +1,41 @@
+:root {
+    --accent-purple: #c084fc;
+}
+
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background-color: #2A2A2A;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', sans-serif;
-    color: #c4b5fd;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 700;
+    color: var(--accent-purple);
+}
+
+h3, h4, h5, h6 {
+    font-weight: 600;
 }
 
 code {
@@ -17,7 +47,7 @@ code {
 }
 
 .btn-pastel-purple {
-    background-color: #ddd6fe;
+    background-color: var(--accent-purple);
     color: #374151;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -26,7 +56,7 @@ code {
 }
 
 .btn-pastel-purple:hover {
-    background-color: #c4b5fd;
+    background-color: rgba(192, 132, 252, 0.85);
 }
 
 .nav-tab {
@@ -75,6 +105,10 @@ code {
     align-items: center;
     width: 100%;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    letter-spacing: 0.01em;
 }
 
 .floating-nav.shrunk {
@@ -107,8 +141,306 @@ code {
     background-color: #1F1F1F; /* Uniform dark charcoal for all containers */
     border-radius: 0.5rem; /* Consistent radius */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Subtle elevation */
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-pane:hover {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.project-pane:hover h3,
+.project-pane:hover p {
+    opacity: 0.95;
+}
+
+/* Subtle neighboring card effect */
+.grid:hover .project-pane:not(:hover) {
+    transform: scale(0.98);
+    opacity: 0.9;
 }
 
 .footer-bg {
-    background-color: #333333;
+    background-color: #2A2A2A;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+.footer-divider {
+    height: 1px;
+    background-color: #6b6b6b;
+    border: none;
+    margin: 2rem 0 2.5rem 0;
+}
+
+.footer-inner {
+    max-width: 56rem; /* 896px to match max-w-4xl */
+    margin: 0 auto;
+    padding-left: 32px;
+    padding-right: 32px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    column-gap: 32px;
+    align-items: start;
+}
+
+.footer-inner .footer-section:first-child {
+    justify-self: start;
+    text-align: left;
+}
+
+.footer-inner > *:nth-child(2) {
+    justify-self: end;
+    text-align: left;
+    transform: translateX(40px);
+}
+
+.footer-inner .footer-section:nth-child(3) {
+    justify-self: end;
+    text-align: left;
+}
+
+.footer-bg .footer-section h4 {
+    color: #d4d4d4;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.footer-bg .footer-section a {
+    color: #d4d4d4;
+    font-weight: 400;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.footer-bg .footer-section a:hover {
+    color: var(--accent-purple);
+}
+
+.footer-bg .identity-section h3 {
+    color: var(--accent-purple);
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-bg .identity-section p {
+    color: #bdbdbd;
+    font-weight: 400;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.footer-description {
+    text-wrap: balance;
+    hyphens: auto;
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+.footer-description span {
+    display: block;
+}
+
+.footer-bg .social-icons {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-bg .social-icons img {
+    width: 22px;
+    height: 22px;
+}
+
+.footer-bg .social-icons a {
+    color: white;
+    transition: color 0.2s ease;
+    margin-bottom: 0;
+}
+
+.footer-bg .social-icons a:hover {
+    color: var(--accent-purple);
+}
+
+.accent-purple {
+    color: var(--accent-purple);
+}
+
+/* Projects page section headers - neutral color */
+#projects-page h2 {
+    color: #ffffff;
+}
+
+/* Capstone focused overlay canvas */
+.capstone-focus-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.capstone-focus-overlay.active {
+    opacity: 1;
+}
+
+.capstone-focus-content {
+    background: linear-gradient(145deg, #1F1F1F 0%, #2A2A2A 100%);
+    border-radius: 1rem;
+    padding: 2.5rem;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(192, 132, 252, 0.1);
+}
+
+.capstone-focus-overlay.active .capstone-focus-content {
+    transform: scale(1);
+}
+
+.capstone-focus-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(192, 132, 252, 0.2);
+    padding-bottom: 2rem;
+}
+
+.capstone-focus-main {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
+    align-items: start;
+}
+
+.capstone-focus-article {
+    color: #e5e5e5;
+}
+
+.capstone-focus-media {
+    position: sticky;
+    top: 2rem;
+}
+
+.capstone-media-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.capstone-media-item img {
+    transition: transform 0.2s ease;
+}
+
+.capstone-media-item img:hover {
+    transform: scale(1.02);
+}
+
+.capstone-close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #e5e5e5;
+    font-size: 2rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.capstone-close-btn:hover {
+    background: rgba(192, 132, 252, 0.2);
+    color: #c084fc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .capstone-focus-main {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .capstone-focus-media {
+        position: static;
+    }
+
+    .capstone-media-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .capstone-focus-content {
+        margin: 1rem;
+        padding: 1.5rem;
+        max-height: 95vh;
+    }
+
+    .capstone-focus-header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .capstone-focus-main {
+        gap: 1.5rem;
+    }
+}
+
+.carousel-images {
+    scrollbar-width: thin;
+    scrollbar-color: #666 #333;
+}
+
+.carousel-images::-webkit-scrollbar {
+    height: 6px;
+}
+
+.carousel-images::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 3px;
+}
+
+.carousel-images::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 3px;
+}
+
+.carousel-images::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+/* Projects heading scroll emphasis */
+.page-title-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.projects-heading {
+    font-size: clamp(48px, 6vw, 72px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #f5f5f5;
 }
