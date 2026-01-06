@@ -10,50 +10,53 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 0) {
+                nav.classList.add('shrunk');
+            } else {
+                nav.classList.remove('shrunk');
+            }
+        });
+    </script>
 </head>
-<body class="bg-gray-900 text-white font-sans">
-    <header class="fixed top-0 left-0 right-0 bg-gray-800/90 backdrop-blur-sm z-10">
-        <nav class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+<body class="text-white font-sans">
+    <header class="sticky top-6 z-10">
+        <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
             <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
-            <ul class="flex space-x-6">
-                <li><a href="index.html" class="text-gray-300 hover:text-white">Home</a></li>
-                <li><a href="about.html" class="text-gray-300 hover:text-white">About</a></li>
-                <li><a href="projects.html" class="text-gray-300 hover:text-white">Projects</a></li>
-                <li><a href="blog.html" class="text-gray-300 hover:text-white">Blog</a></li>
-                <li><a href="uses.html" class="text-gray-300 hover:text-white">Uses</a></li>
-            </ul>
+            <div class="flex items-center space-x-6">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="projects.html" class="nav-link">Projects</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="uses.html" class="nav-link">Uses</a>
+            </div>
         </nav>
     </header>
 
     <main class="pt-24 px-4 max-w-4xl mx-auto">
         <section class="mb-16">
-            <h1 class="text-4xl font-bold mb-8">Blog</h1>
+            <div class="page-title-wrap">
+                <h1 class="projects-heading text-center text-white mb-8">Blog</h1>
+            </div>
             <div class="space-y-8">
-                <article class="bg-gray-800 p-8 rounded-lg">
-                    <h2 class="text-2xl font-semibold mb-4">AI-First Marketing: Balancing Automation and Human Insight</h2>
-                    <p class="text-gray-300 mb-4">Exploring how AI tools can enhance marketing workflows while preserving the critical role of human judgment and creativity.</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Coming Soon</span>
-                        <span class="text-sm text-gray-500">5 min read</span>
-                    </div>
+                <article class="blog-card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">AI-First Marketing: Balancing Automation and Human Insight</h3>
+                    <p class="text-gray-300 mb-2">Exploring how AI tools can enhance marketing workflows while preserving the critical role of human judgment and creativity.</p>
+                    <span class="text-sm text-gray-500">Coming Soon • 5 min read</span>
                 </article>
 
-                <article class="bg-gray-800 p-8 rounded-lg">
-                    <h2 class="text-2xl font-semibold mb-4">Data-Driven Storytelling in B2B Marketing</h2>
-                    <p class="text-gray-300 mb-4">How to effectively communicate complex data insights to drive business decisions and build client trust.</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Coming Soon</span>
-                        <span class="text-sm text-gray-500">4 min read</span>
-                    </div>
+                <article class="blog-card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">Data-Driven Storytelling in B2B Marketing</h3>
+                    <p class="text-gray-300 mb-2">How to effectively communicate complex data insights to drive business decisions and build client trust.</p>
+                    <span class="text-sm text-gray-500">Coming Soon • 4 min read</span>
                 </article>
 
-                <article class="bg-gray-800 p-8 rounded-lg">
-                    <h2 class="text-2xl font-semibold mb-4">Building Analytics Foundations for Marketing Professionals</h2>
-                    <p class="text-gray-300 mb-4">Essential skills and tools for marketers looking to strengthen their analytical capabilities in an AI-driven landscape.</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Coming Soon</span>
-                        <span class="text-sm text-gray-500">6 min read</span>
-                    </div>
+                <article class="blog-card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-2">Building Analytics Foundations for Marketing Professionals</h3>
+                    <p class="text-gray-300 mb-2">Essential skills and tools for marketers looking to strengthen their analytical capabilities in an AI-driven landscape.</p>
+                    <span class="text-sm text-gray-500">Coming Soon • 6 min read</span>
                 </article>
             </div>
         </section>
@@ -61,35 +64,36 @@
 
     <footer class="footer-bg py-12">
         <div class="max-w-4xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="footer-section identity-section">
-                    <h3>Nathanael Kenzler</h3>
-                    <p class="footer-description">
-                        <span>Enterprise-focused business &</span>
-                        <span>marketing professional passionate</span>
-                        <span>about turning strategy into impact.</span>
-                    </p>
-                    <div class="social-icons">
-                        <a href="https://github.com/nkenzler1818" title="GitHub"><img src="Project Files/Link Icons/icons8-github-24.png" alt="GitHub" width="20" height="20"></a>
-                        <a href="https://www.linkedin.com/in/nathanael-kenzler/" title="LinkedIn"><img src="Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn" width="20" height="20"></a>
-                        <a href="mailto:nkenzler@arizona.edu" title="Email"><img src="Project Files/Link Icons/icons8-email-48.png" alt="Email" width="20" height="20"></a>
-                    </div>
+            <hr class="footer-divider">
+        </div>
+        <div class="footer-inner">
+            <div class="footer-section identity-section">
+                <h3>Nathanael Kenzler</h3>
+                <p class="footer-description">
+                    <span>Enterprise-focused business &</span>
+                    <span>marketing professional passionate</span>
+                    <span>about turning strategy into impact.</span>
+                </p>
+                <div class="social-icons">
+                    <a href="https://github.com/nkenzler1818" title="GitHub"><img src="Project Files/Link Icons/icons8-github-24.png" alt="GitHub" width="22" height="22"></a>
+                    <a href="https://www.linkedin.com/in/nathanael-kenzler/" title="LinkedIn"><img src="Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn" width="22" height="22"></a>
+                    <a href="mailto:nkenzler@arizona.edu" title="Email"><img src="Project Files/Link Icons/icons8-email-48.png" alt="Email" width="22" height="22"></a>
                 </div>
-                <div class="footer-section">
-                    <h4>Navigate</h4>
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About</a>
-                    <a href="projects.html">Projects</a>
-                    <a href="blog.html">Blog</a>
-                    <a href="uses.html">Uses</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Misc</h4>
-                    <a href="#">Links</a>
-                    <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
-                    <a href="#">RSS Feed</a>
-                    <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Scroll to Top</a>
-                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Navigate</h4>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="projects.html">Projects</a>
+                <a href="blog.html">Blog</a>
+                <a href="uses.html">Uses</a>
+            </div>
+            <div class="footer-section">
+                <h4>Misc</h4>
+                <a href="#">Links</a>
+                <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
+                <a href="#">RSS Feed</a>
+                <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Scroll to Top</a>
             </div>
         </div>
     </footer>

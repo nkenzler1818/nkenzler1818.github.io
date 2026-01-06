@@ -10,18 +10,28 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 0) {
+                nav.classList.add('shrunk');
+            } else {
+                nav.classList.remove('shrunk');
+            }
+        });
+    </script>
 </head>
-<body class="bg-gray-900 text-white font-sans">
-    <header class="fixed top-0 left-0 right-0 bg-gray-800/90 backdrop-blur-sm z-10">
-        <nav class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+<body class="text-white font-sans">
+    <header class="sticky top-6 z-10">
+        <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
             <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
-            <ul class="flex space-x-6">
-                <li><a href="index.html" class="text-gray-300 hover:text-white">Home</a></li>
-                <li><a href="about.html" class="text-gray-300 hover:text-white">About</a></li>
-                <li><a href="projects.html" class="text-gray-300 hover:text-white">Projects</a></li>
-                <li><a href="blog.html" class="text-gray-300 hover:text-white">Blog</a></li>
-                <li><a href="uses.html" class="text-gray-300 hover:text-white">Uses</a></li>
-            </ul>
+            <div class="flex items-center space-x-6">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="projects.html" class="nav-link">Projects</a>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="uses.html" class="nav-link">Uses</a>
+            </div>
         </nav>
     </header>
 
@@ -32,19 +42,19 @@
                 <div>
                     <h2 class="text-2xl font-semibold mb-6">Software</h2>
                     <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">VS Code</h3>
                             <p class="text-gray-300">Primary code editor for development and writing.</p>
                         </div>
-                        <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">Tableau</h3>
                             <p class="text-gray-300">Data visualization and business intelligence tool.</p>
                         </div>
-                        <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">Excel</h3>
                             <p class="text-gray-300">Spreadsheet analysis and data manipulation.</p>
                         </div>
-                        <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">Adobe Creative Suite</h3>
                             <p class="text-gray-300">Design and content creation tools.</p>
                         </div>
@@ -54,11 +64,11 @@
                 <div>
                     <h2 class="text-2xl font-semibold mb-6">AI Tools</h2>
                     <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">ChatGPT</h3>
                             <p class="text-gray-300">AI assistant for research, ideation, and workflow enhancement.</p>
                         </div>
-                        <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">AI Assistants</h3>
                             <p class="text-gray-300">Various AI tools for productivity and creative tasks.</p>
                         </div>
@@ -68,15 +78,15 @@
                 <div>
                     <h2 class="text-2xl font-semibold mb-6">Learning Focus</h2>
                     <div class="grid md:grid-cols-2 gap-6">
-                        <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">SQL</h3>
                             <p class="text-gray-300">Database querying and data analysis.</p>
                         </div>
-                        <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">Analytics</h3>
                             <p class="text-gray-300">Building strong analytical foundations for data-driven decisions.</p>
                         </div>
-                        <div class="bg-gray-800 p-6 rounded-lg">
+                        <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">AI-Enabled Workflows</h3>
                             <p class="text-gray-300">Exploring how AI can improve marketing and operational processes.</p>
                         </div>
@@ -88,35 +98,36 @@
 
     <footer class="footer-bg py-12">
         <div class="max-w-4xl mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="footer-section identity-section">
-                    <h3>Nathanael Kenzler</h3>
-                    <p class="footer-description">
-                        <span>Enterprise-focused business &</span>
-                        <span>marketing professional passionate</span>
-                        <span>about turning strategy into impact.</span>
-                    </p>
-                    <div class="social-icons">
-                        <a href="https://github.com/nkenzler1818" title="GitHub"><img src="Project Files/Link Icons/icons8-github-24.png" alt="GitHub" width="20" height="20"></a>
-                        <a href="https://www.linkedin.com/in/nathanael-kenzler/" title="LinkedIn"><img src="Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn" width="20" height="20"></a>
-                        <a href="mailto:nkenzler@arizona.edu" title="Email"><img src="Project Files/Link Icons/icons8-email-48.png" alt="Email" width="20" height="20"></a>
-                    </div>
+            <hr class="footer-divider">
+        </div>
+        <div class="footer-inner">
+            <div class="footer-section identity-section">
+                <h3>Nathanael Kenzler</h3>
+                <p class="footer-description">
+                    <span>Enterprise-focused business &</span>
+                    <span>marketing professional passionate</span>
+                    <span>about turning strategy into impact.</span>
+                </p>
+                <div class="social-icons">
+                    <a href="https://github.com/nkenzler1818" title="GitHub"><img src="Project Files/Link Icons/icons8-github-24.png" alt="GitHub" width="22" height="22"></a>
+                    <a href="https://www.linkedin.com/in/nathanael-kenzler/" title="LinkedIn"><img src="Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn" width="22" height="22"></a>
+                    <a href="mailto:nkenzler@arizona.edu" title="Email"><img src="Project Files/Link Icons/icons8-email-48.png" alt="Email" width="22" height="22"></a>
                 </div>
-                <div class="footer-section">
-                    <h4>Navigate</h4>
-                    <a href="index.html">Home</a>
-                    <a href="about.html">About</a>
-                    <a href="projects.html">Projects</a>
-                    <a href="blog.html">Blog</a>
-                    <a href="uses.html">Uses</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Misc</h4>
-                    <a href="#">Links</a>
-                    <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
-                    <a href="#">RSS Feed</a>
-                    <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Scroll to Top</a>
-                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Navigate</h4>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="projects.html">Projects</a>
+                <a href="blog.html">Blog</a>
+                <a href="uses.html">Uses</a>
+            </div>
+            <div class="footer-section">
+                <h4>Misc</h4>
+                <a href="#">Links</a>
+                <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
+                <a href="#">RSS Feed</a>
+                <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Scroll to Top</a>
             </div>
         </div>
     </footer>

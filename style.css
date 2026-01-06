@@ -637,9 +637,7 @@ code {
 
 /* Projects heading scroll emphasis */
 .page-title-wrap {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* centered by justify-content, but now scoped */
 }
 
 .projects-heading {
@@ -647,4 +645,14 @@ code {
     font-weight: 800;
     letter-spacing: -0.02em;
     color: #f5f5f5;
+    text-align: center;
+}
+
+.about-section .projects-heading {
+    width: calc(100% - 320px - 24px);
+    text-align: center;
+}
+
+.about-section img {
+    margin-top: -135px;
 }
