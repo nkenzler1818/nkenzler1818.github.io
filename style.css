@@ -156,6 +156,20 @@ code {
     opacity: 0.95;
 }
 
+.blog-card {
+    cursor: pointer;
+}
+
+.blog-card:hover {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.blog-card:hover h3,
+.blog-card:hover p {
+    opacity: 0.95;
+}
+
 /* Subtle neighboring card effect */
 .grid:hover .project-pane:not(:hover) {
     transform: scale(0.98);
@@ -472,6 +486,184 @@ code {
 /* Capstone tile background when modal is open */
 .capstone-card.capstone-open {
     background-color: #2A2A2A;
+}
+
+/* Blog modal container */
+.blog-modal {
+    position: fixed;
+    z-index: 999;
+    pointer-events: auto;
+}
+
+/* Blog focused overlay canvas */
+.blog-focus-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.blog-focus-overlay.active {
+    opacity: 1;
+}
+
+.blog-focus-content {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    max-height: 70vh;
+    margin: auto;
+    background: #141414;
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    padding-left: 0;
+    padding-right: 24px;
+}
+
+.blog-scroll-inner {
+    flex: 1;
+    min-height: 0;
+    padding: 0 2.5rem 2.5rem 4rem;
+    margin-top: 0;
+    direction: ltr;
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0px,
+        black 24px,
+        black 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0px,
+        black 24px,
+        black 100%
+    );
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.blog-scroll-inner .simplebar-track.simplebar-vertical {
+    background: transparent;
+    left: 0 !important;
+    right: auto !important;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.blog-scroll-inner .simplebar-scrollbar:before {
+    background: #767676;
+}
+
+.blog-scroll-inner {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.blog-scroll-inner::-webkit-scrollbar {
+    display: none;
+}
+
+.blog-focus-overlay.active .blog-focus-content {
+    /* transform: scale(1); */
+}
+
+.blog-focus-header {
+    position: relative;
+    margin-bottom: 20px;
+    margin-top: 0;
+    border-bottom: 1px solid rgba(192, 132, 252, 0.2);
+    padding-bottom: 20px;
+    padding-top: 70px;
+    direction: ltr;
+}
+
+.blog-focus-header + * {
+    border-top: none !important;
+    margin-top: 0;
+}
+
+.blog-focus-header + *::before {
+    content: none !important;
+    display: none !important;
+}
+
+.blog-focus-header + hr {
+    display: none !important;
+}
+
+.blog-focus-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    border-top: none;
+    margin-top: 0;
+    direction: ltr;
+}
+
+.blog-focus-article {
+    color: #e5e5e5;
+    border-top: none;
+    margin-top: 0;
+}
+
+.blog-close-btn {
+    position: absolute;
+    top: 12.5px;
+    right: 12.5px;
+    background: none;
+    border: none;
+    color: rgba(229, 229, 229, 0.6);
+    font-size: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, opacity 0.15s ease;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    border-radius: 0 24px 0 0;
+}
+
+.blog-close-btn:hover {
+    color: #c084fc;
+    text-shadow: none;
+}
+
+.blog-close-btn:focus {
+    outline: 2px solid rgba(192, 132, 252, 0.5);
+    outline-offset: 2px;
+}
+
+.blog-close-btn:active {
+    transform: none;
+}
+
+/* Blog tile background when modal is open */
+.blog-card.blog-open {
+    background-color: #2A2A2A;
+}
+
+/* Responsive adjustments for blog modal */
+@media (max-width: 768px) {
+    .blog-focus-content {
+        margin: 1rem;
+        padding: 1.5rem;
+        max-height: 90vh;
+    }
 }
 
 /* Image lightbox overlay */
