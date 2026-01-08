@@ -213,12 +213,23 @@
             const nav = document.querySelector('nav');
             const projectsHeading = document.querySelector('.projects-heading');
             const scrollY = window.scrollY;
+            const isMobile = window.innerWidth <= 768;
 
-            // Nav shrink logic (same as other pages)
-            if (scrollY > 0) {
-                nav.classList.add('shrunk');
+            // Nav shrink logic
+            if (isMobile) {
+                // Mobile: start shrunk, shrink more when scrolling
+                if (scrollY > 0) {
+                    nav.classList.add('mobile-shrunk');
+                } else {
+                    nav.classList.remove('mobile-shrunk');
+                }
             } else {
-                nav.classList.remove('shrunk');
+                // Desktop: normal shrink behavior
+                if (scrollY > 0) {
+                    nav.classList.add('shrunk');
+                } else {
+                    nav.classList.remove('shrunk');
+                }
             }
 
             // Projects heading fade effect
@@ -230,23 +241,53 @@
                 projectsHeading.style.opacity = opacity;
             }
         });
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('more-dropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('more-dropdown');
+            const button = document.querySelector('.more-btn');
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
     </script>
 </head>
 <body class="text-white font-sans">
     <header class="sticky top-6 z-10">
         <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
             <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
-            <div class="flex items-center space-x-6">
+            <!-- Desktop nav -->
+            <div class="hidden md:flex items-center space-x-6">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="about.html" class="nav-link">About</a>
                 <a href="projects.html" class="nav-link">Projects</a>
                 <a href="blog.html" class="nav-link">Blog</a>
                 <a href="uses.html" class="nav-link">Uses</a>
             </div>
+            <!-- Mobile nav -->
+            <div class="flex md:hidden items-center ml-4 translate-y-px">
+                <div class="flex items-center space-x-1">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="projects.html" class="nav-link">Projects</a>
+                </div>
+                <div class="relative ml-1">
+                    <button class="more-btn text-white p-1 rounded hover:bg-gray-700" onclick="toggleDropdown()">⋮</button>
+                    <div id="more-dropdown" class="more-dropdown hidden absolute right-0 mt-1 bg-gray-800 rounded-md shadow-lg z-20">
+                        <a href="blog.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Blog</a>
+                        <a href="uses.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
+                    </div>
+                </div>
+            </div>
         </nav>
     </header>
 
-    <main id="projects-page" class="pt-24 px-4 max-w-4xl mx-auto">
+    <main id="projects-page" class="pt-24 md:pt-24 pt-12 px-4 max-w-4xl mx-auto">
         <section class="mb-16">
             <div class="page-title-wrap">
                 <h1 class="projects-heading text-center text-white mb-8">Project Portfolio</h1>
