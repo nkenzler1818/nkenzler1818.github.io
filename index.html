@@ -7,6 +7,8 @@
     <meta name="description" content="Aspiring Enterprise & Product Marketer with a focus on AI-first, data-driven marketing.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css">
+    <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -45,6 +47,149 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        // Blog modal functionality - adapted from capstone modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const blogCards = document.querySelectorAll('.blog-card');
+            const blogOverlay = document.querySelector('.blog-focus-overlay');
+            const closeBtn = document.querySelector('.blog-close-btn');
+            let isBlogOpen = false;
+            let modalBackdrop = null;
+
+            function updateHoverState() {
+                // Disable hover effects when blog modal is open
+                if (isBlogOpen) {
+                    blogCards.forEach(card => {
+                        card.style.transform = 'none';
+                        card.style.transition = 'none';
+                        card.classList.add('blog-open');
+                    });
+                } else {
+                    blogCards.forEach(card => {
+                        card.style.transition = '';
+                        card.classList.remove('blog-open');
+                    });
+                }
+            }
+
+            function showBlog(blogData) {
+                if (isBlogOpen) return;
+
+                isBlogOpen = true;
+
+                // Initialize custom scrollbar if needed
+                const scrollInner = document.querySelector('.blog-scroll-inner');
+                if (scrollInner) {
+                    new SimpleBar(scrollInner);
+                }
+
+                // Create and add backdrop
+                modalBackdrop = document.createElement('div');
+                modalBackdrop.className = 'modal-backdrop';
+                document.body.appendChild(modalBackdrop);
+
+                // Populate modal content
+                const titleEl = document.querySelector('.blog-focus-title');
+                const descEl = document.querySelector('.blog-focus-desc');
+                const readTimeEl = document.querySelector('.blog-focus-read-time');
+                const articleEl = document.querySelector('.blog-focus-article-text');
+
+                if (titleEl) titleEl.textContent = blogData.title;
+                if (descEl) descEl.textContent = blogData.description;
+                if (readTimeEl) readTimeEl.textContent = blogData.readTime;
+                if (articleEl) {
+                    articleEl.innerHTML = '';
+                    const paragraphs = blogData.articleText.split('\n\n');
+                    paragraphs.forEach(p => {
+                        const pEl = document.createElement('p');
+                        pEl.className = 'text-gray-300 leading-relaxed mb-4';
+                        pEl.textContent = p;
+                        articleEl.appendChild(pEl);
+                    });
+                }
+
+                // Update hover state
+                updateHoverState();
+
+                // Show overlay
+                blogOverlay.classList.remove('hidden');
+                blogOverlay.classList.add('active');
+
+                // Disable scroll
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeBlog() {
+                if (!isBlogOpen) return;
+
+                isBlogOpen = false;
+
+                // Remove backdrop
+                if (modalBackdrop) {
+                    modalBackdrop.remove();
+                    modalBackdrop = null;
+                }
+
+                // Hide overlay
+                blogOverlay.classList.remove('active');
+                blogOverlay.classList.add('hidden');
+
+                // Re-enable scroll
+                document.body.style.overflow = '';
+
+                // Restore hover state
+                updateHoverState();
+            }
+
+            // Card click to open
+            blogCards.forEach((card, index) => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (!isBlogOpen && !blogOverlay.contains(e.target)) {
+                        const title = this.querySelector('h3').textContent;
+                        const description = this.querySelector('p').textContent;
+                        const readTime = this.querySelector('span').textContent;
+                        const isPublished = this.hasAttribute('data-published');
+                        let articleText;
+                        if (isPublished) {
+                            if (title.includes("Building This Site")) {
+                                articleText = "Over the past few days, I have built this site as a way to share more than what a traditional resume can show. For me, this site is a blend of my technical skills and my creative side, a place where I can demonstrate how I use AI tools and marketing insights to build something meaningful.\n\nI have learned a lot in the process, not just about coding and design but also about how to tell my own story and highlight what I bring to the table. This blog is a small window into who I am: someone who loves turning strategy into impact and using both creativity and data to make it happen.\n\nLooking ahead, I plan to share insights about the industry, updates on my academic and professional journey, and reflections on what I am learning along the way. Whether it is about the challenges of mastering new tools or the excitement of applying marketing concepts in real projects, I hope to offer something of value. I want this site to be a space where I can connect more personally, share what excites me, and give you a genuine glimpse into my journey.\n\nI hope you find a bit of that spirit here and enjoy following along!";
+                            } else if (title.includes("Mastering New Skills")) {
+                                articleText = "Mastering New Skills: My First Week of Marketing Research at UArizona\n\nHello,\n\nI'm thrilled to share that I'm settling back into life in Arizona and officially kicking off my master's journey at the University of Arizona. This post is a one-week snapshot capturing my first impressions as I dive into coursework, meet my professors, and begin exploring the tools and techniques that will shape this semester. I'll be updating it briefly over the next few days before leaving it as a reflection of what's ahead.\n\nTo start, one of my first courses is Marketing 572: Marketing Research for Managers, taught by Professor Martin Reimann, PhD. This course focuses on how marketing research informs business decisions, from defining research problems to collecting and analyzing data. Based on the syllabus and as Professor Reimann explained in our first class, the goal is to equip us with the ability to efficiently collect data and interpret it in ways that lead to meaningful conclusions.\n\nThroughout the course, we'll be working with a mix of qualitative and quantitative research techniques while gaining hands-on experience using industry-standard tools like SPSS and Qualtrics. I'll also be working toward a CITI certification in research ethics, which will strengthen my understanding of ethical considerations in marketing research and data collection.\n\nIn short, this first week is about laying a strong foundation. I'm excited to see how these skills develop over the semester and how they'll shape me into a more strategic, data-informed marketer. Thanks for following along.";
+                            }
+                        } else {
+                            articleText = "This blog post is coming soon. Stay tuned for more insights on marketing, AI, and business strategy!";
+                        }
+
+                        showBlog({ title, description, readTime, articleText });
+                    }
+                });
+            });
+
+            // Close button
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeBlog();
+            });
+
+            // Backdrop click to close
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-backdrop') && isBlogOpen) {
+                    closeBlog();
+                }
+            });
+
+            // Modal content click - prevent closing
+            blogOverlay.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Initialize
+            updateHoverState();
+        });
     </script>
 </head>
 <body class="text-white font-sans">
@@ -81,7 +226,7 @@
         <section id="intro" class="mb-16">
             <div class="hero-container p-6 -mt-12 md:mt-0">
                 <div class="flex flex-col md:flex-row items-center gap-8">
-                    <div class="flex-shrink-0">
+                    <div class="flex-shrink-0 hero-image">
                         <img src="headshot.jpg" alt="Nathanael Kenzler" class="w-48 h-48 rounded-full object-cover">
                     </div>
                     <div class="flex-1">
@@ -97,6 +242,7 @@
                                 <a href="Kenzler_CV2025.pdf" download class="icon-btn" title="Resume"><img src="Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="Resume"></a>
                             </div>
                         </div>
+                        <p class="mb-4">See "Building this Site..." from the Blog page for the goal and story of this website</p>
                     </div>
                 </div>
             </div>
@@ -123,15 +269,15 @@
         <section id="blog" class="mb-16">
             <h2 class="text-3xl font-bold mb-8">From the Blog</h2>
             <div class="space-y-6">
-                <article class="blog-card p-6 rounded-lg">
-                    <h3 class="text-xl font-semibold mb-2">Post Title 1</h3>
-                    <p class="text-gray-300 mb-2">Brief description of the blog post.</p>
-                    <span class="text-sm text-gray-500">Date • Read time</span>
+                <article class="blog-card p-6 rounded-lg" data-published="true">
+                    <h3 class="text-xl font-semibold mb-2">Building This Site: Bringing My Creative Side Into Marketing</h3>
+                    <p class="text-gray-300 mb-2">Read my first post on why I built this site and what I hope it becomes.</p>
+                    <span class="text-sm text-gray-500">1/4/2026 • 1 min read</span>
                 </article>
-                <article class="blog-card p-6 rounded-lg">
-                    <h3 class="text-xl font-semibold mb-2">Post Title 2</h3>
-                    <p class="text-gray-300 mb-2">Brief description of the blog post.</p>
-                    <span class="text-sm text-gray-500">Date • Read time</span>
+                <article class="blog-card p-6 rounded-lg" data-published="true">
+                    <h3 class="text-xl font-semibold mb-2">Mastering New Skills: My First Week of Marketing Research at UArizona</h3>
+                    <p class="text-gray-300 mb-2">A snapshot of the tools, research methods, and analytical skills I'm beginning to develop as I start my master's coursework at the University of Arizona.</p>
+                    <span class="text-sm text-gray-500">1/14/2026 · 3 min read</span>
                 </article>
             </div>
         </section>
@@ -173,5 +319,28 @@
             </div>
         </div>
     </footer>
+
+    <!-- Blog Modal (outside main, position fixed) -->
+    <div class="blog-focus-overlay blog-modal hidden">
+        <div class="blog-focus-content">
+            <button class="blog-close-btn" aria-label="Close blog view">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="blog-scroll-inner">
+                <div class="blog-focus-header">
+                    <h2 class="blog-focus-title text-3xl font-bold mb-3 accent-purple text-left"></h2>
+                    <p class="blog-focus-desc text-gray-300 text-lg text-left mb-4"></p>
+                    <p class="blog-focus-read-time text-sm text-gray-500 text-left"></p>
+                </div>
+                <div class="blog-focus-main">
+                    <div class="blog-focus-article">
+                        <div class="blog-focus-article-text"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
