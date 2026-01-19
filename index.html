@@ -48,6 +48,17 @@
             }
         });
 
+        function navigateToProject(project) {
+            // Add fade out effect
+            document.body.style.transition = 'opacity 0.3s ease';
+            document.body.style.opacity = '0';
+
+            // Navigate after fade
+            setTimeout(() => {
+                window.location.href = 'projects.html?open=' + project;
+            }, 300);
+        }
+
         // Blog modal functionality - adapted from capstone modal
         document.addEventListener('DOMContentLoaded', function() {
             const blogCards = document.querySelectorAll('.blog-card');
@@ -155,7 +166,7 @@
                         let articleText;
                         if (isPublished) {
                             if (title.includes("Building This Site")) {
-                                articleText = "Over the past few days, I have built this site as a way to share more than what a traditional resume can show. For me, this site is a blend of my technical skills and my creative side, a place where I can demonstrate how I use AI tools and marketing insights to build something meaningful.\n\nI have learned a lot in the process, not just about coding and design but also about how to tell my own story and highlight what I bring to the table. This blog is a small window into who I am: someone who loves turning strategy into impact and using both creativity and data to make it happen.\n\nLooking ahead, I plan to share insights about the industry, updates on my academic and professional journey, and reflections on what I am learning along the way. Whether it is about the challenges of mastering new tools or the excitement of applying marketing concepts in real projects, I hope to offer something of value. I want this site to be a space where I can connect more personally, share what excites me, and give you a genuine glimpse into my journey.\n\nI hope you find a bit of that spirit here and enjoy following along!";
+                                articleText = "Over the past few weeks, I have built this site as a way to share more than what a traditional resume can show. For me, this site is a blend of my technical skills and my creative side, a place where I can demonstrate how I use AI tools and marketing insights to build something meaningful.\n\nI have learned a lot in the process, not just about coding and design but also about how to tell my own story and highlight what I bring to the table. This blog is a small window into who I am: someone who loves turning strategy into impact and using both creativity and data to make it happen.\n\nLooking ahead, I plan to share insights about the industry, updates on my academic and professional journey, and reflections on what I am learning along the way. Whether it is about the challenges of mastering new tools or the excitement of applying marketing concepts in real projects, I hope to offer something of value. I want this site to be a space where I can connect more personally, share what excites me, and give you a genuine glimpse into my journey.\n\nI hope you find a bit of that spirit here and enjoy following along!";
                             } else if (title.includes("Mastering New Skills")) {
                                 articleText = "Mastering New Skills: My First Week of Marketing Research at UArizona\n\nHello,\n\nI'm thrilled to share that I'm settling back into life in Arizona and officially kicking off my master's journey at the University of Arizona. This post is a one-week snapshot capturing my first impressions as I dive into coursework, meet my professors, and begin exploring the tools and techniques that will shape this semester. I'll be updating it briefly over the next few days before leaving it as a reflection of what's ahead.\n\nTo start, one of my first courses is Marketing 572: Marketing Research for Managers, taught by Professor Martin Reimann, PhD. This course focuses on how marketing research informs business decisions, from defining research problems to collecting and analyzing data. Based on the syllabus and as Professor Reimann explained in our first class, the goal is to equip us with the ability to efficiently collect data and interpret it in ways that lead to meaningful conclusions.\n\nThroughout the course, we'll be working with a mix of qualitative and quantitative research techniques while gaining hands-on experience using industry-standard tools like SPSS and Qualtrics. I'll also be working toward a CITI certification in research ethics, which will strengthen my understanding of ethical considerations in marketing research and data collection.\n\nIn short, this first week is about laying a strong foundation. I'm excited to see how these skills develop over the semester and how they'll shape me into a more strategic, data-informed marketer. Thanks for following along.";
                             }
@@ -242,7 +253,7 @@
                                 <a href="Kenzler_CV2025.pdf" download class="icon-btn" title="Resume"><img src="Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="Resume"></a>
                             </div>
                         </div>
-                        <p class="mb-4">See "Building this Site..." from the Blog page for the goal and story of this website</p>
+                        <p class="mb-4">See the "Building this Site..." blog post for the story of this interactive portfolio</p>
                     </div>
                 </div>
             </div>
@@ -251,17 +262,17 @@
         <section id="projects" class="mb-16">
             <h2 class="text-3xl font-bold mb-8">Featured Projects</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="project-pane p-6 rounded-lg">
-                    <h3 class="text-xl font-semibold mb-2">AI-Assisted Marketing Workflow Exploration</h3>
-                    <p class="text-gray-300 mb-4">Explored how AI tools can support marketing research, content ideation, and workflow efficiency. Evaluated where AI adds value vs. human judgment. Focused on AI-first thinking in marketing operations.</p>
+                <div class="project-card p-6 rounded-lg" onclick="navigateToProject('capstone')">
+                    <h3 class="text-xl font-semibold mb-2">Capstone Project</h3>
+                    <p class="text-gray-300 mb-4">A semester-long business strategy simulation focused on competitive positioning, decision-making, and performance analysis. Led weekly strategy coordination and translated complex data into actionable insights.</p>
                 </div>
-                <div class="project-pane p-6 rounded-lg">
-                    <h3 class="text-xl font-semibold mb-2">Data-Driven Client Engagement – VASA Fitness</h3>
-                    <p class="text-gray-300 mb-4">Managed 27 concurrent client relationships. Used storytelling and data insights to reinforce trust and engagement. Applied consultative selling and performance tracking.</p>
+                <div class="project-card p-6 rounded-lg" onclick="navigateToProject('persona')">
+                    <h3 class="text-xl font-semibold mb-2">Professional Persona Analysis</h3>
+                    <p class="text-gray-300 mb-4">A self-perception versus peer-perception study examining leadership communication, working style, and professional presence. Combines survey analysis, reflection, and applied business communication theory.</p>
                 </div>
-                <div class="project-pane p-6 rounded-lg">
-                    <h3 class="text-xl font-semibold mb-2">Brand & Go-To-Market Support – Bay Area K9 Association</h3>
-                    <p class="text-gray-300 mb-4">Supported early-stage branding and visual identity. Created marketing content and campaigns. Coordinated client communications and operations.</p>
+                <div class="project-card p-6 rounded-lg" onclick="navigateToProject('casecomp')">
+                    <h3 class="text-xl font-semibold mb-2">Case Competition Presentation</h3>
+                    <p class="text-gray-300 mb-4">A team-based case competition sponsored by Insight, addressing internal communication overload through an immersive VR-based communication strategy. Focused on research, positioning, and executive-level storytelling.</p>
                 </div>
             </div>
         </section>
@@ -342,5 +353,7 @@
             </div>
         </div>
     </div>
+
+
 </body>
 </html>

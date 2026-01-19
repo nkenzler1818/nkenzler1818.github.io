@@ -197,8 +197,8 @@
                 }
             });
 
-            // Add click handlers to all BSG images
-            const mediaItems = document.querySelectorAll('.capstone-media-item img');
+            // Add click handlers to all BSG images and persona images
+            const mediaItems = document.querySelectorAll('.capstone-media-item img, .persona-inline-figure img');
             mediaItems.forEach(img => {
                 img.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -255,6 +255,255 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        // Persona modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const personaCard = document.querySelector('.persona-card');
+            const focusOverlay = document.querySelector('.persona-focus-overlay');
+            const closeBtn = document.querySelector('.persona-close-btn');
+            let isPersonaOpen = false;
+            let modalBackdrop = null;
+
+            function updateHoverState() {
+                // Disable hover effects when persona is open
+                if (isPersonaOpen) {
+                    personaCard.style.transform = 'none';
+                    personaCard.style.transition = 'none';
+                    personaCard.classList.add('persona-open');
+                } else {
+                    personaCard.style.transition = '';
+                    personaCard.classList.remove('persona-open');
+                }
+            }
+
+            function showPersona() {
+                if (isPersonaOpen) return;
+
+                isPersonaOpen = true;
+
+                // Initialize custom scrollbar
+                new SimpleBar(document.querySelector('.persona-scroll-inner'));
+
+                // Create and add backdrop
+                modalBackdrop = document.createElement('div');
+                modalBackdrop.className = 'modal-backdrop';
+                document.body.appendChild(modalBackdrop);
+
+                // Update hover state
+                updateHoverState();
+
+                // Show overlay
+                focusOverlay.classList.remove('hidden');
+                focusOverlay.classList.add('active');
+
+                // Disable scroll
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closePersona() {
+                if (!isPersonaOpen) return;
+
+                isPersonaOpen = false;
+
+                // Remove backdrop
+                if (modalBackdrop) {
+                    modalBackdrop.remove();
+                    modalBackdrop = null;
+                }
+
+                // Hide overlay
+                focusOverlay.classList.remove('active');
+                focusOverlay.classList.add('hidden');
+
+                // Re-enable scroll
+                document.body.style.overflow = '';
+
+                // Restore hover state
+                updateHoverState();
+            }
+
+            // Card click to open
+            personaCard.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (!isPersonaOpen && !focusOverlay.contains(e.target)) {
+                    showPersona();
+                }
+            });
+
+            // Close button
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closePersona();
+            });
+
+            // Backdrop click to close
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-backdrop') && isPersonaOpen) {
+                    closePersona();
+                }
+            });
+
+            // Modal content click - prevent closing
+            focusOverlay.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // ESC key to close
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isPersonaOpen) {
+                    e.preventDefault();
+                    closePersona();
+                }
+            });
+
+            // Initialize
+            updateHoverState();
+        });
+
+        // Case Competition modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const caseCompCard = document.querySelector('.case-comp-card');
+            const focusOverlay = document.querySelector('.case-comp-focus-overlay');
+            const closeBtn = document.querySelector('.case-comp-close-btn');
+            let isCaseCompOpen = false;
+            let modalBackdrop = null;
+
+            function updateHoverState() {
+                // Disable hover effects when case-comp is open
+                if (isCaseCompOpen) {
+                    caseCompCard.style.transform = 'none';
+                    caseCompCard.style.transition = 'none';
+                    caseCompCard.classList.add('case-comp-open');
+                } else {
+                    caseCompCard.style.transition = '';
+                    caseCompCard.classList.remove('case-comp-open');
+                }
+            }
+
+            function showCaseComp() {
+                if (isCaseCompOpen) return;
+
+                isCaseCompOpen = true;
+
+                // Initialize custom scrollbar
+                new SimpleBar(document.querySelector('.case-comp-scroll-inner'));
+
+                // Create and add backdrop
+                modalBackdrop = document.createElement('div');
+                modalBackdrop.className = 'modal-backdrop';
+                document.body.appendChild(modalBackdrop);
+
+                // Update hover state
+                updateHoverState();
+
+                // Show overlay
+                focusOverlay.classList.remove('hidden');
+                focusOverlay.classList.add('active');
+
+                // Disable scroll
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeCaseComp() {
+                if (!isCaseCompOpen) return;
+
+                isCaseCompOpen = false;
+
+                // Remove backdrop
+                if (modalBackdrop) {
+                    modalBackdrop.remove();
+                    modalBackdrop = null;
+                }
+
+                // Hide overlay
+                focusOverlay.classList.remove('active');
+                focusOverlay.classList.add('hidden');
+
+                // Re-enable scroll
+                document.body.style.overflow = '';
+
+                // Restore hover state
+                updateHoverState();
+            }
+
+            // Card click to open
+            caseCompCard.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (!isCaseCompOpen && !focusOverlay.contains(e.target)) {
+                    showCaseComp();
+                }
+            });
+
+            // Close button
+            closeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeCaseComp();
+            });
+
+            // Backdrop click to close
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-backdrop') && isCaseCompOpen) {
+                    closeCaseComp();
+                }
+            });
+
+            // Modal content click - prevent closing
+            focusOverlay.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // ESC key to close
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isCaseCompOpen) {
+                    e.preventDefault();
+                    closeCaseComp();
+                }
+            });
+
+            // Initialize
+            updateHoverState();
+        });
+
+        // Deep link handling for auto-opening modals
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const openParam = urlParams.get('open');
+
+            if (openParam) {
+                // Scroll to Undergrad Work section (second .mb-12 div)
+                const sections = document.querySelectorAll('.mb-12');
+                const undergradSection = sections[1]; // Graduate is 0, Undergrad is 1
+                if (undergradSection) {
+                    undergradSection.scrollIntoView({ behavior: 'smooth' });
+                }
+
+                // Open the appropriate modal after scroll
+                setTimeout(() => {
+                    if (openParam === 'capstone') {
+                        // Trigger capstone modal
+                        const capstoneCard = document.querySelector('.capstone-card');
+                        if (capstoneCard) capstoneCard.click();
+                    } else if (openParam === 'persona') {
+                        // Trigger persona modal
+                        const personaCard = document.querySelector('.persona-card');
+                        if (personaCard) personaCard.click();
+                    } else if (openParam === 'casecomp') {
+                        // Trigger case-comp modal
+                        const caseCompCard = document.querySelector('.case-comp-card');
+                        if (caseCompCard) caseCompCard.click();
+                    }
+                }, 500); // Wait for scroll to complete
+
+                // Optional: Clean up URL
+                // window.history.replaceState(null, null, window.location.pathname);
+            }
+        });
     </script>
 </head>
 <body class="text-white font-sans">
@@ -294,19 +543,19 @@
             </div>
 
             <div class="mb-12">
-                <h2 class="text-2xl font-bold mb-2 accent-purple">Star Projects</h2>
-                <p class="text-gray-400 mb-6">Handpicked highlights of my best work.</p>
+                <h2 class="text-2xl font-bold mb-2 accent-purple">Graduate Work</h2>
+                <p class="text-gray-400 mb-6">Upcoming projects for this semester I am specifically looking forward to while attaining my Master's in Marketing.</p>
                 <div class="grid md:grid-cols-3 gap-6">
                     <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Messaging Strategy</h3>
+                        <h3 class="text-xl font-semibold mb-2">Placeholder 1</h3>
                         <p class="text-gray-300">Coming Soon</p>
                     </div>
                     <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">GTM Launch Plan</h3>
+                        <h3 class="text-xl font-semibold mb-2">Placeholder 2</h3>
                         <p class="text-gray-300">Coming Soon</p>
                     </div>
                     <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Tech to Business</h3>
+                        <h3 class="text-xl font-semibold mb-2">Placeholder 3</h3>
                         <p class="text-gray-300">Coming Soon</p>
                     </div>
                 </div>
@@ -318,18 +567,18 @@
             <div class="mb-12">
                 <h2 class="text-2xl font-bold mb-2 accent-purple">Undergrad Work</h2>
                 <p class="text-gray-400 mb-6">Key projects from my time studying Business Administration.</p>
-                <div class="grid md:grid-cols-3 gap-6">
+                <div class="undergrad-work-grid">
                     <div class="project-pane p-6 rounded-lg capstone-card" data-project="capstone">
                         <h3 class="text-xl font-semibold mb-2">Capstone Project</h3>
-                        <p class="text-gray-300">BSBA Graduation Project</p>
+                        <p class="text-gray-300">Senior Year: BSBA Graduation Project</p>
                     </div>
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Market Analysis</h3>
-                        <p class="text-gray-300">Coming Soon</p>
+                    <div class="project-pane p-6 rounded-lg persona-card" data-project="persona">
+                        <h3 class="text-xl font-semibold mb-2">Professional Persona Analysis</h3>
+                        <p class="text-gray-300">Junior Year: Self vs peer perception survey</p>
                     </div>
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Capstone Presentation</h3>
-                        <p class="text-gray-300">Coming Soon</p>
+                    <div class="project-pane p-6 rounded-lg case-comp-card" data-project="case-comp">
+                        <h3 class="text-xl font-semibold mb-2">Case Competition Presentation</h3>
+                        <p class="text-gray-300">Junior Year: Presented by Insight</p>
                     </div>
                 </div>
             </div>
@@ -512,6 +761,211 @@
                         </div>
                     </div>
                 </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Persona Analysis Modal -->
+    <div class="persona-focus-overlay persona-modal hidden">
+        <div class="persona-focus-content">
+            <button class="persona-close-btn" aria-label="Close modal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="persona-scroll-inner">
+                <div class="persona-focus-header">
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Professional Persona Analysis</h2>
+                    <p class="text-gray-300 text-lg text-center">Insight into how I perceive myself as a professional compared to how others experience my working style</p>
+                </div>
+
+                <div class="persona-focus-article">
+                    <p class="text-gray-300 mb-6 leading-relaxed">During the first semester of my junior year in my Business Communication course, we built professional portfolios and worked to clarify who we were as emerging professionals and who we wanted to become. As part of that process, I created an anonymous perception survey and asked people who had worked with me in real professional settings to describe my working style. My sample included two managers, two colleagues at my level, and one former team member. While I would have preferred a larger sample, the responses were thoughtful and consistent, providing a meaningful signal rather than random data about how my working style is perceived compared to how I see myself.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Who do I think I am?</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">To get a better sense who I am, I took a self perception survey which took a look at many facets of my persona in a professional setting.</p>
+                    <p class="text-gray-300 mb-6 leading-relaxed">In analyzing my Culture Map results and self-description, I perceive myself as an adaptable leader who values clear communication, blends theory with practice in persuasion, and balances collaboration with hierarchy. I prioritize trust-building through task completion and personal connections, handle disagreements with professionalism, and approach scheduling with a balance of structure and flexibility.</p>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Overall, I see myself as growth-oriented, driven, hard-working, and a perfectionistic problem-solver, equipped to lead confidently in diverse environments.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Who do others think I am?</h3>
+                    <p class="text-gray-300 mb-4 leading-relaxed">To cross reference with my own perceptions (red circle), survey responses from five colleagues, including managers and peers, were collected to assess perceptions of my work style and personality (Image A).</p>
+
+                    <div class="persona-inline-figure">
+                        <img src="Project Files/peoplestyles.png" alt="People Styles perceptual map showing self vs peer perception" class="rounded-lg">
+                        <p class="text-gray-400 text-sm mt-2 text-center">Image A — People Styles: Responsiveness vs Assertiveness</p>
+                    </div>
+
+                    <p class="text-gray-300 mb-6 leading-relaxed">While I see myself as amiable, colleagues perceive me as more assertive and driven. These differences in perception emphasize the significance of understanding how others view my behavior. Addressing these discrepancies is vital for fostering effective communication and building stronger working relationships.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Recognizing my true nature</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">While I see myself as amiable, colleagues perceive me as more assertive and driven (green circle is group avg). These differences in perception emphasize the significance of understanding how others view my behavior. Addressing these discrepancies is vital for fostering effective communication and building stronger working relationships.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Aligning misperceptions</h3>
+                    <p class="text-gray-300 mb-4 leading-relaxed">Acknowledging the disparity between self-perception and professional perception is vital for refining my business approach and client interactions. While I may see myself as amiable, colleagues perceive me as assertive and driven. This difference highlights the importance of understanding how others perceive my demeanor.</p>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Neglecting to align my self-perception with others' perceptions could disrupt team dynamics and impede professional success. Misalignments in perceived assertiveness and drive may lead to confusion and conflict within a team, undermining trust and productivity. Failing to reconcile these differences can hinder performance and morale. Thus, it's essential to address these discrepancies to maintain a cohesive and successful working environment.</p>
+
+                    <div class="border-l-4 border-purple-500 pl-6 mb-8">
+                        <h3 class="text-xl font-semibold text-white mb-4">Moving forward — present-day reflection</h3>
+                        <p class="text-gray-300 mb-4 leading-relaxed">This project reflects where I was at the time, my junior year of undergraduate study, when I was actively forming my professional identity and exploring entrepreneurship. Looking back, it is interesting to reflect on the mindset I had then compared to where I am now.</p>
+                        <p class="text-gray-300 mb-4 leading-relaxed">Since creating this report, I have continued to develop both personally and professionally. I am now focused on creating impact at a broader scale, thinking more deeply about influence, positioning, and how ideas are communicated. The skills I began developing here such as self-awareness, audience perception, and intentional communication, have since evolved into a stronger interest in storytelling and, ultimately, marketing.</p>
+                        <p class="text-gray-300 leading-relaxed">While this work represents an earlier stage of my journey, it laid important groundwork. The reflection, feedback, and self-assessment captured here have contributed to my growth into a more thoughtful, strategic, and impact-oriented business professional.</p>
+                    </div>
+
+                    <div class="border-t border-gray-700 pt-6 mt-8">
+                        <div class="flex justify-center items-center">
+                            <a href="ProfessionalPersonaReport.pdf" target="_blank" rel="noreferrer" class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm rounded-md transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                </svg>
+                                View Original Assignment PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Competition Presentation Modal -->
+    <div class="case-comp-focus-overlay case-comp-modal hidden">
+        <div class="case-comp-focus-content">
+            <button class="case-comp-close-btn" aria-label="Close modal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="case-comp-scroll-inner">
+                <div class="case-comp-focus-header">
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Case Competition Presentation</h2>
+                    <p class="text-gray-300 text-lg text-center">Communication Strategy Presentation</p>
+                </div>
+
+                <div class="case-comp-focus-article">
+                    <h3 class="text-xl font-semibold mb-4 text-white">Project Overview</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">In this project, I participated in a case competition hosted by Insight, a company dealing with communication overload among employees. We were one of about 40 or 50 teams in total, and in our specific group, we competed against five other teams. After a few weeks of preparation, two representatives from Insight reviewed our proposals. We were encouraged to think beyond common tools like Slack or GroupMe and explore new, creative communication methods. This led our team to brainstorm innovative ideas, and we ultimately arrived at a virtual reality solution to address the problem.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Presentation Slides</h3>
+                    <iframe src="CaseCompPresentation.pdf" width="100%" height="600px" style="border: none;"></iframe>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white" style="margin-top: 35px;">Key Highlights from the Presentation</h3>
+                    <table class="presentation-table">
+                        <thead>
+                            <tr>
+                                <th>Section & Context</th>
+                                <th>Slide Range</th>
+                                <th>Overview</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Section & Context">Title & Team Introduction</td>
+                                <td data-label="Slide Range">1–2</td>
+                                <td data-label="Overview">Introduced the case competition, team identity (Team H9), and team members, establishing the context for the Insight-sponsored challenge.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Agenda & Presentation Flow</td>
+                                <td data-label="Slide Range">3</td>
+                                <td data-label="Overview">Outlined the presentation agenda, including the situation, background analysis, benchmark, recommendation, response and impact, and conclusion.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Introduction & Situation</td>
+                                <td data-label="Slide Range">4</td>
+                                <td data-label="Overview">Framed the core challenge facing Insight and introduced the need for a new internal communication strategy to address engagement and information transfer.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Issue & Opportunity</td>
+                                <td data-label="Slide Range">5</td>
+                                <td data-label="Overview">Identified key communication issues including information overload, miscommunication, missed messages, and the opportunity to consolidate and improve engagement.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Attentiveness in a Virtual World</td>
+                                <td data-label="Slide Range">6</td>
+                                <td data-label="Overview">Highlighted research showing increased attentiveness and reduced distractions in immersive virtual environments.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Retaining Information</td>
+                                <td data-label="Slide Range">7</td>
+                                <td data-label="Overview">Demonstrated how VR improves information retention through multi-sensory engagement and experiential learning.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Educational & Workplace Landscape</td>
+                                <td data-label="Slide Range">8–9</td>
+                                <td data-label="Overview">Provided examples of VR adoption across education and the workplace, emphasizing improved focus, confidence, and training outcomes.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Target Audience & Communication Levels</td>
+                                <td data-label="Slide Range">10–11</td>
+                                <td data-label="Overview">Defined Insight's employee audience and outlined differing communication needs across in-person, remote, and hybrid environments.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Industry Context & Best Practices</td>
+                                <td data-label="Slide Range">12–14</td>
+                                <td data-label="Overview">Positioned VR as a rapidly growing industry and established best practices centered on immersive and interactive communication.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Benchmark & Memory Retention</td>
+                                <td data-label="Slide Range">15–17</td>
+                                <td data-label="Overview">Used Accenture as a benchmark to illustrate memory loss in traditional training and improved retention through VR when scaled to Insight.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Applying VR to Insight</td>
+                                <td data-label="Slide Range">18</td>
+                                <td data-label="Overview">Connected VR capabilities directly to Insight's communication needs, focusing on updates, training, and engagement.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Insight VR Hub Concept</td>
+                                <td data-label="Slide Range">19</td>
+                                <td data-label="Overview">Introduced Insight VR Hub as a conceptual centralized virtual space for internal communication and engagement.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Personalized VR Experience</td>
+                                <td data-label="Slide Range">20</td>
+                                <td data-label="Overview">Showcased personalized VR sessions designed to deliver role-relevant information and reduce unnecessary communication noise.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Simulation & Interactive Features</td>
+                                <td data-label="Slide Range">21</td>
+                                <td data-label="Overview">Detailed immersive simulations, AI-driven interactions, and voice recognition as core engagement features.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Gamification & Engagement</td>
+                                <td data-label="Slide Range">22</td>
+                                <td data-label="Overview">Introduced leaderboards and gamified elements to increase participation, motivation, and performance.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Response & Impact</td>
+                                <td data-label="Slide Range">23</td>
+                                <td data-label="Overview">Summarized expected engagement improvements and performance impact resulting from the proposed VR communication strategy.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Implementation Timeline</td>
+                                <td data-label="Slide Range">24</td>
+                                <td data-label="Overview">Outlined phased implementation including development and testing, pilot launch, and full rollout with monitoring.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Budget Allocation</td>
+                                <td data-label="Slide Range">25</td>
+                                <td data-label="Overview">Presented budget details including 500 Meta Quest 2 headsets and an incentive program to drive adoption.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">KPIs & Measurement</td>
+                                <td data-label="Slide Range">26</td>
+                                <td data-label="Overview">Defined success metrics such as quiz completion rates and accuracy to measure engagement and effectiveness.</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Section & Context">Conclusion & Close</td>
+                                <td data-label="Slide Range">27–28</td>
+                                <td data-label="Overview">Recapped the problem, solution, research support, and implementation plan, concluding with questions and discussion.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="border-l-4 border-purple-500 pl-6 mb-8">
+                        <h3 class="text-xl font-semibold text-white mb-4">Looking Back and Moving Forward</h3>
+                        <p class="text-gray-300 mb-4 leading-relaxed">This project was not just about exploring VR technology; it was a pivotal moment in my development as a team leader and marketer. Working with a group that included younger teammates, I had the opportunity to step up into a leadership role. Guiding our team through the case competition helped me hone my skills in coordinating tasks, communicating complex ideas, and ensuring that everyone's strengths were utilized.</p>
+                        <p class="text-gray-300 leading-relaxed">Reflecting on this experience now, it's clear how much it contributed to my growth in marketing and leadership. It taught me the importance of adapting my communication style to different audiences and fostering a collaborative environment where new ideas could thrive. This project underscored how stepping into a leadership role and working closely with a diverse team can shape you into a more well-rounded and strategic professional.</p>
+                    </div>
                 </div>
             </div>
         </div>
