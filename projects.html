@@ -470,40 +470,7 @@
             updateHoverState();
         });
 
-        // Deep link handling for auto-opening modals
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const openParam = urlParams.get('open');
 
-            if (openParam) {
-                // Scroll to Undergrad Work section (second .mb-12 div)
-                const sections = document.querySelectorAll('.mb-12');
-                const undergradSection = sections[1]; // Graduate is 0, Undergrad is 1
-                if (undergradSection) {
-                    undergradSection.scrollIntoView({ behavior: 'smooth' });
-                }
-
-                // Open the appropriate modal after scroll
-                setTimeout(() => {
-                    if (openParam === 'capstone') {
-                        // Trigger capstone modal
-                        const capstoneCard = document.querySelector('.capstone-card');
-                        if (capstoneCard) capstoneCard.click();
-                    } else if (openParam === 'persona') {
-                        // Trigger persona modal
-                        const personaCard = document.querySelector('.persona-card');
-                        if (personaCard) personaCard.click();
-                    } else if (openParam === 'casecomp') {
-                        // Trigger case-comp modal
-                        const caseCompCard = document.querySelector('.case-comp-card');
-                        if (caseCompCard) caseCompCard.click();
-                    }
-                }, 500); // Wait for scroll to complete
-
-                // Optional: Clean up URL
-                // window.history.replaceState(null, null, window.location.pathname);
-            }
-        });
     </script>
 </head>
 <body class="text-white font-sans">
