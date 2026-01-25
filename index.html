@@ -269,7 +269,7 @@
         });
     </script>
 </head>
-<body class="text-white font-sans">
+<body class="text-white font-sans home-page">
     <header class="sticky top-6 z-10">
         <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
             <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
@@ -301,12 +301,12 @@
 
     <main class="pt-24 px-4 max-w-4xl mx-auto">
         <section id="intro" class="mb-16">
-            <div class="hero-container p-6 -mt-12 md:mt-0">
-                <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="hero-container p-6 pt-24 pb-[33px] md:pt-6 md:pb-6 -mt-12 md:mt-0">
+                <div class="flex flex-col md:flex-row items-center gap-5 md:gap-8">
                     <div class="flex-shrink-0 hero-image">
                         <img src="headshot.jpg" alt="Nathanael Kenzler" class="w-48 h-48 rounded-full object-cover">
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 -mt-3 md:mt-0">
                         <h1 class="text-4xl font-bold text-white mb-4">👋 Hello, world!</h1>
                         <h2 class="text-2xl font-semibold mb-4"><span class="text-white">I am</span> <span class="accent-purple">Nathanael Kenzler</span></h2>
                         <p class="text-lg mb-4">M.S. in Marketing Candidate | Aspiring Business and Marketing Professional</p>
@@ -319,7 +319,7 @@
                                 <a href="Kenzler_CV2025.pdf" download class="icon-btn" title="Resume"><img src="Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="Resume"></a>
                             </div>
                         </div>
-                        <p class="mb-4">See the "Building this Site..." blog post for the story of this interactive portfolio</p>
+                        <p class="mb-4 -mt-2.5 md:mt-0">See the "Building this Site..." blog post for the story of this interactive portfolio</p>
                     </div>
                 </div>
             </div>
@@ -330,15 +330,15 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="project-card p-6 rounded-lg" onclick="showHomeModal('home-capstone-modal')">
                     <h3 class="text-xl font-semibold mb-2">Capstone Project</h3>
-                    <p class="text-gray-300 mb-4">A semester-long business strategy simulation focused on competitive positioning, decision-making, and performance analysis. Led weekly strategy coordination and translated complex data into actionable insights.</p>
+                    <p class="text-white mb-4">A semester-long business strategy simulation focused on competitive positioning, decision-making, and performance analysis. Led weekly strategy coordination and translated complex data into actionable insights.</p>
                 </div>
                 <div class="project-card p-6 rounded-lg" onclick="showHomeModal('home-persona-modal')">
                     <h3 class="text-xl font-semibold mb-2">Professional Persona Analysis</h3>
-                    <p class="text-gray-300 mb-4">A self-perception versus peer-perception study examining leadership communication, working style, and professional presence. Combines survey analysis, reflection, and applied business communication theory.</p>
+                    <p class="text-white mb-4">A self-perception versus peer-perception study examining leadership communication, working style, and professional presence. Combines survey analysis, reflection, and applied business communication theory.</p>
                 </div>
                 <div class="project-card p-6 rounded-lg" onclick="showHomeModal('home-casecomp-modal')">
                     <h3 class="text-xl font-semibold mb-2">Case Competition Presentation</h3>
-                    <p class="text-gray-300 mb-4">A team-based case competition sponsored by Insight, addressing internal communication overload through an immersive VR-based communication strategy. Focused on research, positioning, and executive-level storytelling.</p>
+                    <p class="text-white mb-4">A team-based case competition sponsored by Insight, addressing internal communication overload through an immersive VR-based communication strategy. Focused on research, positioning, and executive-level storytelling.</p>
                 </div>
             </div>
         </section>
@@ -348,13 +348,13 @@
             <div class="space-y-6">
                 <article class="blog-card p-6 rounded-lg" data-published="true">
                     <h3 class="text-xl font-semibold mb-2">Building This Site: Bringing My Creative Side Into Marketing</h3>
-                    <p class="text-gray-300 mb-2">Read my first post on why I built this site and what I hope it becomes.</p>
-                    <span class="text-sm text-gray-500">1/4/2026 • 1 min read</span>
+                    <p class="text-white mb-2">Read my first post on why I built this site and what I hope it becomes.</p>
+                    <span class="text-sm text-gray-500 text-accent-muted">1/4/2026 • 1 min read</span>
                 </article>
                 <article class="blog-card p-6 rounded-lg" data-published="true">
                     <h3 class="text-xl font-semibold mb-2">Mastering New Skills: My First Week of Marketing Research at UArizona</h3>
-                    <p class="text-gray-300 mb-2">A snapshot of the tools, research methods, and analytical skills I'm beginning to develop as I start my master's coursework at the University of Arizona.</p>
-                    <span class="text-sm text-gray-500">1/14/2026 · 3 min read</span>
+                    <p class="text-white mb-2">A snapshot of the tools, research methods, and analytical skills I'm beginning to develop as I start my master's coursework at the University of Arizona.</p>
+                    <span class="text-sm text-gray-500 text-accent-muted">1/14/2026 · 3 min read</span>
                 </article>
             </div>
         </section>
@@ -388,9 +388,8 @@
                 </div>
                 <div class="footer-section">
                     <h4>Misc</h4>
-                    <a href="#">Links</a>
                     <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
-                    <a href="#">RSS Feed</a>
+                    <a href="/rss.xml">RSS Feed</a>
                     <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Scroll to Top</a>
                 </div>
             </div>
@@ -408,8 +407,8 @@
             <div class="blog-scroll-inner">
                 <div class="blog-focus-header">
                     <h2 class="blog-focus-title text-3xl font-bold mb-3 accent-purple text-left"></h2>
-                    <p class="blog-focus-desc text-gray-300 text-lg text-left mb-4"></p>
-                    <p class="blog-focus-read-time text-sm text-gray-500 text-left"></p>
+                    <p class="blog-focus-desc text-white text-lg text-left mb-4"></p>
+                    <p class="blog-focus-read-time text-sm text-gray-500 text-accent-muted text-left"></p>
                 </div>
                 <div class="blog-focus-main">
                     <div class="blog-focus-article">
@@ -436,7 +435,7 @@
                         </a>
                     </div>
                     <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Capstone Project</h2>
-                    <p class="text-gray-300 text-lg text-center">A dynamic business simulation showcasing market strategy, competition, and adaptive decision-making over time.</p>
+                    <p class="text-white text-lg text-center">A dynamic business simulation showcasing market strategy, competition, and adaptive decision-making over time.</p>
                 </div>
 
                 <div class="capstone-focus-main">
@@ -536,7 +535,7 @@
             <div class="blog-scroll-inner">
                 <div class="blog-focus-header">
                     <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Professional Persona Analysis</h2>
-                    <p class="text-gray-300 text-lg text-center">Insight into how I perceive myself as a professional compared to how others experience my working style</p>
+                    <p class="text-white text-lg text-center">Insight into how I perceive myself as a professional compared to how others experience my working style</p>
                 </div>
 
                 <div class="blog-focus-main">
@@ -591,7 +590,7 @@
             <div class="blog-scroll-inner">
                 <div class="blog-focus-header">
                     <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Case Competition Presentation</h2>
-                    <p class="text-gray-300 text-lg text-center">Communication Strategy Presentation</p>
+                    <p class="text-white text-lg text-center">Communication Strategy Presentation</p>
                 </div>
 
                 <div class="blog-focus-main">

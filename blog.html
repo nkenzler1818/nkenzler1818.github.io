@@ -67,7 +67,7 @@
                     const paragraphs = blogData.articleText.split('\n\n');
                     paragraphs.forEach(p => {
                         const pEl = document.createElement('p');
-                        pEl.className = 'text-gray-300 leading-relaxed mb-4';
+                        pEl.className = 'text-white leading-relaxed mb-4';
                         pEl.textContent = p;
                         articleEl.appendChild(pEl);
                     });
@@ -192,7 +192,7 @@
         });
     </script>
 </head>
-<body class="text-white font-sans">
+<body class="text-white font-sans blog-page">
     <header class="sticky top-6 z-10">
         <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
             <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
@@ -230,20 +230,20 @@
             <div class="space-y-8">
                 <article class="blog-card p-6 rounded-lg" data-published="true">
                     <h3 class="text-xl font-semibold mb-2">Building This Site: Bringing My Creative Side Into Marketing</h3>
-                    <p class="text-gray-300 mb-2">Read my first post on why I built this site and what I hope it becomes.</p>
-                    <span class="text-sm text-gray-500">1/4/2026 • 1 min read</span>
+                    <p class="text-white mb-2">Read my first post on why I built this site and what I hope it becomes.</p>
+                    <span class="text-sm text-gray-500 text-accent-muted">1/4/2026 • 1 min read</span>
                 </article>
 
                 <article class="blog-card p-6 rounded-lg" data-published="true">
                     <h3 class="text-xl font-semibold mb-2">Mastering New Skills: My First Week of Marketing Research at UArizona</h3>
-                    <p class="text-gray-300 mb-2">A snapshot of the tools, research methods, and analytical skills I'm beginning to develop as I start my master's coursework at the University of Arizona.</p>
-                    <span class="text-sm text-gray-500">1/14/2026 · 3 min read</span>
+                    <p class="text-white mb-2">A snapshot of the tools, research methods, and analytical skills I'm beginning to develop as I start my master's coursework at the University of Arizona.</p>
+                    <span class="text-sm text-gray-500 text-accent-muted">1/14/2026 · 3 min read</span>
                 </article>
 
                 <article class="blog-card p-6 rounded-lg">
                     <h3 class="text-xl font-semibold mb-2">More Posts Coming Soon</h3>
-                    <p class="text-gray-300 mb-2">I'm working on more articles about marketing, AI, and business strategy. Stay tuned!</p>
-                    <span class="text-sm text-gray-500">Coming Soon</span>
+                    <p class="text-white mb-2">I'm working on more articles about marketing, AI, and business strategy. Stay tuned!</p>
+                    <span class="text-sm text-gray-500 text-accent-muted">Coming Soon</span>
                 </article>
             </div>
         </section>
@@ -296,8 +296,8 @@
             <div class="blog-scroll-inner">
                 <div class="blog-focus-header">
                     <h2 class="blog-focus-title text-3xl font-bold mb-3 accent-purple text-left"></h2>
-                    <p class="blog-focus-desc text-gray-300 text-lg text-left mb-4"></p>
-                    <p class="blog-focus-read-time text-sm text-gray-500 text-left"></p>
+                    <p class="blog-focus-desc text-accent-muted text-lg text-left mb-4"></p>
+                    <p class="blog-focus-read-time text-sm text-gray-500 text-accent-muted text-left"></p>
                 </div>
                 <div class="blog-focus-main">
                     <div class="blog-focus-article">

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="rss-style.xslt"?>
+<rss version="2.0">
+  <channel>
+    <title>Nathanael Kenzler Portfolio Updates</title>
+    <link>https://nathanaelkenzler.org</link>
+    <description>New projects and blog posts from my personal portfolio.</description>
+    <language>en-us</language>
+    <generator>Static Portfolio RSS</generator>
+    <lastBuildDate>Tue, 14 Jan 2026 00:00:00 GMT</lastBuildDate>
+
+    <!-- Blog Posts -->
+
+    <item>
+      <title>Blog: Mastering New Skills – Marketing Research at UArizona</title>
+      <link>https://nathanaelkenzler.org/blog.html</link>
+      <guid>https://nathanaelkenzler.org/rss#2026-01-14-mastering-new-skills</guid>
+      <pubDate>Wed, 14 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Blog</category>
+      <description><![CDATA[
+        A snapshot of the tools, research methods, and analytical skills I’m beginning to develop as I start my master’s coursework at the University of Arizona.
+      ]]></description>
+    </item>
+
+    <item>
+      <title>Blog: Building This Site – Bringing My Creative Side Into Marketing</title>
+      <link>https://nathanaelkenzler.org/blog.html</link>
+      <guid>https://nathanaelkenzler.org/rss#2026-01-04-building-this-site</guid>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Blog</category>
+      <description><![CDATA[
+        My first post explaining why I built this website, how I approached it as a project, and what I want it to become over time.
+      ]]></description>
+    </item>
+
+    <!-- Projects -->
+
+    <item>
+      <title>Project: Capstone – Business Strategy Game</title>
+      <link>https://nathanaelkenzler.org/projects.html</link>
+      <guid>https://nathanaelkenzler.org/rss#capstone-bsg</guid>
+      <pubDate>Mon, 06 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Projects</category>
+      <description><![CDATA[
+        Senior-year capstone project simulating a competitive business environment, focused on strategic decision-making, execution, and performance improvement.
+      ]]></description>
+    </item>
+
+    <item>
+      <title>Project: Professional Persona Analysis</title>
+      <link>https://nathanaelkenzler.org/projects.html</link>
+      <guid>https://nathanaelkenzler.org/rss#professional-persona-analysis</guid>
+      <pubDate>Mon, 06 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Projects</category>
+      <description><![CDATA[
+        Junior-year project analyzing self-perception versus peer perception through survey research, data synthesis, and insight development.
+      ]]></description>
+    </item>
+
+    <item>
+      <title>Project: Case Competition Presentation</title>
+      <link>https://nathanaelkenzler.org/projects.html</link>
+      <guid>https://nathanaelkenzler.org/rss#case-competition-presentation</guid>
+      <pubDate>Mon, 06 Jan 2026 00:00:00 GMT</pubDate>
+      <category>Projects</category>
+      <description><![CDATA[
+        Junior-year case competition project presented through Insight, emphasizing research, strategic thinking, and clear communication of recommendations.
+      ]]></description>
+    </item>
+
+  </channel>
+</rss>
