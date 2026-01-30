@@ -719,6 +719,10 @@ code {
     margin-bottom: 24px;
 }
 
+.blog-scroll-inner .simplebar-track.simplebar-horizontal {
+    display: none;
+}
+
 .blog-scroll-inner .simplebar-scrollbar:before {
     background: #767676;
 }
@@ -1004,6 +1008,10 @@ code {
     left: 0 !important;
     right: auto !important;
     margin-top: 24px;
+
+.capstone-scroll-inner .simplebar-track.simplebar-horizontal {
+    display: none;
+}
     margin-bottom: 24px;
 }
 
@@ -1177,6 +1185,10 @@ code {
     left: 0 !important;
     right: auto !important;
     margin-top: 24px;
+
+.persona-scroll-inner .simplebar-track.simplebar-horizontal {
+    display: none;
+}
     margin-bottom: 24px;
 }
 

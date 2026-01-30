@@ -7,6 +7,8 @@
     <meta name="description" content="Tools and technologies Nathanael Kenzler uses for marketing, analytics, and development.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css">
+    <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -82,6 +84,14 @@
                 modalBackdrop = document.createElement('div');
                 modalBackdrop.className = 'modal-backdrop';
                 document.body.appendChild(modalBackdrop);
+
+                if (window.innerWidth <= 768 && (modal.id === 'certification-modal-google' || modal.id === 'certification-modal-tableau')) {
+                    const scrollInner = modal.querySelector('.blog-scroll-inner');
+                    if (scrollInner && !scrollInner.dataset.simplebarInitialized) {
+                        new SimpleBar(scrollInner, { autoHide: false });
+                        scrollInner.dataset.simplebarInitialized = 'true';
+                    }
+                }
 
                 modal.classList.remove('hidden');
                 modal.classList.add('active');
@@ -168,11 +178,11 @@
                 <div class="relative ml-1 mobile-more-trigger">
                     <button class="more-btn text-white p-1 rounded hover:bg-gray-700" onclick="toggleDropdown()">⋮</button>
                     <div id="more-dropdown" class="more-dropdown hidden absolute right-0 mt-1 bg-gray-800 rounded-md shadow-lg z-20">
-                        <a href="index.html" class="mobile-more-link more-home block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Home</a>
-                        <a href="about.html" class="mobile-more-link more-about block px-3 py-2 text-white hover:bg-gray-700">About</a>
-                        <a href="projects.html" class="mobile-more-link more-projects block px-3 py-2 text-white hover:bg-gray-700">Projects</a>
-                        <a href="blog.html" class="mobile-more-link more-blog block px-3 py-2 text-white hover:bg-gray-700">Blog</a>
-                        <a href="uses.html" class="mobile-more-link more-uses block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
+                        <a href="index.html" class="mobile-more-link more-home px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Home</a>
+                        <a href="about.html" class="mobile-more-link more-about px-3 py-2 text-white hover:bg-gray-700">About</a>
+                        <a href="projects.html" class="mobile-more-link more-projects px-3 py-2 text-white hover:bg-gray-700">Projects</a>
+                        <a href="blog.html" class="mobile-more-link more-blog px-3 py-2 text-white hover:bg-gray-700">Blog</a>
+                        <a href="uses.html" class="mobile-more-link more-uses px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
                     </div>
                 </div>
             </div>
