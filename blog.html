@@ -13,6 +13,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script>
+        function fitPageTitle() {
+            const heading = document.querySelector('.projects-heading');
+            if (!heading) return;
+
+            const container = heading.parentElement;
+            const baseSize = 72;
+            const minSize = 48;
+            const buffer = 24;
+            const available = (container?.clientWidth || heading.parentElement.clientWidth) - buffer;
+
+            heading.classList.add('auto-fit');
+            heading.style.setProperty('--heading-size', `${baseSize}px`);
+
+            if (heading.scrollWidth <= available) {
+                return;
+            }
+
+            const scale = Math.max(minSize / baseSize, available / heading.scrollWidth);
+            const nextSize = Math.max(minSize, Math.min(baseSize, baseSize * scale));
+            heading.style.setProperty('--heading-size', `${nextSize}px`);
+        }
+
         // Blog modal functionality - adapted from capstone modal
         document.addEventListener('DOMContentLoaded', function() {
             const blogCards = document.querySelectorAll('.blog-card');
@@ -68,7 +90,19 @@
                     paragraphs.forEach(p => {
                         const pEl = document.createElement('p');
                         pEl.className = 'text-white leading-relaxed mb-4';
-                        pEl.textContent = p;
+                        const lines = p.split('\n');
+                        if (lines.length > 1) {
+                            const heading = lines.shift().trim();
+                            const rest = lines.join(' ').trim();
+                            const headingEl = document.createElement('strong');
+                            headingEl.className = 'blog-course-heading';
+                            headingEl.textContent = heading;
+                            pEl.appendChild(headingEl);
+                            pEl.appendChild(document.createElement('br'));
+                            pEl.appendChild(document.createTextNode(rest));
+                        } else {
+                            pEl.textContent = p;
+                        }
                         articleEl.appendChild(pEl);
                     });
                 }
@@ -122,7 +156,7 @@
                             if (title.includes("Building This Site")) {
                                 articleText = "Over the past few weeks, I have built this site as a way to share more than what a traditional resume can show. For me, this site is a blend of my technical skills and my creative side, a place where I can demonstrate how I use AI tools and marketing insights to build something meaningful.\n\nI have learned a lot in the process, not just about coding and design but also about how to tell my own story and highlight what I bring to the table. This blog is a small window into who I am: someone who loves turning strategy into impact and using both creativity and data to make it happen.\n\nLooking ahead, I plan to share insights about the industry, updates on my academic and professional journey, and reflections on what I am learning along the way. Whether it is about the challenges of mastering new tools or the excitement of applying marketing concepts in real projects, I hope to offer something of value. I want this site to be a space where I can connect more personally, share what excites me, and give you a genuine glimpse into my journey.\n\nI hope you find a bit of that spirit here and enjoy following along!";
                             } else if (title.includes("Mastering New Skills")) {
-                                articleText = "Mastering New Skills: My First Week of Marketing Research at UArizona\n\nHello,\n\nI'm thrilled to share that I'm settling back into life in Arizona and officially kicking off my master's journey at the University of Arizona. This post is a one-week snapshot capturing my first impressions as I dive into coursework, meet my professors, and begin exploring the tools and techniques that will shape this semester. I'll be updating it briefly over the next few days before leaving it as a reflection of what's ahead.\n\nTo start, one of my first courses is Marketing 572: Marketing Research for Managers, taught by Professor Martin Reimann, PhD. This course focuses on how marketing research informs business decisions, from defining research problems to collecting and analyzing data. Based on the syllabus and as Professor Reimann explained in our first class, the goal is to equip us with the ability to efficiently collect data and interpret it in ways that lead to meaningful conclusions.\n\nThroughout the course, we'll be working with a mix of qualitative and quantitative research techniques while gaining hands-on experience using industry-standard tools like SPSS and Qualtrics. I'll also be working toward a CITI certification in research ethics, which will strengthen my understanding of ethical considerations in marketing research and data collection.\n\nIn short, this first week is about laying a strong foundation. I'm excited to see how these skills develop over the semester and how they'll shape me into a more strategic, data-informed marketer. Thanks for following along.";
+                                articleText = "Mastering New Skills: My First Week of Marketing Research at UArizona\n\nHello,\n\nI'm thrilled to share that I'm settling back into life in Arizona and officially kicking off my master's journey at the University of Arizona. This post is a one-week snapshot capturing my first impressions as I dive into coursework, meet my professors, and begin exploring the tools and techniques that will shape this semester. I'll be updating it briefly over the next few days before leaving it as a reflection of what's ahead.\n\nMarketing 572: Marketing Research for Managers\nThis course, led by Professor Martin Reimann, PhD, focuses on how marketing research informs business decisions; from defining problems to analyzing data. We’ll work with qualitative and quantitative techniques, using tools like SPSS and Qualtrics. I'll also pursue a CITI certification in research ethics, building a solid foundation for ethical data collection.\n\nBNAN 570: Generative AI: Insights and Strategy\nTaught by Professor Bikram Ghosh, PhD, this class excites me because we’ll build a RAG-based LLM system. We’ll start with foundational LLMs and move toward applying AI in business contexts. The big project will test everything from prompt engineering to agentic RAG development.\n\nMKTG 546: Competitive Marketing Strategy\nProfessor Mrinal Ghosh, PhD, is teaching us how to develop holistic competitive strategies by evaluating customers, competitors, and market dynamics. The course focuses on integrating pricing, branding, and channels to achieve long-term success in competitive environments. I’m excited to build these analytical skills, as they will help me create strategies that deliver real customer value.\n\nMKTG 560: International Marketing\Instructed by Professor Tirthankar Roy, PhD, is guiding us through the complexities of international marketing. We are learning how to adapt strategies across different countries, taking into account cultural, economic, and regulatory differences. This week, we began exploring brand positioning and how it shifts across markets, setting the stage for building competitive global strategies.\n\nIn short, this first week has laid out a clear path and a strong foundation. I’m eager to see how these skills grow and shape me into a strategic, data-driven marketer. Thanks for following along.";
                             }
                         } else {
                             articleText = "This blog post is coming soon. Stay tuned for more insights on marketing, AI, and business strategy!";
@@ -190,14 +224,17 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        window.addEventListener('resize', fitPageTitle);
+        window.addEventListener('DOMContentLoaded', fitPageTitle);
     </script>
 </head>
 <body class="text-white font-sans blog-page">
     <header class="sticky top-6 z-10">
         <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
-            <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
+            <a href="index.html" class="text-xl font-bold accent-purple nav-brand">Nathanael Kenzler</a>
             <!-- Desktop nav -->
-            <div class="hidden md:flex items-center space-x-6">
+            <div class="nav-desktop items-center space-x-6">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="about.html" class="nav-link">About</a>
                 <a href="projects.html" class="nav-link">Projects</a>
@@ -205,17 +242,22 @@
                 <a href="uses.html" class="nav-link">Uses</a>
             </div>
             <!-- Mobile nav -->
-            <div class="flex md:hidden items-center ml-4 translate-y-px">
-                <div class="flex items-center space-x-1">
+            <div class="nav-mobile items-center ml-4 translate-y-px">
+                <div class="flex items-center space-x-6 mobile-primary-links">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="about.html" class="nav-link">About</a>
                     <a href="projects.html" class="nav-link">Projects</a>
+                    <a href="blog.html" class="nav-link">Blog</a>
+                    <a href="uses.html" class="nav-link">Uses</a>
                 </div>
-                <div class="relative ml-1">
+                <div class="relative ml-1 mobile-more-trigger">
                     <button class="more-btn text-white p-1 rounded hover:bg-gray-700" onclick="toggleDropdown()">⋮</button>
                     <div id="more-dropdown" class="more-dropdown hidden absolute right-0 mt-1 bg-gray-800 rounded-md shadow-lg z-20">
-                        <a href="blog.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Blog</a>
-                        <a href="uses.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
+                        <a href="index.html" class="mobile-more-link more-home block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Home</a>
+                        <a href="about.html" class="mobile-more-link more-about block px-3 py-2 text-white hover:bg-gray-700">About</a>
+                        <a href="projects.html" class="mobile-more-link more-projects block px-3 py-2 text-white hover:bg-gray-700">Projects</a>
+                        <a href="blog.html" class="mobile-more-link more-blog block px-3 py-2 text-white hover:bg-gray-700">Blog</a>
+                        <a href="uses.html" class="mobile-more-link more-uses block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
                     </div>
                 </div>
             </div>

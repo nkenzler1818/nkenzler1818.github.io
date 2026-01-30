@@ -37,6 +37,50 @@
             dropdown.classList.toggle('hidden');
         }
 
+        function fitPageTitle() {
+            const heading = document.querySelector('.projects-heading');
+            if (!heading) return;
+
+            const container = heading.parentElement;
+            const baseSize = 72;
+            const minSize = 48;
+            const buffer = 24;
+            const available = (container?.clientWidth || heading.parentElement.clientWidth) - buffer;
+
+            heading.classList.add('auto-fit');
+            heading.style.setProperty('--heading-size', `${baseSize}px`);
+
+            if (heading.scrollWidth <= available) {
+                return;
+            }
+
+            const scale = Math.max(minSize / baseSize, available / heading.scrollWidth);
+            const nextSize = Math.max(minSize, Math.min(baseSize, baseSize * scale));
+            heading.style.setProperty('--heading-size', `${nextSize}px`);
+        }
+
+        function toggleFaq(button) {
+            const item = button.closest('.faq-item');
+            const answer = item.querySelector('.faq-answer');
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+            button.setAttribute('aria-expanded', String(!isExpanded));
+            item.classList.toggle('open', !isExpanded);
+
+            if (!isExpanded) {
+                answer.style.maxHeight = `${answer.scrollHeight}px`;
+            } else {
+                answer.style.maxHeight = '0px';
+            }
+        }
+
+        function setupFaq() {
+            const questions = document.querySelectorAll('.faq-question');
+            questions.forEach((question) => {
+                question.addEventListener('click', () => toggleFaq(question));
+            });
+        }
+
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('more-dropdown');
@@ -45,14 +89,18 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        window.addEventListener('resize', fitPageTitle);
+        window.addEventListener('DOMContentLoaded', fitPageTitle);
+        window.addEventListener('DOMContentLoaded', setupFaq);
     </script>
 </head>
 <body class="text-white font-sans about-page">
     <header class="sticky top-6 z-10">
         <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
-            <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
+            <a href="index.html" class="text-xl font-bold accent-purple nav-brand">Nathanael Kenzler</a>
             <!-- Desktop nav -->
-            <div class="hidden md:flex items-center space-x-6">
+            <div class="nav-desktop items-center space-x-6">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="about.html" class="nav-link">About</a>
                 <a href="projects.html" class="nav-link">Projects</a>
@@ -60,17 +108,22 @@
                 <a href="uses.html" class="nav-link">Uses</a>
             </div>
             <!-- Mobile nav -->
-            <div class="flex md:hidden items-center ml-4 translate-y-px">
-                <div class="flex items-center space-x-1">
+            <div class="nav-mobile items-center ml-4 translate-y-px">
+                <div class="flex items-center space-x-6 mobile-primary-links">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="about.html" class="nav-link">About</a>
                     <a href="projects.html" class="nav-link">Projects</a>
+                    <a href="blog.html" class="nav-link">Blog</a>
+                    <a href="uses.html" class="nav-link">Uses</a>
                 </div>
-                <div class="relative ml-1">
+                <div class="relative ml-1 mobile-more-trigger">
                     <button class="more-btn text-white p-1 rounded hover:bg-gray-700" onclick="toggleDropdown()">⋮</button>
                     <div id="more-dropdown" class="more-dropdown hidden absolute right-0 mt-1 bg-gray-800 rounded-md shadow-lg z-20">
-                        <a href="blog.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Blog</a>
-                        <a href="uses.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
+                        <a href="index.html" class="mobile-more-link more-home block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Home</a>
+                        <a href="about.html" class="mobile-more-link more-about block px-3 py-2 text-white hover:bg-gray-700">About</a>
+                        <a href="projects.html" class="mobile-more-link more-projects block px-3 py-2 text-white hover:bg-gray-700">Projects</a>
+                        <a href="blog.html" class="mobile-more-link more-blog block px-3 py-2 text-white hover:bg-gray-700">Blog</a>
+                        <a href="uses.html" class="mobile-more-link more-uses block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
                     </div>
                 </div>
             </div>
@@ -83,18 +136,19 @@
                 <h1 class="projects-heading text-center text-white mb-8 w-full">About Me</h1>
             </div>
             <div class="text-lg leading-relaxed space-y-6 relative">
-                <img src="Project Files/Old main photo.png" alt="Nathanael Kenzler" class="hidden md:block float-right w-48 sm:w-64 lg:w-72 h-auto object-cover rounded-lg ml-6 mb-4" style="margin-top: 0px;">
-                <h2 class="text-3xl font-bold">My Background in Marketing Thus Far</h2>
-                <img src="Project Files/Old main photo.png" alt="Nathanael Kenzler" class="block md:hidden w-48 sm:w-64 h-auto object-cover rounded-lg mx-auto mb-6" style="margin-top: 0px;">
-                <p>I am a first-generation college student pursuing a Master of Science in Marketing after completing my undergraduate degree in Business Administration, both at the University of Arizona. I am drawn to roles where strategy, communication, and execution come together, especially in fast-paced, high-performing environments.</p>
+                <div class="about-text-wrap">
+                    <h2 class="text-3xl font-bold mb-8">My Background in Marketing Thus Far</h2>
+                    <img src="Project Files/Old main photo.png" alt="Nathanael Kenzler" class="about-profile-image h-auto object-cover rounded-lg" style="margin-top: 0px;">
+                    <p>I am a first-generation college student pursuing a Master of Science in Marketing after completing my undergraduate degree in Business Administration, both at the University of Arizona. I am drawn to roles where strategy, communication, and execution come together, especially in fast-paced, high-performing environments.</p>
 
-                <p>Across operations, marketing support, and client-facing roles, I have developed a practical understanding of how businesses operate day to day. I have managed multiple client relationships at once, supported team operations under pressure, and contributed to early brand and go-to-market efforts.</p>
+                    <p>Across operations, marketing support, and client-facing roles, I have developed a practical understanding of how businesses operate day to day. I have managed multiple client relationships at once, supported team operations under pressure, and contributed to early brand and go-to-market efforts.</p>
 
-                <p>My core strength is critical thinking. I am able to evaluate complex or technical information, identify what truly matters, and form clear, unbiased conclusions. From there, I translate those insights into straightforward, digestible narratives that help teams align. This has allowed me to build trust with clients, support better operational decisions, and contribute more effectively in environments where clarity drives outcomes.</p>
+                    <p>My core strength is critical thinking. I am able to evaluate complex or technical information, identify what truly matters, and form clear, unbiased conclusions. From there, I translate those insights into straightforward, digestible narratives that help teams align. This has allowed me to build trust with clients, support better operational decisions, and contribute more effectively in environments where clarity drives outcomes.</p>
 
-                <p>Alongside my graduate studies, I am intentionally building a strong analytics and AI foundation through Tableau and SQL certifications while exploring how AI tools and automation can improve marketing workflows and decision-making.</p>
+                    <p>Alongside my graduate studies, I am intentionally building a strong analytics and AI foundation through Tableau and SQL certifications while exploring how AI tools and automation can improve marketing workflows and decision-making.</p>
 
-                <p>What truly draws me to marketing is the blend of human connection and technical expertise it requires. I love taking complex ideas and turning them into clear, actionable insights that people can really use. Thanks to my background, I am able to do this not just with a creative touch, but also with the technical skill and calm under pressure that high-level marketing demands. It is that combination of clarity, impact, and technical finesse that makes me excited to build my career in this field. </p>
+                    <p>What truly draws me to marketing is the blend of human connection and technical expertise it requires. I love taking complex ideas and turning them into clear, actionable insights that people can really use. Thanks to my background, I am able to do this not just with a creative touch, but also with the technical skill and calm under pressure that high-level marketing demands. It is that combination of clarity, impact, and technical finesse that makes me excited to build my career in this field. </p>
+                </div>
             </div>
         </section>
 
@@ -137,6 +191,45 @@
                 <div>
                     <h3 class="text-xl font-semibold">High School Diploma</h3>
                     <p class="text-white">Bellarmine College Preparatory (May 2021)</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section mb-16">
+            <h2 class="text-3xl font-bold mb-8">FAQs</h2>
+            <div class="faq-list space-y-4">
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-1">
+                        <span class="faq-question-text">How did my personal journey lead me to tech marketing?</span>
+                        <span class="faq-icon" aria-hidden="true">▸</span>
+                    </button>
+                    <div class="faq-answer" id="faq-answer-1">
+                        <div class="faq-answer-content">
+                            <p>I have always been drawn to tech as a tool for creativity and optimization. Growing up with an engineer father, I was always encouraged to explore how things work. Whether it was tinkering with PCs, geospoofing a game for fun, or hardwiring cameras, tech became my playground. Now, I’m excited to channel that same curiosity into a professional tech marketing path, where I can combine strategy, creativity, and a lifelong affinity for making things work better.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-2">
+                        <span class="faq-question-text">How do analytics and AI fit into my marketing approach?</span>
+                        <span class="faq-icon" aria-hidden="true">▸</span>
+                    </button>
+                    <div class="faq-answer" id="faq-answer-2">
+                        <div class="faq-answer-content">
+                            <p>Analytics give me a strong foundation, turning data into clear, strategic decisions. In my time I spent as a candidate for my business administration degree, I learned a widee variety of tools and techniques on how to derive and present conclusions professionally and effectively. Moreover, a reason I’m especially excited about my Master’s program is taking courses such as Marketing Research, where I get hands-on experience with qualitative and quantitative methods to gather and interpret data. On the AI side, I love experimenting. For example, I explore which tools fit best into my workflow; Perplexity for research, Gemini for visual representations, and even building this site by integrating Cline as a wrapper in my IDE while coding with OpenAI’s Codex 5.2. Each step refines how I achieve results and as I alluded to in the question above, I enjoy finding and swapping pieces to bolster my ability to execute an idea to the highest degree!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" type="button" aria-expanded="false" aria-controls="faq-answer-3">
+                        <span class="faq-question-text">What kind of teams do I work best with?</span>
+                        <span class="faq-icon" aria-hidden="true">▸</span>
+                    </button>
+                    <div class="faq-answer" id="faq-answer-3">
+                        <div class="faq-answer-content">
+                            <p>I pride myself on knowing when to step up and when to step back. I work best with teams that trust each other’s strengths. Sometimes I lead, whether as a project lead or owning a specific task, and other times I focus on supporting the team behind the scenes. The key is recognizing what the team needs, adapting, and maximizing everyone’s strengths so we create the best outcomes together.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

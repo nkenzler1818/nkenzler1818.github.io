@@ -37,6 +37,28 @@
             dropdown.classList.toggle('hidden');
         }
 
+        function fitPageTitle() {
+            const heading = document.querySelector('.projects-heading');
+            if (!heading) return;
+
+            const container = heading.parentElement;
+            const baseSize = 72;
+            const minSize = 48;
+            const buffer = 24;
+            const available = (container?.clientWidth || heading.parentElement.clientWidth) - buffer;
+
+            heading.classList.add('auto-fit');
+            heading.style.setProperty('--heading-size', `${baseSize}px`);
+
+            if (heading.scrollWidth <= available) {
+                return;
+            }
+
+            const scale = Math.max(minSize / baseSize, available / heading.scrollWidth);
+            const nextSize = Math.max(minSize, Math.min(baseSize, baseSize * scale));
+            heading.style.setProperty('--heading-size', `${nextSize}px`);
+        }
+
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('more-dropdown');
@@ -45,14 +67,89 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const certificationCards = document.querySelectorAll('.certification-card');
+            let activeModal = null;
+            let modalBackdrop = null;
+
+            if (!certificationCards.length) return;
+
+            function openModal(modal) {
+                if (activeModal) return;
+                activeModal = modal;
+
+                modalBackdrop = document.createElement('div');
+                modalBackdrop.className = 'modal-backdrop';
+                document.body.appendChild(modalBackdrop);
+
+                modal.classList.remove('hidden');
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                if (!activeModal) return;
+
+                if (modalBackdrop) {
+                    modalBackdrop.remove();
+                    modalBackdrop = null;
+                }
+
+                activeModal.classList.remove('active');
+                activeModal.classList.add('hidden');
+                activeModal = null;
+                document.body.style.overflow = '';
+            }
+
+            certificationCards.forEach(function(card) {
+                const modalId = card.getAttribute('aria-controls');
+                const modal = modalId ? document.getElementById(modalId) : null;
+                const closeBtn = modal?.querySelector('.blog-close-btn');
+
+                if (!modal || !closeBtn) return;
+
+                card.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    openModal(modal);
+                });
+
+                card.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openModal(modal);
+                    }
+                });
+
+                closeBtn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    closeModal();
+                });
+
+                modal.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                });
+            });
+
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal-backdrop') && activeModal) {
+                    closeModal();
+                }
+            });
+        });
+
+        window.addEventListener('resize', fitPageTitle);
+        window.addEventListener('DOMContentLoaded', fitPageTitle);
     </script>
 </head>
 <body class="text-white font-sans uses-page">
     <header class="sticky top-6 z-10">
         <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
-            <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
+            <a href="index.html" class="text-xl font-bold accent-purple nav-brand">Nathanael Kenzler</a>
             <!-- Desktop nav -->
-            <div class="hidden md:flex items-center space-x-6">
+            <div class="nav-desktop items-center space-x-6">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="about.html" class="nav-link">About</a>
                 <a href="projects.html" class="nav-link">Projects</a>
@@ -60,17 +157,22 @@
                 <a href="uses.html" class="nav-link">Uses</a>
             </div>
             <!-- Mobile nav -->
-            <div class="flex md:hidden items-center ml-4 translate-y-px">
-                <div class="flex items-center space-x-1">
+            <div class="nav-mobile items-center ml-4 translate-y-px">
+                <div class="flex items-center space-x-6 mobile-primary-links">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="about.html" class="nav-link">About</a>
                     <a href="projects.html" class="nav-link">Projects</a>
+                    <a href="blog.html" class="nav-link">Blog</a>
+                    <a href="uses.html" class="nav-link">Uses</a>
                 </div>
-                <div class="relative ml-1">
+                <div class="relative ml-1 mobile-more-trigger">
                     <button class="more-btn text-white p-1 rounded hover:bg-gray-700" onclick="toggleDropdown()">⋮</button>
                     <div id="more-dropdown" class="more-dropdown hidden absolute right-0 mt-1 bg-gray-800 rounded-md shadow-lg z-20">
-                        <a href="blog.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Blog</a>
-                        <a href="uses.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
+                        <a href="index.html" class="mobile-more-link more-home block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Home</a>
+                        <a href="about.html" class="mobile-more-link more-about block px-3 py-2 text-white hover:bg-gray-700">About</a>
+                        <a href="projects.html" class="mobile-more-link more-projects block px-3 py-2 text-white hover:bg-gray-700">Projects</a>
+                        <a href="blog.html" class="mobile-more-link more-blog block px-3 py-2 text-white hover:bg-gray-700">Blog</a>
+                        <a href="uses.html" class="mobile-more-link more-uses block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
                     </div>
                 </div>
             </div>
@@ -93,26 +195,12 @@
                             <p class="text-white">Data visualization and business intelligence tool.</p>
                         </div>
                         <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">Excel</h3>
-                            <p class="text-white">Spreadsheet analysis and data manipulation.</p>
+                            <h3 class="text-xl font-medium mb-2">Microsoft Suite</h3>
+                            <p class="text-white">Productivity, analysis, and presentation tools.</p>
                         </div>
                         <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">Adobe Creative Suite</h3>
                             <p class="text-white">Design and content creation tools.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h2 class="text-2xl font-semibold mb-6">AI Tools</h2>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">ChatGPT</h3>
-                            <p class="text-white">AI assistant for research, ideation, and workflow enhancement.</p>
-                        </div>
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">AI Assistants</h3>
-                            <p class="text-white">Various AI tools for productivity and creative tasks.</p>
                         </div>
                     </div>
                 </div>
@@ -131,6 +219,24 @@
                         <div class="project-pane p-6 rounded-lg">
                             <h3 class="text-xl font-medium mb-2">AI-Enabled Workflows</h3>
                             <p class="text-white">Exploring how AI can improve marketing and operational processes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-semibold mb-6">Certifications</h2>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="project-pane p-6 rounded-lg certification-card" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="certification-modal">
+                            <h3 class="text-xl font-medium mb-2"><span class="font-bold">CITI Certification</span></h3>
+                            <p class="text-white">Coming Soon.</p>
+                        </div>
+                        <div class="project-pane p-6 rounded-lg certification-card" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="certification-modal-google">
+                            <h3 class="text-xl font-medium mb-2"><span class="font-bold">Google Data Analytics Professional Certificate (SQL)</span></h3>
+                            <p class="text-white">Coming Soon</p>
+                        </div>
+                        <div class="project-pane p-6 rounded-lg certification-card" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="certification-modal-tableau">
+                            <h3 class="text-xl font-medium mb-2"><span class="font-bold">Tableau Desktop Certified Associate</span></h3>
+                            <p class="text-white">Coming Soon</p>
                         </div>
                     </div>
                 </div>
@@ -172,5 +278,82 @@
             </div>
         </div>
     </footer>
+
+    <div class="blog-focus-overlay blog-modal hidden" id="certification-modal" role="dialog" aria-modal="true" aria-labelledby="certification-modal-title">
+        <div class="blog-focus-content">
+            <button class="blog-close-btn" aria-label="Close certification details">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="blog-scroll-inner">
+                <div class="blog-focus-header">
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-left" id="certification-modal-title">CITI Certification</h2>
+                    <p class="text-accent-muted text-lg text-left mb-4">Coming Soon.</p>
+                </div>
+                <div class="blog-focus-main">
+                    <div class="blog-focus-article">
+                        <p class="text-white leading-relaxed">
+                            CITI certification focuses on research ethics and compliance. I’ll be completing it soon as part of my coursework.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="blog-focus-overlay blog-modal hidden" id="certification-modal-google" role="dialog" aria-modal="true" aria-labelledby="certification-modal-google-title">
+        <div class="blog-focus-content">
+            <button class="blog-close-btn" aria-label="Close certification details">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="blog-scroll-inner">
+                <div class="blog-focus-header">
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-left" id="certification-modal-google-title">Google Data Analytics Professional Certificate (SQL)</h2>
+                    <p class="text-accent-muted text-lg text-left mb-4">Coming Soon</p>
+                </div>
+                <div class="blog-focus-main">
+                    <div class="blog-focus-article">
+                        <p class="text-white leading-relaxed">
+                            As part of my master’s studies, I am pursuing the Google Data Analytics Professional Certificate to strengthen my SQL and data analysis skills in a business and marketing context. This program focuses on using SQL to query, clean, and aggregate data, helping me move beyond surface-level insights and work directly with structured datasets.
+                        </p>
+                        <p class="text-white leading-relaxed mt-4">
+                            Developing these skills allows me to ground marketing decisions in evidence, understand performance at a deeper level, and work more confidently with data pipelines commonly used across analytics and marketing teams. It also supports my goal of building a technical foundation that complements strategy, research, and storytelling.
+                        </p>
+                        <a class="accent-purple underline mt-4 inline-block" href="https://www.coursera.org/google-certificates/data-analytics-certificate" target="_blank" rel="noopener">https://www.coursera.org/google-certificates/data-analytics-certificate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="blog-focus-overlay blog-modal hidden" id="certification-modal-tableau" role="dialog" aria-modal="true" aria-labelledby="certification-modal-tableau-title">
+        <div class="blog-focus-content">
+            <button class="blog-close-btn" aria-label="Close certification details">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="blog-scroll-inner">
+                <div class="blog-focus-header">
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-left" id="certification-modal-tableau-title">Tableau Desktop Certified Associate</h2>
+                    <p class="text-accent-muted text-lg text-left mb-4">Coming Soon</p>
+                </div>
+                <div class="blog-focus-main">
+                    <div class="blog-focus-article">
+                        <p class="text-white leading-relaxed">
+                            I am working toward the Tableau Desktop Certified Associate certification to deepen my ability to visualize and communicate data clearly. While AI tools can assist with charts and summaries, I want the hands-on ability to build dashboards myself, customize visual narratives, and explore data at a granular level.
+                        </p>
+                        <p class="text-white leading-relaxed mt-4">
+                            Tableau gives me the flexibility to create business-ready visualizations that support decision-making, experimentation, and storytelling. This certification aligns with my focus on analytics-driven marketing and allows me to translate complex datasets into insights that stakeholders can quickly understand and act on.
+                        </p>
+                        <a class="accent-purple underline mt-4 inline-block" href="https://www.tableau.com/learn/certification/desktop-certified-associate" target="_blank" rel="noopener">https://www.tableau.com/learn/certification/desktop-certified-associate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

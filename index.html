@@ -272,9 +272,9 @@
 <body class="text-white font-sans home-page">
     <header class="sticky top-6 z-10">
         <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
-            <a href="index.html" class="text-xl font-bold accent-purple">Nathanael Kenzler</a>
+            <a href="index.html" class="text-xl font-bold accent-purple nav-brand">Nathanael Kenzler</a>
             <!-- Desktop nav -->
-            <div class="hidden md:flex items-center space-x-6">
+            <div class="nav-desktop items-center space-x-6">
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="about.html" class="nav-link">About</a>
                 <a href="projects.html" class="nav-link">Projects</a>
@@ -282,17 +282,22 @@
                 <a href="uses.html" class="nav-link">Uses</a>
             </div>
             <!-- Mobile nav -->
-            <div class="flex md:hidden items-center ml-4 translate-y-px">
-                <div class="flex items-center space-x-1">
+            <div class="nav-mobile items-center ml-4 translate-y-px">
+                <div class="flex items-center space-x-6 mobile-primary-links">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="about.html" class="nav-link">About</a>
                     <a href="projects.html" class="nav-link">Projects</a>
+                    <a href="blog.html" class="nav-link">Blog</a>
+                    <a href="uses.html" class="nav-link">Uses</a>
                 </div>
-                <div class="relative ml-1">
+                <div class="relative ml-1 mobile-more-trigger">
                     <button class="more-btn text-white p-1 rounded hover:bg-gray-700" onclick="toggleDropdown()">⋮</button>
                     <div id="more-dropdown" class="more-dropdown hidden absolute right-0 mt-1 bg-gray-800 rounded-md shadow-lg z-20">
-                        <a href="blog.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Blog</a>
-                        <a href="uses.html" class="block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
+                        <a href="index.html" class="mobile-more-link more-home block px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Home</a>
+                        <a href="about.html" class="mobile-more-link more-about block px-3 py-2 text-white hover:bg-gray-700">About</a>
+                        <a href="projects.html" class="mobile-more-link more-projects block px-3 py-2 text-white hover:bg-gray-700">Projects</a>
+                        <a href="blog.html" class="mobile-more-link more-blog block px-3 py-2 text-white hover:bg-gray-700">Blog</a>
+                        <a href="uses.html" class="mobile-more-link more-uses block px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
                     </div>
                 </div>
             </div>
@@ -310,7 +315,7 @@
                         <h1 class="text-4xl font-bold text-white mb-4">👋 Hello, world!</h1>
                         <h2 class="text-2xl font-semibold mb-4"><span class="text-white">I am</span> <span class="accent-purple">Nathanael Kenzler</span></h2>
                         <p class="text-lg mb-4">M.S. in Marketing Candidate | Aspiring Business and Marketing Professional</p>
-                        <p class="mb-6">I'm a first-generation graduate student pursuing a Master of Science in Marketing at the University of Arizona. My background spans marketing support, operations, and client-facing roles, with a focus on clarity, execution, and data-driven storytelling.</p>
+                        <p class="mb-6">I am a first-generation graduate student pursuing a Master of Science in Marketing at the University of Arizona. My background spans marketing support, operations, and client-facing roles, with a focus on clarity, execution, and data-driven storytelling.</p>
                         <div class="flex flex-wrap gap-2 mb-6">
                             <a href="about.html" class="btn-dark-purple">More about me</a>
                             <div class="flex gap-4">
@@ -319,7 +324,7 @@
                                 <a href="Kenzler_CV2025.pdf" download class="icon-btn" title="Resume"><img src="Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="Resume"></a>
                             </div>
                         </div>
-                        <p class="mb-4 -mt-2.5 md:mt-0">See the "Building this Site..." blog post for the story of this interactive portfolio</p>
+                        <p class="mb-4 -mt-2.5 md:mt-0">See the "Building this Site..." blog post for the story of this interactive portfolio. Also, while the site is viewable on mobile devices, the site is optimized for a desktop view!</p>
                     </div>
                 </div>
             </div>
