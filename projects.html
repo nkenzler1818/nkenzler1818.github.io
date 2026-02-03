@@ -544,17 +544,20 @@
                 <h2 class="text-2xl font-bold mb-2 accent-purple">Graduate Work</h2>
                 <p class="text-gray-400 mb-6">Upcoming projects for this semester I am specifically looking forward to while attaining my Master's in Marketing.</p>
                 <div class="grid md:grid-cols-3 gap-6">
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Placeholder 1</h3>
-                        <p class="text-white">Coming Soon</p>
+                    <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="agentic-rag-modal">
+                        <h3 class="text-xl font-semibold mb-2">Agentic RAG Business Workflow</h3>
+                        <p class="text-white">First-semester master’s AI systems project</p>
+                        <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
                     </div>
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Placeholder 2</h3>
-                        <p class="text-white">Coming Soon</p>
+                    <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="vinho-rio-modal">
+                        <h3 class="text-xl font-semibold mb-2">Harvard Simulation: Vinho Rio</h3>
+                        <p class="text-white">International marketing simulation project</p>
+                        <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
                     </div>
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Placeholder 3</h3>
-                        <p class="text-white">Coming Soon</p>
+                    <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="marketing-research-methods-modal">
+                        <h3 class="text-xl font-semibold mb-2">Marketing Research Methods</h3>
+                        <p class="text-white">Quantitative &amp; qualitative research methods</p>
+                        <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
                     </div>
                 </div>
                 </div>
@@ -568,15 +571,18 @@
                 <div class="undergrad-work-grid">
                     <div class="project-pane p-6 rounded-lg capstone-card" data-project="capstone">
                         <h3 class="text-xl font-semibold mb-2">Capstone Project</h3>
-                        <p class="text-white">Senior Year: BSBA Graduation Project</p>
+                        <p class="text-white">BSBA Graduation Project</p>
+                        <p class="text-accent-muted text-sm mt-3">Senior Year</p>
                     </div>
                     <div class="project-pane p-6 rounded-lg persona-card" data-project="persona">
                         <h3 class="text-xl font-semibold mb-2">Professional Persona Analysis</h3>
-                        <p class="text-white">Junior Year: Self vs peer perception survey</p>
+                        <p class="text-white">Self vs Peer Perception Survey</p>
+                        <p class="text-accent-muted text-sm mt-3">Junior Year</p>
                     </div>
                     <div class="project-pane p-6 rounded-lg case-comp-card" data-project="case-comp">
                         <h3 class="text-xl font-semibold mb-2">Case Competition Presentation</h3>
-                        <p class="text-white">Junior Year: Presented by Insight</p>
+                        <p class="text-white">Presented by Insight</p>
+                        <p class="text-accent-muted text-sm mt-3">Junior Year</p>
                     </div>
                 </div>
             </div>
@@ -587,11 +593,13 @@
                 <div class="grid md:grid-cols-2 gap-6">
                     <div class="project-pane p-6 rounded-lg">
                         <h3 class="text-xl font-semibold mb-2">Photography</h3>
-                        <p class="text-white">Coming Soon</p>
+                        <p class="text-white">Personal Portfolio Series</p>
+                        <p class="text-accent-muted text-sm mt-3">Coming Soon</p>
                     </div>
                     <div class="project-pane p-6 rounded-lg">
                         <h3 class="text-xl font-semibold mb-2">Writing</h3>
-                        <p class="text-white">Coming Soon</p>
+                        <p class="text-white">Essays &amp; Long-Form Work</p>
+                        <p class="text-accent-muted text-sm mt-3">Coming Soon</p>
                     </div>
                 </div>
             </div>
@@ -602,15 +610,18 @@
                 <div class="grid md:grid-cols-3 gap-6">
                     <div class="project-pane p-6 rounded-lg">
                         <h3 class="text-xl font-semibold mb-2">Building My Website</h3>
-                        <p class="text-white">Coming Soon</p>
+                        <p class="text-white">Design &amp; Development Iterations</p>
+                        <p class="text-accent-muted text-sm mt-3">In Progress</p>
                     </div>
                     <div class="project-pane p-6 rounded-lg">
                         <h3 class="text-xl font-semibold mb-2">SQL Practice</h3>
-                        <p class="text-white">Coming Soon</p>
+                        <p class="text-white">Query Building &amp; Data Modeling</p>
+                        <p class="text-accent-muted text-sm mt-3">In Progress</p>
                     </div>
                     <div class="project-pane p-6 rounded-lg">
                         <h3 class="text-xl font-semibold mb-2">Tableau Project</h3>
-                        <p class="text-white">Coming Soon</p>
+                        <p class="text-white">Dashboard Design &amp; Storytelling</p>
+                        <p class="text-accent-muted text-sm mt-3">In Progress</p>
                     </div>
                 </div>
             </div>
@@ -651,6 +662,73 @@
             </div>
         </div>
     </footer>
+
+    <!-- Graduate Work Modals -->
+    <div id="agentic-rag-modal" class="graduate-focus-overlay graduate-modal hidden">
+        <div class="graduate-focus-content">
+            <button class="graduate-close-btn" aria-label="Close modal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="graduate-scroll-inner">
+                <div class="graduate-focus-header">
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Agentic RAG anchored LLM Workflow</h2>
+                </div>
+                <div class="graduate-focus-article">
+                    <p class="text-gray-300 mb-6 leading-relaxed">This semester-long project focuses on designing and applying an Agentic Retrieval-Augmented Generation (RAG) system to a real-world business workflow. The emphasis is on structuring generative AI systems that support research, decision-making, and operational processes rather than standalone experimentation.</p>
+                    <h3 class="text-xl font-semibold mb-4 text-white">Timing</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Spring 2026 (semester-long)</p>
+                    <h3 class="text-xl font-semibold mb-4 text-white">Course Context</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">This project represents 30% of my final grade in Generative AI: Insights &amp; Strategy and serves as the primary applied project for the course.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="vinho-rio-modal" class="graduate-focus-overlay graduate-modal hidden">
+        <div class="graduate-focus-content">
+            <button class="graduate-close-btn" aria-label="Close modal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="graduate-scroll-inner">
+                <div class="graduate-focus-header">
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Harvard Simulation: Vinho Rio LiveCase</h2>
+                </div>
+                <div class="graduate-focus-article">
+                    <p class="text-gray-300 mb-6 leading-relaxed">This team-based simulation uses Harvard Business School’s Vinho Rio LiveCase to explore international marketing strategy, competitive dynamics, and global market entry decisions. The project focuses on adapting marketing strategy across regions while managing trade-offs in pricing, positioning, and growth.</p>
+                    <h3 class="text-xl font-semibold mb-4 text-white">Timing</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Spring 2026</p>
+                    <h3 class="text-xl font-semibold mb-4 text-white">Course Context</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">This simulation is a core graded component of International Marketing and contributes to both the team project and participation portions of the course grade.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="marketing-research-methods-modal" class="graduate-focus-overlay graduate-modal hidden">
+        <div class="graduate-focus-content">
+            <button class="graduate-close-btn" aria-label="Close modal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="graduate-scroll-inner">
+                <div class="graduate-focus-header">
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Marketing Research Methods</h2>
+                </div>
+                <div class="graduate-focus-article">
+                    <p class="text-gray-300 mb-6 leading-relaxed">This project series covers the full marketing research process, including exploratory and conclusive research methods. Work includes empathy-based research, interviews, focus groups, observations, netnography, survey design, experimental research, and statistical analysis using original data.</p>
+                    <h3 class="text-xl font-semibold mb-4 text-white">Timing</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Spring 2026 (multiple projects across the semester)</p>
+                    <h3 class="text-xl font-semibold mb-4 text-white">Course Context</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">These projects collectively represent a significant portion of the grade in Marketing Research for Managers and emphasize end-to-end research design, execution, and insight development.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Capstone Project Modal (outside grid, position fixed) -->
     <div class="capstone-focus-overlay capstone-modal hidden">

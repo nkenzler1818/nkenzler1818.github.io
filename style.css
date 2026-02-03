@@ -28,6 +28,11 @@ body {
     background-color: #2A2A2A;
 }
 
+/* Blog page: offset content to match scrollbar spacing on other pages */
+.blog-page {
+    padding-right: 12px;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     font-weight: 700;
@@ -73,6 +78,10 @@ code {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     transition: background-color 0.2s;
+}
+
+.floating-nav .nav-link {
+    transform: translateY(1px);
 }
 
 .nav-link:hover, .nav-link.active {
@@ -192,6 +201,33 @@ code {
 
 .hero-image {
     margin-top: -60px;
+}
+
+.wave-emoji {
+    display: inline-block;
+    transform-origin: 70% 70%;
+    animation: wave-emoji 1.6s ease-in-out infinite;
+}
+
+@keyframes wave-emoji {
+    0% {
+        transform: rotate(0deg);
+    }
+    20% {
+        transform: rotate(-25deg);
+    }
+    40% {
+        transform: rotate(25deg);
+    }
+    60% {
+        transform: rotate(-20deg);
+    }
+    80% {
+        transform: rotate(20deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
 }
 
 .blog-card {
@@ -436,6 +472,145 @@ code {
 /* Projects page section headers - neutral color */
 #projects-page h2 {
     color: #ffffff;
+}
+
+/* Graduate modal container */
+.graduate-modal {
+    position: fixed;
+    z-index: 999;
+    pointer-events: auto;
+}
+
+/* Graduate focused overlay canvas */
+.graduate-focus-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.graduate-focus-overlay.active {
+    opacity: 1;
+}
+
+.graduate-focus-content {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    max-height: 80vh;
+    margin: auto;
+    background: #141414;
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    padding-left: 0;
+    padding-right: 24px;
+}
+
+.graduate-scroll-inner {
+    flex: 1;
+    min-height: 0;
+    padding: 0 2.5rem 2.5rem 4rem;
+    margin-top: 0;
+    direction: ltr;
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0px,
+        black 24px,
+        black 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0px,
+        black 24px,
+        black 100%
+    );
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.graduate-scroll-inner .simplebar-track.simplebar-vertical {
+    background: transparent;
+    left: 0 !important;
+    right: auto !important;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.graduate-scroll-inner .simplebar-scrollbar:before {
+    background: #767676;
+}
+
+.graduate-scroll-inner {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.graduate-scroll-inner::-webkit-scrollbar {
+    display: none;
+}
+
+.graduate-focus-header {
+    position: relative;
+    margin-bottom: 20px;
+    margin-top: 0;
+    border-bottom: 1px solid rgba(192, 132, 252, 0.2);
+    padding-bottom: 20px;
+    padding-top: 70px;
+    direction: ltr;
+}
+
+.graduate-focus-article {
+    color: #e5e5e5;
+}
+
+.graduate-close-btn {
+    position: absolute;
+    top: 12.5px;
+    right: 12.5px;
+    background: none;
+    border: none;
+    color: rgba(229, 229, 229, 0.6);
+    font-size: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, opacity 0.15s ease;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    border-radius: 0 24px 0 0;
+}
+
+.graduate-close-btn:hover {
+    color: #c084fc;
+    text-shadow: none;
+}
+
+.graduate-close-btn:focus {
+    outline: 2px solid rgba(192, 132, 252, 0.5);
+    outline-offset: 2px;
+}
+
+.graduate-close-btn:active {
+    transform: none;
+}
+
+.graduate-card.graduate-open {
+    background-color: #2A2A2A;
 }
 
 /* Modal backdrop */
@@ -690,6 +865,9 @@ code {
 .blog-scroll-inner {
     flex: 1;
     min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     padding: 0 2.5rem 2.5rem 4rem;
     margin-top: 0;
     direction: ltr;
