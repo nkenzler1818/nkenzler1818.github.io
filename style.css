@@ -199,6 +199,12 @@ code {
     cursor: pointer;
 }
 
+.project-pane:focus-visible,
+.project-card:focus-visible {
+    outline: 2px solid rgba(192, 132, 252, 0.6);
+    outline-offset: 2px;
+}
+
 .hero-image {
     margin-top: -60px;
 }
@@ -1038,7 +1044,7 @@ code {
     position: relative;
     background-color: #1F1F1F;
     border-radius: 0.5rem;
-    padding: 4rem 1rem 2rem 1rem;
+    padding: 4.5rem 1rem 2rem 1rem;
     max-width: 90vw;
     max-height: 90vh;
     display: flex;
@@ -1058,15 +1064,15 @@ code {
 
 .image-lightbox-content img {
     max-width: 100%;
-    max-height: 100%;
+    max-height: calc(90vh - 7.5rem);
     object-fit: contain;
     border-radius: 0.25rem;
 }
 
 .image-lightbox-close-btn {
     position: absolute;
-    top: 13px;
-    right: 18px;
+    top: 12.5px;
+    right: 12.5px;
     background: none;
     border: none;
     color: rgba(229, 229, 229, 0.6);
@@ -1434,6 +1440,426 @@ code {
 /* Case Competition tile background when modal is open */
 .case-comp-card.case-comp-open {
     background-color: #2A2A2A;
+}
+
+/* Case study modal container */
+.case-study-modal {
+    position: fixed;
+    z-index: 999;
+    pointer-events: auto;
+}
+
+.case-study-focus-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.case-study-focus-overlay.active {
+    opacity: 1;
+}
+
+.case-study-focus-content {
+    position: relative;
+    width: 100%;
+    max-width: 2000px;
+    height: 95vh;
+    max-height: 95vh;
+    margin: auto;
+    background: #141414;
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    padding-left: 0;
+    padding-right: 24px;
+}
+
+.case-study-scroll-inner {
+    flex: 1;
+    min-height: 0;
+    padding: 0 2.5rem 2.5rem 4rem;
+    margin-top: 0;
+    direction: ltr;
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0px,
+        black 24px,
+        black 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0px,
+        black 24px,
+        black 100%
+    );
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.case-study-scroll-inner .simplebar-track.simplebar-vertical {
+    background: transparent;
+    left: 0 !important;
+    right: auto !important;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.case-study-scroll-inner .simplebar-scrollbar:before {
+    background: #767676;
+}
+
+.case-study-scroll-inner {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.case-study-scroll-inner::-webkit-scrollbar {
+    display: none;
+}
+
+.case-study-focus-header {
+    position: relative;
+    margin-bottom: 20px;
+    margin-top: 0;
+    border-bottom: 1px solid rgba(192, 132, 252, 0.2);
+    padding-bottom: 20px;
+    padding-top: 70px;
+    direction: ltr;
+    text-align: center;
+}
+
+.case-study-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    background: rgba(192, 132, 252, 0.15);
+    color: #c084fc;
+    margin-bottom: 1rem;
+}
+
+.case-study-focus-article {
+    color: #e5e5e5;
+}
+
+.case-study-section {
+    margin-bottom: 2rem;
+}
+
+.case-study-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+}
+
+.case-study-artifacts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.case-study-artifact {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1rem;
+}
+
+.case-study-artifact-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.case-study-artifact-image:hover {
+    transform: scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.case-study-artifact-file {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    background: rgba(124, 70, 175, 0.12);
+    border-radius: 12px;
+    border: 1px solid rgba(192, 132, 252, 0.2);
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.case-study-artifact-file:hover {
+    transform: scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    border-color: rgba(192, 132, 252, 0.45);
+}
+
+.case-study-artifact-meta {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.case-study-artifact-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(192, 132, 252, 0.7);
+    font-weight: 600;
+}
+
+.case-study-artifact-name {
+    font-size: 0.85rem;
+    color: #e5e5e5;
+    font-weight: 500;
+}
+
+.case-study-chart {
+    width: 100%;
+    max-width: 2000px;
+    margin: 0 auto;
+    min-height: 520px;
+    height: 520px;
+    border-radius: 16px;
+    background: #141414;
+    border: 1px solid rgba(192, 132, 252, 0.2);
+    padding: 0.5rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: block;
+}
+
+.case-study-chart > div,
+.case-study-chart .plotly,
+.case-study-chart .plotly .svg-container {
+    width: 100% !important;
+    display: block;
+}
+
+.case-study-visualization-desc {
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.01em;
+}
+
+.case-study-interaction {
+    margin-top: 0.85rem;
+    opacity: 0.75;
+}
+
+.case-study-key-insights {
+    margin-top: 3rem;
+}
+
+.case-study-footer {
+    border-top: 1px solid rgba(192, 132, 252, 0.2);
+    padding-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.case-study-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.case-study-secondary-btn {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #f5f5f5;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.case-study-secondary-btn:hover {
+    border-color: rgba(192, 132, 252, 0.8);
+    color: #c084fc;
+}
+
+.case-study-close-btn {
+    position: absolute;
+    top: 12.5px;
+    right: 12.5px;
+    background: none;
+    border: none;
+    color: rgba(229, 229, 229, 0.6);
+    font-size: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, opacity 0.15s ease;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    border-radius: 0 24px 0 0;
+}
+
+.case-study-close-btn:hover {
+    color: #c084fc;
+    text-shadow: none;
+}
+
+.case-study-close-btn:focus {
+    outline: 2px solid rgba(192, 132, 252, 0.5);
+    outline-offset: 2px;
+}
+
+.case-study-close-btn:active {
+    transform: none;
+}
+
+.case-study-card.case-study-open {
+    background-color: #2A2A2A;
+}
+
+/* CSV preview modal */
+.csv-preview-modal {
+    position: fixed;
+    z-index: 1100;
+    pointer-events: auto;
+}
+
+.csv-preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.csv-preview-overlay.active {
+    opacity: 1;
+}
+
+.csv-preview-content {
+    position: relative;
+    width: min(90vw, 720px);
+    max-height: 80vh;
+    background: #141414;
+    border-radius: 20px;
+    padding: 2.5rem 2rem 2rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.csv-preview-header {
+    text-align: center;
+}
+
+.csv-preview-table-wrap {
+    overflow: auto;
+    max-height: 45vh;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(20, 20, 20, 0.6);
+}
+
+.csv-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    color: #e5e5e5;
+}
+
+.csv-preview-table thead {
+    background: rgba(192, 132, 252, 0.12);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.csv-preview-table th,
+.csv-preview-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.csv-preview-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.csv-preview-close-btn {
+    position: absolute;
+    top: 12.5px;
+    right: 12.5px;
+    background: none;
+    border: none;
+    color: rgba(229, 229, 229, 0.6);
+    font-size: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease, opacity 0.15s ease;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    z-index: 1101;
+}
+
+.csv-preview-close-btn:hover {
+    color: #c084fc;
+    text-shadow: none;
+}
+
+.csv-preview-close-btn:focus {
+    outline: 2px solid rgba(192, 132, 252, 0.5);
+    outline-offset: 2px;
+}
+
+.csv-preview-close-btn:active {
+    transform: none;
+}
+
+@media (max-width: 640px) {
+    .csv-preview-content {
+        padding: 2.25rem 1.5rem 1.5rem;
+        max-height: 85vh;
+    }
+
+    .csv-preview-table-wrap {
+        max-height: 50vh;
+    }
 }
 
 /* Presentation highlights table */
@@ -1994,6 +2420,34 @@ code {
 
     .case-comp-focus-header {
         padding-top: 50px;
+    }
+
+    .case-study-focus-content {
+        margin: 1rem;
+        padding: 1rem;
+        max-height: 90vh;
+    }
+
+    .case-study-scroll-inner {
+        padding: 1rem 1rem 1rem 2rem;
+    }
+
+    .case-study-focus-header {
+        padding-top: 50px;
+    }
+
+    .case-study-columns {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .case-study-artifacts {
+        grid-template-columns: 1fr;
+    }
+
+    .case-study-footer {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
     .icon-btn {

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css">
     <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -198,7 +199,7 @@
             });
 
             // Add click handlers to all BSG images and persona images
-            const mediaItems = document.querySelectorAll('.capstone-media-item img, .persona-inline-figure img');
+            const mediaItems = document.querySelectorAll('.capstone-media-item img, .persona-inline-figure img, .case-study-artifact-image');
             mediaItems.forEach(img => {
                 img.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -496,6 +497,337 @@
             updateHoverState();
         });
 
+        // Independent case study modal + Plotly chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const triggerBtn = document.querySelector('[data-case-study-trigger]');
+            const caseStudyCard = document.querySelector('.case-study-card');
+            const focusOverlay = document.querySelector('.case-study-focus-overlay');
+            const closeBtn = document.querySelector('.case-study-close-btn');
+            const closeSecondaryBtn = document.querySelector('[data-case-study-close]');
+            const scrollBtn = document.querySelector('[data-scroll-target]');
+            const scrollInner = document.querySelector('.case-study-scroll-inner');
+            const chartContainer = document.getElementById('field-marketing-chart');
+            const chartSection = document.getElementById('field-marketing-visualization');
+            let isCaseStudyOpen = false;
+            let modalBackdrop = null;
+            let simplebarInstance = null;
+            let chartLoaded = false;
+            let lastFocusedElement = null;
+
+            if (!triggerBtn || !focusOverlay || !scrollInner || !chartContainer) {
+                return;
+            }
+
+            function updateHoverState() {
+                if (!caseStudyCard) return;
+                if (isCaseStudyOpen) {
+                    caseStudyCard.style.transform = 'none';
+                    caseStudyCard.style.transition = 'none';
+                    caseStudyCard.classList.add('case-study-open');
+                } else {
+                    caseStudyCard.style.transition = '';
+                    caseStudyCard.classList.remove('case-study-open');
+                }
+            }
+
+            function renderCaseStudyChart() {
+                if (chartLoaded || !window.Plotly) return;
+
+                const configTag = document.getElementById('field-marketing-chart-config');
+                if (!configTag) return;
+
+                try {
+                    const config = JSON.parse(configTag.textContent);
+                    if (!config?.data || !config?.layout) return;
+                    Plotly.newPlot(chartContainer, config.data, config.layout, {
+                        responsive: true,
+                        displayModeBar: false
+                    });
+                    chartLoaded = true;
+                } catch (error) {
+                    console.error('Failed to parse chart config', error);
+                }
+            }
+
+            function trapFocus(e) {
+                if (!isCaseStudyOpen || e.key !== 'Tab') return;
+
+                const focusable = focusOverlay.querySelectorAll(
+                    'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+                );
+                if (!focusable.length) return;
+
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+
+            function showCaseStudy() {
+                if (isCaseStudyOpen) return;
+
+                isCaseStudyOpen = true;
+                lastFocusedElement = document.activeElement;
+
+                if (!simplebarInstance) {
+                    simplebarInstance = new SimpleBar(scrollInner, { autoHide: false });
+                } else {
+                    simplebarInstance.recalculate();
+                }
+
+                setTimeout(renderCaseStudyChart, 0);
+
+                modalBackdrop = document.createElement('div');
+                modalBackdrop.className = 'modal-backdrop';
+                document.body.appendChild(modalBackdrop);
+
+                updateHoverState();
+
+                focusOverlay.classList.remove('hidden');
+                focusOverlay.classList.add('active');
+                focusOverlay.setAttribute('aria-hidden', 'false');
+
+                document.body.style.overflow = 'hidden';
+
+            }
+
+            function closeCaseStudy() {
+                if (!isCaseStudyOpen) return;
+
+                isCaseStudyOpen = false;
+
+                if (modalBackdrop) {
+                    modalBackdrop.remove();
+                    modalBackdrop = null;
+                }
+
+                focusOverlay.classList.remove('active');
+                focusOverlay.classList.add('hidden');
+                focusOverlay.setAttribute('aria-hidden', 'true');
+
+                document.body.style.overflow = '';
+                updateHoverState();
+
+                if (lastFocusedElement) {
+                    lastFocusedElement.focus();
+                }
+            }
+
+            triggerBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                showCaseStudy();
+            });
+
+            triggerBtn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showCaseStudy();
+                }
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeCaseStudy();
+                });
+            }
+
+            if (closeSecondaryBtn) {
+                closeSecondaryBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeCaseStudy();
+                });
+            }
+
+            if (scrollBtn) {
+                scrollBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!chartSection) return;
+                    const scrollElement = simplebarInstance ? simplebarInstance.getScrollElement() : scrollInner;
+                    const offsetTop = chartSection.offsetTop - 80;
+                    scrollElement.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                });
+            }
+
+            focusOverlay.addEventListener('click', function(e) {
+                if (e.target === focusOverlay) {
+                    closeCaseStudy();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isCaseStudyOpen) {
+                    e.preventDefault();
+                    closeCaseStudy();
+                }
+                trapFocus(e);
+            });
+
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-backdrop') && isCaseStudyOpen) {
+                    closeCaseStudy();
+                }
+            });
+
+            updateHoverState();
+        });
+
+        // CSV preview modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const triggerBtn = document.querySelector('[data-csv-preview-trigger]');
+            const previewOverlay = document.querySelector('.csv-preview-overlay');
+            const closeBtn = document.querySelector('.csv-preview-close-btn');
+            const tableHead = document.querySelector('.csv-preview-table thead');
+            const tableBody = document.querySelector('.csv-preview-table tbody');
+            const errorMessage = document.querySelector('.csv-preview-error');
+            let previewBackdrop = null;
+            let csvLoaded = false;
+
+            if (!triggerBtn || !previewOverlay || !tableHead || !tableBody) {
+                return;
+            }
+
+            function splitCsvLine(line) {
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+
+                for (let i = 0; i < line.length; i += 1) {
+                    const char = line[i];
+                    if (char === '"') {
+                        if (inQuotes && line[i + 1] === '"') {
+                            current += '"';
+                            i += 1;
+                        } else {
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current.trim());
+                return values;
+            }
+
+            function renderCsvTable(rows) {
+                tableHead.innerHTML = '';
+                tableBody.innerHTML = '';
+
+                const headerRow = document.createElement('tr');
+                rows[0].forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header;
+                    headerRow.appendChild(th);
+                });
+                tableHead.appendChild(headerRow);
+
+                rows.slice(1, 16).forEach(row => {
+                    const tr = document.createElement('tr');
+                    row.forEach(cell => {
+                        const td = document.createElement('td');
+                        td.textContent = cell;
+                        tr.appendChild(td);
+                    });
+                    tableBody.appendChild(tr);
+                });
+            }
+
+            function loadCsv() {
+                if (csvLoaded) return;
+                const csvDataTag = document.getElementById('field-marketing-csv-data');
+                if (!csvDataTag) {
+                    if (errorMessage) {
+                        errorMessage.textContent = 'Preview unavailable at the moment.';
+                        errorMessage.classList.remove('hidden');
+                    }
+                    return;
+                }
+
+                const text = csvDataTag.textContent || '';
+                const lines = text.trim().split(/\r?\n/).filter(Boolean);
+                const rows = lines.map(splitCsvLine);
+                renderCsvTable(rows);
+                csvLoaded = true;
+            }
+
+            function showPreview() {
+                if (previewBackdrop) return;
+                previewBackdrop = document.createElement('div');
+                previewBackdrop.className = 'modal-backdrop';
+                document.body.appendChild(previewBackdrop);
+
+                previewOverlay.classList.remove('hidden');
+                previewOverlay.classList.add('active');
+                previewOverlay.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+
+                loadCsv();
+
+                if (closeBtn) {
+                    closeBtn.focus();
+                }
+            }
+
+            function closePreview() {
+                if (previewBackdrop) {
+                    previewBackdrop.remove();
+                    previewBackdrop = null;
+                }
+
+                previewOverlay.classList.remove('active');
+                previewOverlay.classList.add('hidden');
+                previewOverlay.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+
+            triggerBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                showPreview();
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closePreview();
+                });
+            }
+
+            previewOverlay.addEventListener('click', function(e) {
+                if (e.target === previewOverlay) {
+                    closePreview();
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-backdrop') && previewBackdrop) {
+                    closePreview();
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && previewBackdrop) {
+                    e.preventDefault();
+                    closePreview();
+                }
+            });
+        });
+
 
     </script>
 </head>
@@ -590,16 +922,21 @@
             <div class="mb-12">
                 <h2 class="text-2xl font-bold mb-2 accent-purple">Independent Projects</h2>
                 <p class="text-gray-400 mb-6">Self-driven projects, highschool work, personal experiments, and in general more creative personal works.</p>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Photography</h3>
-                        <p class="text-white">Personal Portfolio Series</p>
-                        <p class="text-accent-muted text-sm mt-3">Coming Soon</p>
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div class="project-pane p-6 rounded-lg case-study-card" data-case-study-trigger role="button" tabindex="0" aria-haspopup="dialog">
+                        <h3 class="text-xl font-semibold mb-2 accent-purple">Campaign Efficiency Case Study</h3>
+                        <p class="text-white">Data modeling, SQL analysis, and visualization workflow</p>
+                        <p class="text-accent-muted text-sm mt-3">Independent Project — Jan 2026</p>
                     </div>
                     <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Writing</h3>
+                        <h3 class="text-xl font-semibold mb-2 accent-purple">Photography</h3>
+                        <p class="text-white">Personal Portfolio Series</p>
+                        <p class="text-accent-muted text-sm mt-3">Independent Project — Coming Soon</p>
+                    </div>
+                    <div class="project-pane p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2 accent-purple">Writing</h3>
                         <p class="text-white">Essays &amp; Long-Form Work</p>
-                        <p class="text-accent-muted text-sm mt-3">Coming Soon</p>
+                        <p class="text-accent-muted text-sm mt-3">Independent Project — Coming Soon</p>
                     </div>
                 </div>
             </div>
@@ -607,7 +944,7 @@
             <div class="mb-12">
                 <h2 class="text-2xl font-bold mb-2 accent-purple">In Progress / Learning</h2>
                 <p class="text-gray-400 mb-6">Skills and projects I'm currently building.</p>
-                <div class="grid md:grid-cols-3 gap-6">
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
                     <div class="project-pane p-6 rounded-lg">
                         <h3 class="text-xl font-semibold mb-2">Building My Website</h3>
                         <p class="text-white">Design &amp; Development Iterations</p>
@@ -1045,5 +1382,1131 @@
             </div>
         </div>
     </div>
+
+    <!-- Independent Case Study Modal -->
+    <div class="case-study-focus-overlay case-study-modal hidden" role="dialog" aria-modal="true" aria-labelledby="field-marketing-title" aria-describedby="field-marketing-subtitle" aria-hidden="true">
+        <div class="case-study-focus-content">
+            <button class="case-study-close-btn" aria-label="Close modal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="case-study-scroll-inner">
+                <div class="case-study-focus-header">
+                    <h2 id="field-marketing-title" class="text-3xl font-bold mb-3 accent-purple text-center">Campaign Efficiency Case Study</h2>
+                    <p id="field-marketing-subtitle" class="text-white text-lg text-center">Evaluating webinars, regional events, and digital campaigns using SQL + visualization</p>
+                </div>
+
+                <div class="case-study-focus-article">
+                    <section class="case-study-section">
+                        <h3 class="text-xl font-semibold mb-4 text-white">Context</h3>
+                        <p class="text-gray-300 leading-relaxed">This project represents my first hands-on exploration of working with SQL and relational data in practice. Rather than starting with a defined business problem or assignment, I wanted to experience the full analytical flow end to end and understand what it feels like to move from raw data to insight.</p>
+                        <p class="text-gray-300 mt-4 leading-relaxed">To do this, I intentionally jumped in with minimal constraints and focused on learning how data moves through a system, how queries shape outputs, and how results can be translated into something interpretable and visual.</p>
+                    </section>
+
+                    <section class="case-study-section">
+                        <h3 class="text-xl font-semibold mb-4 text-white">Project Overview</h3>
+                        <p class="text-gray-300 leading-relaxed">For this project, I worked with a fully synthetic dataset generated by OpenAI's ChatGPT. I did not provide instructions for the structure or contents of the dataset, which made the data effectively random and unpredictable.</p>
+                        <p class="text-gray-300 mt-4 leading-relaxed">This setup allowed me to focus on adapting to an unfamiliar dataset, integrating it into a relational database, and determining how to extract meaningful signals through analysis rather than controlling inputs from the start.</p>
+                    </section>
+
+                    <section class="case-study-section">
+                        <h3 class="text-xl font-semibold mb-4 text-white">The Data</h3>
+                        <p class="text-gray-300 leading-relaxed">The dataset consists of synthetic campaign, lead, and opportunity records modeled in a simplified enterprise-style structure. While the data itself is artificial, it reflects common relationships found in real-world marketing and sales environments.</p>
+                        <p class="text-gray-300 mt-4 leading-relaxed">All analysis was performed after the data was imported into MySQL. From there, I defined metrics and calculations to evaluate pipeline, cost, and ROI by campaign type. All insights were derived directly from SQL query outputs.</p>
+                    </section>
+
+                    <section class="case-study-section">
+                        <h3 class="text-xl font-semibold mb-4 text-white">Analysis Flow</h3>
+                        <ul class="text-gray-300 space-y-2 ml-4">
+                            <li>• Imported a synthetic dataset into MySQL</li>
+                            <li>• Joined campaign, lead, and opportunity tables to establish relational context</li>
+                            <li>• Aggregated pipeline, cost, and ROI metrics by campaign type using SQL</li>
+                            <li>• Analyzed relative efficiency and scale tradeoffs across campaign types</li>
+                            <li>• Used Gemini to generate a visualization from the analyzed outputs</li>
+                            <li>• Translated the visualization into a structured JSON prompt</li>
+                            <li>• Integrated the interactive visualization directly into this website</li>
+                        </ul>
+                    </section>
+
+                    <section class="case-study-section">
+                        <h3 class="text-xl font-semibold mb-4 text-white">SQL &amp; Data Foundation</h3>
+                        <p class="text-gray-300 leading-relaxed">This analysis is backed by a relational SQL data model that connects campaigns, leads, and opportunities to evaluate pipeline impact and ROI. The visualization is generated from an aggregated dataset produced through SQL joins and calculations.</p>
+                        <div class="case-study-artifacts">
+                            <figure class="case-study-artifact">
+                                <img src="Project Files/mysqlworkbench.png" alt="SQL aggregation and ROI calculation view in MySQL Workbench" class="case-study-artifact-image">
+                                <figcaption class="text-accent-muted text-xs mt-2">SQL aggregation and ROI calculation across campaigns, leads, and opportunities.</figcaption>
+                            </figure>
+                            <figure class="case-study-artifact">
+                                <button class="case-study-artifact-file" type="button" data-csv-preview-trigger aria-label="View CSV preview">
+                                    <div class="case-study-artifact-meta">
+                                        <span class="case-study-artifact-label">Data Output</span>
+                                        <span class="case-study-artifact-name">case study csv.csv</span>
+                                    </div>
+                                </button>
+                                <figcaption class="text-accent-muted text-xs mt-2">Aggregated dataset exported from SQL and used as the source for the visualization.</figcaption>
+                            </figure>
+                        </div>
+                    </section>
+
+                    <section class="case-study-section">
+                        <h3 class="text-xl font-semibold mb-4 text-white">Data &amp; Tools</h3>
+                        <div class="case-study-columns">
+                            <div class="case-study-column">
+                                <h4 class="text-lg font-semibold text-white mb-3">Data</h4>
+                                <ul class="text-gray-300 space-y-2 ml-4">
+                                    <li>• Synthetic campaign, lead, and opportunity data</li>
+                                    <li>• Metrics: pipeline $, cost, ROI</li>
+                                    <li>• Modeled to reflect a realistic enterprise sales motion</li>
+                                </ul>
+                            </div>
+                            <div class="case-study-column">
+                                <h4 class="text-lg font-semibold text-white mb-3">Tools</h4>
+                                <ul class="text-gray-300 space-y-2 ml-4">
+                                    <li>• MySQL (data modeling &amp; analysis)</li>
+                                    <li>• SQL (aggregation and ROI calculation)</li>
+                                    <li>• Gemini (visualization)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="case-study-section" id="field-marketing-visualization">
+                        <h3 class="text-xl font-semibold mb-2 text-white">Key Visualization</h3>
+                        <p class="case-study-visualization-desc text-accent-muted text-sm">Pipeline, cost, and ROI comparison across field marketing activity types.</p>
+                        <div id="field-marketing-chart" class="case-study-chart" aria-label="Field marketing ROI and pipeline chart"></div>
+                        <p class="case-study-interaction text-accent-muted text-xs">Tip: Click and drag to zoom into a specific range. Double-click to reset the view. Double-click again to re-scale the ROI axis for comparison</p>
+                    </section>
+
+                    <section class="case-study-section case-study-key-insights">
+                        <h3 class="text-2xl font-semibold mb-4 text-white">Key Insights</h3>
+                        <ul class="text-gray-300 space-y-2 ml-4">
+                            <li>• Regional events generated the highest total pipeline but required the largest investment</li>
+                            <li>• Webinars delivered the strongest ROI, indicating high efficiency at lower cost</li>
+                            <li>• Digital campaigns produced volume but underperformed on ROI in this scenario</li>
+                        </ul>
+                    </section>
+
+                    <section class="case-study-section">
+                        <h3 class="text-xl font-semibold mb-4 text-white">Recommendation</h3>
+                        <p class="text-gray-300 leading-relaxed">Based on this analysis, a balanced field marketing strategy is recommended: continue investing in regional events for pipeline scale, while expanding webinars to maximize ROI and efficiency. Digital campaigns should be refined or repositioned to better support enterprise conversion.</p>
+                    </section>
+
+                    <section class="case-study-section">
+                        <h3 class="text-xl font-semibold mb-4 text-white">What I Took Away</h3>
+                        <p class="text-gray-300 leading-relaxed">This project was my first opportunity to work through a complete analytical workflow without a prescribed path. Starting with unfamiliar data forced me to think less about getting a specific answer and more about understanding structure, relationships, and tradeoffs.</p>
+                        <p class="text-gray-300 mt-4 leading-relaxed">Working through this process helped me see how tools like SQL and visualization fit together, not as isolated skills, but as part of a broader way of thinking about data. It also clarified where deeper technical fluency can unlock better questions, clearer insights, and more confident decision-making as I continue developing in marketing.</p>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSV Preview Modal -->
+    <div class="csv-preview-overlay csv-preview-modal hidden" role="dialog" aria-modal="true" aria-labelledby="csv-preview-title" aria-hidden="true">
+        <div class="csv-preview-content">
+            <button class="csv-preview-close-btn" aria-label="Close preview">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="csv-preview-header">
+                <h3 id="csv-preview-title" class="text-xl font-semibold mb-2 text-white">Aggregated Dataset Preview</h3>
+                <p class="text-accent-muted text-sm">Snapshot of the SQL output used for the ROI visualization.</p>
+            </div>
+            <p class="csv-preview-error text-accent-muted text-sm mt-4 hidden"></p>
+            <div class="csv-preview-table-wrap">
+                <table class="csv-preview-table">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script id="field-marketing-chart-config" type="application/json">
+        {
+          "data": [
+            {
+              "marker": {
+                "color": "#7b1fa2",
+                "line": {
+                  "color": "#141414",
+                  "width": 1
+                }
+              },
+              "name": "Total Pipeline",
+              "offsetgroup": "1",
+              "x": [
+                "Webinar",
+                "Regional Event",
+                "Digital Campaign"
+              ],
+              "y": [
+                145000.0,
+                550000.0,
+                90000.0
+              ],
+              "type": "bar"
+            },
+            {
+              "marker": {
+                "color": "#e1bee7",
+                "line": {
+                  "color": "#141414",
+                  "width": 1
+                }
+              },
+              "name": "Total Cost",
+              "offsetgroup": "2",
+              "x": [
+                "Webinar",
+                "Regional Event",
+                "Digital Campaign"
+              ],
+              "y": [
+                9500.0,
+                43000.0,
+                12000.0
+              ],
+              "type": "bar"
+            },
+            {
+              "line": {
+                "color": "#ff5252",
+                "width": 3
+              },
+              "marker": {
+                "color": "#ff5252",
+                "size": 10
+              },
+              "mode": "lines+markers+text",
+              "name": "ROI",
+              "text": [
+                "14.3x",
+                "11.8x",
+                "6.5x"
+              ],
+              "textfont": {
+                "color": "#ff5252"
+              },
+              "textposition": "top center",
+              "x": [
+                "Webinar",
+                "Regional Event",
+                "Digital Campaign"
+              ],
+              "y": [
+                14.26,
+                11.79,
+                6.5
+              ],
+              "yaxis": "y2",
+              "type": "scatter"
+            }
+          ],
+          "layout": {
+            "template": {
+              "data": {
+                "histogram2dcontour": [
+                  {
+                    "type": "histogram2dcontour",
+                    "colorbar": {
+                      "outlinewidth": 0,
+                      "ticks": ""
+                    },
+                    "colorscale": [
+                      [
+                        0.0,
+                        "#0d0887"
+                      ],
+                      [
+                        0.1111111111111111,
+                        "#46039f"
+                      ],
+                      [
+                        0.2222222222222222,
+                        "#7201a8"
+                      ],
+                      [
+                        0.3333333333333333,
+                        "#9c179e"
+                      ],
+                      [
+                        0.4444444444444444,
+                        "#bd3786"
+                      ],
+                      [
+                        0.5555555555555556,
+                        "#d8576b"
+                      ],
+                      [
+                        0.6666666666666666,
+                        "#ed7953"
+                      ],
+                      [
+                        0.7777777777777778,
+                        "#fb9f3a"
+                      ],
+                      [
+                        0.8888888888888888,
+                        "#fdca26"
+                      ],
+                      [
+                        1.0,
+                        "#f0f921"
+                      ]
+                    ]
+                  }
+                ],
+                "choropleth": [
+                  {
+                    "type": "choropleth",
+                    "colorbar": {
+                      "outlinewidth": 0,
+                      "ticks": ""
+                    }
+                  }
+                ],
+                "histogram2d": [
+                  {
+                    "type": "histogram2d",
+                    "colorbar": {
+                      "outlinewidth": 0,
+                      "ticks": ""
+                    },
+                    "colorscale": [
+                      [
+                        0.0,
+                        "#0d0887"
+                      ],
+                      [
+                        0.1111111111111111,
+                        "#46039f"
+                      ],
+                      [
+                        0.2222222222222222,
+                        "#7201a8"
+                      ],
+                      [
+                        0.3333333333333333,
+                        "#9c179e"
+                      ],
+                      [
+                        0.4444444444444444,
+                        "#bd3786"
+                      ],
+                      [
+                        0.5555555555555556,
+                        "#d8576b"
+                      ],
+                      [
+                        0.6666666666666666,
+                        "#ed7953"
+                      ],
+                      [
+                        0.7777777777777778,
+                        "#fb9f3a"
+                      ],
+                      [
+                        0.8888888888888888,
+                        "#fdca26"
+                      ],
+                      [
+                        1.0,
+                        "#f0f921"
+                      ]
+                    ]
+                  }
+                ],
+                "heatmap": [
+                  {
+                    "type": "heatmap",
+                    "colorbar": {
+                      "outlinewidth": 0,
+                      "ticks": ""
+                    },
+                    "colorscale": [
+                      [
+                        0.0,
+                        "#0d0887"
+                      ],
+                      [
+                        0.1111111111111111,
+                        "#46039f"
+                      ],
+                      [
+                        0.2222222222222222,
+                        "#7201a8"
+                      ],
+                      [
+                        0.3333333333333333,
+                        "#9c179e"
+                      ],
+                      [
+                        0.4444444444444444,
+                        "#bd3786"
+                      ],
+                      [
+                        0.5555555555555556,
+                        "#d8576b"
+                      ],
+                      [
+                        0.6666666666666666,
+                        "#ed7953"
+                      ],
+                      [
+                        0.7777777777777778,
+                        "#fb9f3a"
+                      ],
+                      [
+                        0.8888888888888888,
+                        "#fdca26"
+                      ],
+                      [
+                        1.0,
+                        "#f0f921"
+                      ]
+                    ]
+                  }
+                ],
+                "heatmapgl": [
+                  {
+                    "type": "heatmapgl",
+                    "colorbar": {
+                      "outlinewidth": 0,
+                      "ticks": ""
+                    },
+                    "colorscale": [
+                      [
+                        0.0,
+                        "#0d0887"
+                      ],
+                      [
+                        0.1111111111111111,
+                        "#46039f"
+                      ],
+                      [
+                        0.2222222222222222,
+                        "#7201a8"
+                      ],
+                      [
+                        0.3333333333333333,
+                        "#9c179e"
+                      ],
+                      [
+                        0.4444444444444444,
+                        "#bd3786"
+                      ],
+                      [
+                        0.5555555555555556,
+                        "#d8576b"
+                      ],
+                      [
+                        0.6666666666666666,
+                        "#ed7953"
+                      ],
+                      [
+                        0.7777777777777778,
+                        "#fb9f3a"
+                      ],
+                      [
+                        0.8888888888888888,
+                        "#fdca26"
+                      ],
+                      [
+                        1.0,
+                        "#f0f921"
+                      ]
+                    ]
+                  }
+                ],
+                "contourcarpet": [
+                  {
+                    "type": "contourcarpet",
+                    "colorbar": {
+                      "outlinewidth": 0,
+                      "ticks": ""
+                    }
+                  }
+                ],
+                "contour": [
+                  {
+                    "type": "contour",
+                    "colorbar": {
+                      "outlinewidth": 0,
+                      "ticks": ""
+                    },
+                    "colorscale": [
+                      [
+                        0.0,
+                        "#0d0887"
+                      ],
+                      [
+                        0.1111111111111111,
+                        "#46039f"
+                      ],
+                      [
+                        0.2222222222222222,
+                        "#7201a8"
+                      ],
+                      [
+                        0.3333333333333333,
+                        "#9c179e"
+                      ],
+                      [
+                        0.4444444444444444,
+                        "#bd3786"
+                      ],
+                      [
+                        0.5555555555555556,
+                        "#d8576b"
+                      ],
+                      [
+                        0.6666666666666666,
+                        "#ed7953"
+                      ],
+                      [
+                        0.7777777777777778,
+                        "#fb9f3a"
+                      ],
+                      [
+                        0.8888888888888888,
+                        "#fdca26"
+                      ],
+                      [
+                        1.0,
+                        "#f0f921"
+                      ]
+                    ]
+                  }
+                ],
+                "surface": [
+                  {
+                    "type": "surface",
+                    "colorbar": {
+                      "outlinewidth": 0,
+                      "ticks": ""
+                    },
+                    "colorscale": [
+                      [
+                        0.0,
+                        "#0d0887"
+                      ],
+                      [
+                        0.1111111111111111,
+                        "#46039f"
+                      ],
+                      [
+                        0.2222222222222222,
+                        "#7201a8"
+                      ],
+                      [
+                        0.3333333333333333,
+                        "#9c179e"
+                      ],
+                      [
+                        0.4444444444444444,
+                        "#bd3786"
+                      ],
+                      [
+                        0.5555555555555556,
+                        "#d8576b"
+                      ],
+                      [
+                        0.6666666666666666,
+                        "#ed7953"
+                      ],
+                      [
+                        0.7777777777777778,
+                        "#fb9f3a"
+                      ],
+                      [
+                        0.8888888888888888,
+                        "#fdca26"
+                      ],
+                      [
+                        1.0,
+                        "#f0f921"
+                      ]
+                    ]
+                  }
+                ],
+                "mesh3d": [
+                  {
+                    "type": "mesh3d",
+                    "colorbar": {
+                      "outlinewidth": 0,
+                      "ticks": ""
+                    }
+                  }
+                ],
+                "scatter": [
+                  {
+                    "fillpattern": {
+                      "fillmode": "overlay",
+                      "size": 10,
+                      "solidity": 0.2
+                    },
+                    "type": "scatter"
+                  }
+                ],
+                "parcoords": [
+                  {
+                    "type": "parcoords",
+                    "line": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    }
+                  }
+                ],
+                "scatterpolargl": [
+                  {
+                    "type": "scatterpolargl",
+                    "marker": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    }
+                  }
+                ],
+                "bar": [
+                  {
+                    "error_x": {
+                      "color": "#2a3f5f"
+                    },
+                    "error_y": {
+                      "color": "#2a3f5f"
+                    },
+                    "marker": {
+                      "line": {
+                        "color": "#E5ECF6",
+                        "width": 0.5
+                      },
+                      "pattern": {
+                        "fillmode": "overlay",
+                        "size": 10,
+                        "solidity": 0.2
+                      }
+                    },
+                    "type": "bar"
+                  }
+                ],
+                "scattergeo": [
+                  {
+                    "type": "scattergeo",
+                    "marker": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    }
+                  }
+                ],
+                "scatterpolar": [
+                  {
+                    "type": "scatterpolar",
+                    "marker": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    }
+                  }
+                ],
+                "histogram": [
+                  {
+                    "marker": {
+                      "pattern": {
+                        "fillmode": "overlay",
+                        "size": 10,
+                        "solidity": 0.2
+                      }
+                    },
+                    "type": "histogram"
+                  }
+                ],
+                "scattergl": [
+                  {
+                    "type": "scattergl",
+                    "marker": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    }
+                  }
+                ],
+                "scatter3d": [
+                  {
+                    "type": "scatter3d",
+                    "line": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    },
+                    "marker": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    }
+                  }
+                ],
+                "scattermapbox": [
+                  {
+                    "type": "scattermapbox",
+                    "marker": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    }
+                  }
+                ],
+                "scatterternary": [
+                  {
+                    "type": "scatterternary",
+                    "marker": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    }
+                  }
+                ],
+                "scattercarpet": [
+                  {
+                    "type": "scattercarpet",
+                    "marker": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    }
+                  }
+                ],
+                "carpet": [
+                  {
+                    "aaxis": {
+                      "endlinecolor": "#2a3f5f",
+                      "gridcolor": "white",
+                      "linecolor": "white",
+                      "minorgridcolor": "white",
+                      "startlinecolor": "#2a3f5f"
+                    },
+                    "baxis": {
+                      "endlinecolor": "#2a3f5f",
+                      "gridcolor": "white",
+                      "linecolor": "white",
+                      "minorgridcolor": "white",
+                      "startlinecolor": "#2a3f5f"
+                    },
+                    "type": "carpet"
+                  }
+                ],
+                "table": [
+                  {
+                    "cells": {
+                      "fill": {
+                        "color": "#EBF0F8"
+                      },
+                      "line": {
+                        "color": "white"
+                      }
+                    },
+                    "header": {
+                      "fill": {
+                        "color": "#C8D4E3"
+                      },
+                      "line": {
+                        "color": "white"
+                      }
+                    },
+                    "type": "table"
+                  }
+                ],
+                "barpolar": [
+                  {
+                    "marker": {
+                      "line": {
+                        "color": "#E5ECF6",
+                        "width": 0.5
+                      },
+                      "pattern": {
+                        "fillmode": "overlay",
+                        "size": 10,
+                        "solidity": 0.2
+                      }
+                    },
+                    "type": "barpolar"
+                  }
+                ],
+                "pie": [
+                  {
+                    "automargin": true,
+                    "type": "pie"
+                  }
+                ]
+              },
+              "layout": {
+                "autotypenumbers": "strict",
+                "colorway": [
+                  "#636efa",
+                  "#EF553B",
+                  "#00cc96",
+                  "#ab63fa",
+                  "#FFA15A",
+                  "#19d3f3",
+                  "#FF6692",
+                  "#B6E880",
+                  "#FF97FF",
+                  "#FECB52"
+                ],
+                "font": {
+                  "color": "#2a3f5f"
+                },
+                "hovermode": "closest",
+                "hoverlabel": {
+                  "align": "left"
+                },
+                "paper_bgcolor": "white",
+                "plot_bgcolor": "#E5ECF6",
+                "polar": {
+                  "bgcolor": "#E5ECF6",
+                  "angularaxis": {
+                    "gridcolor": "white",
+                    "linecolor": "white",
+                    "ticks": ""
+                  },
+                  "radialaxis": {
+                    "gridcolor": "white",
+                    "linecolor": "white",
+                    "ticks": ""
+                  }
+                },
+                "ternary": {
+                  "bgcolor": "#E5ECF6",
+                  "aaxis": {
+                    "gridcolor": "white",
+                    "linecolor": "white",
+                    "ticks": ""
+                  },
+                  "baxis": {
+                    "gridcolor": "white",
+                    "linecolor": "white",
+                    "ticks": ""
+                  },
+                  "caxis": {
+                    "gridcolor": "white",
+                    "linecolor": "white",
+                    "ticks": ""
+                  }
+                },
+                "coloraxis": {
+                  "colorbar": {
+                    "outlinewidth": 0,
+                    "ticks": ""
+                  }
+                },
+                "colorscale": {
+                  "sequential": [
+                    [
+                      0.0,
+                      "#0d0887"
+                    ],
+                    [
+                      0.1111111111111111,
+                      "#46039f"
+                    ],
+                    [
+                      0.2222222222222222,
+                      "#7201a8"
+                    ],
+                    [
+                      0.3333333333333333,
+                      "#9c179e"
+                    ],
+                    [
+                      0.4444444444444444,
+                      "#bd3786"
+                    ],
+                    [
+                      0.5555555555555556,
+                      "#d8576b"
+                    ],
+                    [
+                      0.6666666666666666,
+                      "#ed7953"
+                    ],
+                    [
+                      0.7777777777777778,
+                      "#fb9f3a"
+                    ],
+                    [
+                      0.8888888888888888,
+                      "#fdca26"
+                    ],
+                    [
+                      1.0,
+                      "#f0f921"
+                    ]
+                  ],
+                  "sequentialminus": [
+                    [
+                      0.0,
+                      "#0d0887"
+                    ],
+                    [
+                      0.1111111111111111,
+                      "#46039f"
+                    ],
+                    [
+                      0.2222222222222222,
+                      "#7201a8"
+                    ],
+                    [
+                      0.3333333333333333,
+                      "#9c179e"
+                    ],
+                    [
+                      0.4444444444444444,
+                      "#bd3786"
+                    ],
+                    [
+                      0.5555555555555556,
+                      "#d8576b"
+                    ],
+                    [
+                      0.6666666666666666,
+                      "#ed7953"
+                    ],
+                    [
+                      0.7777777777777778,
+                      "#fb9f3a"
+                    ],
+                    [
+                      0.8888888888888888,
+                      "#fdca26"
+                    ],
+                    [
+                      1.0,
+                      "#f0f921"
+                    ]
+                  ],
+                  "diverging": [
+                    [
+                      0,
+                      "#8e0152"
+                    ],
+                    [
+                      0.1,
+                      "#c51b7d"
+                    ],
+                    [
+                      0.2,
+                      "#de77ae"
+                    ],
+                    [
+                      0.3,
+                      "#f1b6da"
+                    ],
+                    [
+                      0.4,
+                      "#fde0ef"
+                    ],
+                    [
+                      0.5,
+                      "#f7f7f7"
+                    ],
+                    [
+                      0.6,
+                      "#e6f5d0"
+                    ],
+                    [
+                      0.7,
+                      "#b8e186"
+                    ],
+                    [
+                      0.8,
+                      "#7fbc41"
+                    ],
+                    [
+                      0.9,
+                      "#4d9221"
+                    ],
+                    [
+                      1,
+                      "#276419"
+                    ]
+                  ]
+                },
+                "xaxis": {
+                  "gridcolor": "white",
+                  "linecolor": "white",
+                  "ticks": "",
+                  "title": {
+                    "standoff": 15
+                  },
+                  "zerolinecolor": "white",
+                  "automargin": true,
+                  "zerolinewidth": 2
+                },
+                "yaxis": {
+                  "gridcolor": "white",
+                  "linecolor": "white",
+                  "ticks": "",
+                  "title": {
+                    "standoff": 15
+                  },
+                  "zerolinecolor": "white",
+                  "automargin": true,
+                  "zerolinewidth": 2
+                },
+                "scene": {
+                  "xaxis": {
+                    "backgroundcolor": "#E5ECF6",
+                    "gridcolor": "white",
+                    "linecolor": "white",
+                    "showbackground": true,
+                    "ticks": "",
+                    "zerolinecolor": "white",
+                    "gridwidth": 2
+                  },
+                  "yaxis": {
+                    "backgroundcolor": "#E5ECF6",
+                    "gridcolor": "white",
+                    "linecolor": "white",
+                    "showbackground": true,
+                    "ticks": "",
+                    "zerolinecolor": "white",
+                    "gridwidth": 2
+                  },
+                  "zaxis": {
+                    "backgroundcolor": "#E5ECF6",
+                    "gridcolor": "white",
+                    "linecolor": "white",
+                    "showbackground": true,
+                    "ticks": "",
+                    "zerolinecolor": "white",
+                    "gridwidth": 2
+                  }
+                },
+                "shapedefaults": {
+                  "line": {
+                    "color": "#2a3f5f"
+                  }
+                },
+                "annotationdefaults": {
+                  "arrowcolor": "#2a3f5f",
+                  "arrowhead": 0,
+                  "arrowwidth": 1
+                },
+                "geo": {
+                  "bgcolor": "white",
+                  "landcolor": "#E5ECF6",
+                  "subunitcolor": "white",
+                  "showland": true,
+                  "showlakes": true,
+                  "lakecolor": "white"
+                },
+                "title": {
+                  "x": 0.05
+                },
+                "mapbox": {
+                  "style": "light"
+                }
+              }
+            },
+            "title": {
+              "font": {
+                "size": 20,
+                "color": "#e0e0e0"
+              },
+              "text": "<b>Campaign Efficiency Analysis</b>",
+              "x": 0.5,
+              "xanchor": "center"
+            },
+            "legend": {
+              "font": {
+                "color": "#e0e0e0"
+              },
+              "orientation": "h",
+              "yanchor": "bottom",
+              "y": -0.2,
+              "xanchor": "center",
+              "x": 0.5
+            },
+            "xaxis": {
+              "title": {
+                "text": "Campaign Type",
+                "font": {
+                  "color": "#e0e0e0"
+                }
+              },
+              "tickfont": {
+                "color": "#e0e0e0"
+              },
+              "showgrid": false,
+              "domain": [
+                0.02,
+                0.98
+              ]
+            },
+            "yaxis": {
+              "title": {
+                "text": "Amount ($)",
+                "font": {
+                  "color": "#e0e0e0"
+                }
+              },
+              "tickfont": {
+                "color": "#e0e0e0"
+              },
+              "gridcolor": "rgba(255, 255, 255, 0.1)",
+              "tickprefix": "$"
+            },
+            "yaxis2": {
+              "title": {
+                "text": "ROI Multiplier",
+                "font": {
+                  "color": "#ff5252"
+                },
+                "standoff": 18
+              },
+              "tickfont": {
+                "color": "#ff5252"
+              },
+              "overlaying": "y",
+              "side": "right",
+              "showgrid": false,
+              "range": [
+                0,
+                18.538
+              ]
+            },
+            "margin": {
+              "l": 40,
+              "r": 60,
+              "t": 80,
+              "b": 80
+            },
+            "paper_bgcolor": "#141414",
+            "plot_bgcolor": "#141414",
+            "barmode": "group"
+          }
+        }
+    </script>
+    <script id="field-marketing-csv-data" type="text/plain">
+campaign_type,total_pipeline,total_cost,roi
+Webinar,145000.00,9500.00,14.26
+"Regional Event",550000.00,43000.00,11.79
+"Digital Campaign",90000.00,12000.00,6.50
+    </script>
 </body>
 </html>
