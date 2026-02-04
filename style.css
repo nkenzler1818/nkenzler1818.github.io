@@ -1470,9 +1470,8 @@ code {
 .case-study-focus-content {
     position: relative;
     width: 100%;
-    max-width: 2000px;
-    height: 95vh;
-    max-height: 95vh;
+    max-width: 1000px;
+    max-height: 85vh;
     margin: auto;
     background: #141414;
     border-radius: 24px;
@@ -1557,6 +1556,12 @@ code {
 
 .case-study-focus-article {
     color: #e5e5e5;
+}
+
+.reflection-block {
+    border-left: 4px solid #a855f7;
+    padding-left: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .case-study-section {
