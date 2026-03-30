@@ -881,14 +881,14 @@
                     </button>
                     <div class="carousel-track-outer">
                         <div class="carousel-track" id="graduate-carousel">
-                            <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="agentic-rag-modal">
-                                <h3 class="text-xl font-semibold mb-2">Agentic RAG Business Workflow</h3>
-                                <p class="text-white">First-semester master’s AI systems project</p>
-                                <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
-                            </div>
                             <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="vinho-rio-modal">
                                 <h3 class="text-xl font-semibold mb-2">Harvard Simulation: Vinho Rio</h3>
                                 <p class="text-white">International marketing simulation project</p>
+                                <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
+                            </div>
+                            <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="agentic-rag-modal">
+                                <h3 class="text-xl font-semibold mb-2">Pharmacovigilance RAG Pipeline</h3>
+                                <p class="text-white">Agentic RAG system for pharmaceutical drug safety signal triage.</p>
                                 <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
                             </div>
                             <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="marketing-research-methods-modal">
@@ -1054,14 +1054,102 @@
             </button>
             <div class="graduate-scroll-inner">
                 <div class="graduate-focus-header">
-                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Agentic RAG anchored LLM Workflow</h2>
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Pharmacovigilance RAG Pipeline</h2>
+                    <p class="text-white text-lg text-center">First-semester master's AI systems project — automating pharmacovigilance workflows with multi-agent RAG.</p>
                 </div>
                 <div class="graduate-focus-article">
-                    <p class="text-gray-300 mb-6 leading-relaxed">This semester-long project focuses on designing and applying an Agentic Retrieval-Augmented Generation (RAG) system to a real-world business workflow. The emphasis is on structuring generative AI systems that support research, decision-making, and operational processes rather than standalone experimentation.</p>
-                    <h3 class="text-xl font-semibold mb-4 text-white">Timing</h3>
-                    <p class="text-gray-300 mb-6 leading-relaxed">Spring 2026 (semester-long)</p>
-                    <h3 class="text-xl font-semibold mb-4 text-white">Course Context</h3>
-                    <p class="text-gray-300 mb-6 leading-relaxed">This project represents 30% of my final grade in Generative AI: Insights &amp; Strategy and serves as the primary applied project for the course.</p>
+                    <h3 class="text-xl font-semibold mb-4 text-white">Project Overview</h3>
+                    <p class="text-gray-300 mb-4 leading-relaxed">Built for BNAN/MKTG 570, this project applies Retrieval-Augmented Generation and multi-agent orchestration to pharmacovigilance — the post-marketing drug safety function. The system automates routine analyst tasks like literature retrieval, FAERS trend analysis, and draft summary generation, while preserving human judgment for clinical signal validation.</p>
+                    <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
+                        <button class="proposal-btn" id="proposal-pdf-btn">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 2v3h3M5 7h4M5 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                            View Original Proposal
+                        </button>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Tech Stack</h3>
+                    <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                        <li>• <span class="text-white">Python</span> — core pipeline and orchestration logic</li>
+                        <li>• <span class="text-white">LangChain</span> — agent framework and chain management</li>
+                        <li>• <span class="text-white">ChromaDB</span> — vector store for retrieved document embeddings</li>
+                        <li>• <span class="text-white">OpenAI GPT-4</span> — primary language model for analysis and synthesis</li>
+                        <li>• <span class="text-white">Cohere Rerank</span> — relevance reranking for retrieval precision</li>
+                        <li>• <span class="text-white">Gradio</span> — interface layer for analyst interaction</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Data Sources</h3>
+                    <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                        <li>• FDA FAERS adverse event reports</li>
+                        <li>• PubMed abstracts</li>
+                        <li>• FDA drug labels</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Agent Architecture</h3>
+                    <p class="text-gray-300 mb-4 leading-relaxed">The system coordinates four specialized agents, each scoped to a distinct step of the pharmacovigilance workflow:</p>
+                    <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                        <li>• <span class="text-white">Research Retrieval</span> — queries PubMed and FDA labels for relevant literature</li>
+                        <li>• <span class="text-white">Adverse Event Analysis</span> — surfaces trends and signal patterns from FAERS data</li>
+                        <li>• <span class="text-white">Regulatory Context</span> — cross-references label indications, warnings, and prior actions</li>
+                        <li>• <span class="text-white">Synthesis</span> — generates structured regulatory summaries for analyst review</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Project Status</h3>
+                    <div class="phase-tracker">
+                        <div class="phase-item phase-complete">
+                            <div class="phase-node">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <div class="phase-connector"></div>
+                            <div class="phase-body">
+                                <div class="phase-label-row">
+                                    <span class="phase-number">Phase 1</span>
+                                    <span class="phase-badge phase-badge-done">Complete</span>
+                                </div>
+                                <p class="phase-title">Project Proposal &amp; Data Strategy</p>
+                                <p class="phase-desc">Defined the pharmacovigilance signal triage workflow, outlined data sources, and scoped the four agent roles.</p>
+                            </div>
+                        </div>
+                        <div class="phase-item phase-complete">
+                            <div class="phase-node">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <div class="phase-connector"></div>
+                            <div class="phase-body">
+                                <div class="phase-label-row">
+                                    <span class="phase-number">Phase 2</span>
+                                    <span class="phase-badge phase-badge-done">Complete</span>
+                                </div>
+                                <p class="phase-title">Core RAG Pipeline Construction</p>
+                                <p class="phase-desc">Implemented document loading, chunking, embedding, and ChromaDB storage. Built Gradio interface and tuned retrieval hyperparameters.</p>
+                            </div>
+                        </div>
+                        <div class="phase-item phase-active">
+                            <div class="phase-node">
+                                <div class="phase-pulse"></div>
+                            </div>
+                            <div class="phase-connector"></div>
+                            <div class="phase-body">
+                                <div class="phase-label-row">
+                                    <span class="phase-number">Phase 3</span>
+                                    <span class="phase-badge phase-badge-active">In Progress</span>
+                                </div>
+                                <p class="phase-title">Agentic Orchestration &amp; Refinement</p>
+                                <p class="phase-desc">Transitioning to multi-agent workflow where specialized agents collaborate sequentially to retrieve evidence, analyze data, and generate structured reports.</p>
+                            </div>
+                        </div>
+                        <div class="phase-item phase-upcoming">
+                            <div class="phase-node"></div>
+                            <div class="phase-body">
+                                <div class="phase-label-row">
+                                    <span class="phase-number">Phase 4</span>
+                                    <span class="phase-badge phase-badge-upcoming">Upcoming</span>
+                                </div>
+                                <p class="phase-title">Final Presentation &amp; System Delivery</p>
+                                <p class="phase-desc">Live demonstration, fully commented Colab notebook, and critical analysis of performance, governance, and production deployment requirements.</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -2549,6 +2637,75 @@
         }
     </script>
     <script>
+        // Graduate Work modal open/close
+        document.addEventListener('DOMContentLoaded', function() {
+            var activeModal = null;
+            var activeBackdrop = null;
+
+            function openGraduateModal(modalId) {
+                var overlay = document.getElementById(modalId);
+                if (!overlay) return;
+
+                // Close any already-open graduate modal
+                if (activeModal) closeGraduateModal();
+
+                activeModal = overlay;
+
+                // Backdrop
+                activeBackdrop = document.createElement('div');
+                activeBackdrop.className = 'modal-backdrop';
+                document.body.appendChild(activeBackdrop);
+
+                overlay.classList.remove('hidden');
+
+                // Initialize SimpleBar on this modal's scroll container
+                new SimpleBar(overlay.querySelector('.graduate-scroll-inner'));
+
+                requestAnimationFrame(function() {
+                    overlay.classList.add('active');
+                });
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeGraduateModal() {
+                if (!activeModal) return;
+                activeModal.classList.remove('active');
+                activeModal.classList.add('hidden');
+                if (activeBackdrop) { activeBackdrop.remove(); activeBackdrop = null; }
+                document.body.style.overflow = '';
+                activeModal = null;
+            }
+
+            // Card clicks
+            document.querySelectorAll('.graduate-card[data-graduate-modal]').forEach(function(card) {
+                card.addEventListener('click', function(e) {
+                    if (card.closest('.carousel-track') && card.closest('.carousel-track').classList.contains('is-dragging')) return;
+                    openGraduateModal(card.getAttribute('data-graduate-modal'));
+                });
+            });
+
+            // Close buttons
+            document.querySelectorAll('.graduate-close-btn').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeGraduateModal();
+                });
+            });
+
+            // Backdrop click to close
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-backdrop') && activeModal) {
+                    closeGraduateModal();
+                }
+            });
+
+            // Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && activeModal) closeGraduateModal();
+            });
+        });
+    </script>
+    <script>
         // Graduate Work carousel — 3-card, bounded, drag-to-scroll, center-focus
         document.addEventListener('DOMContentLoaded', function() {
             var track    = document.getElementById('graduate-carousel');
@@ -2859,6 +3016,59 @@ campaign_type,total_pipeline,total_cost,roi
 Webinar,145000.00,9500.00,14.26
 "Regional Event",550000.00,43000.00,11.79
 "Digital Campaign",90000.00,12000.00,6.50
+    </script>
+
+    <!-- PDF Viewer Popup -->
+    <div id="pdf-popup-overlay" class="pdf-popup-overlay hidden">
+        <div class="pdf-popup-content">
+            <button class="pdf-popup-close" id="pdf-popup-close" aria-label="Close PDF viewer">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <iframe id="pdf-popup-frame" src="" class="pdf-popup-frame" title="Project Proposal PDF"></iframe>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var btn     = document.getElementById('proposal-pdf-btn');
+            var overlay = document.getElementById('pdf-popup-overlay');
+            var frame   = document.getElementById('pdf-popup-frame');
+            var closeBtn = document.getElementById('pdf-popup-close');
+            if (!btn || !overlay) return;
+
+            function openPdf() {
+                frame.src = '../assets/docs/Group_6_Team_Project.pdf';
+                overlay.style.display = 'flex';
+                requestAnimationFrame(function() { overlay.classList.add('active'); });
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closePdf() {
+                overlay.classList.remove('active');
+                setTimeout(function() {
+                    overlay.style.display = 'none';
+                    frame.src = '';
+                }, 250);
+                document.body.style.overflow = '';
+            }
+
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openPdf();
+            });
+
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closePdf();
+            });
+
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) closePdf();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closePdf();
+            });
+        });
     </script>
 </body>
 </html>
