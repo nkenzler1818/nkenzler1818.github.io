@@ -257,6 +257,117 @@ code {
     opacity: 0.9;
 }
 
+/* Carousel */
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.carousel-track-outer {
+    flex: 1;
+    min-width: 0;
+    /* Gentle edge fade — transitions over 12% of the track width on each side */
+    mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+
+.carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* vertical padding gives shadow + hover-lift room;
+       horizontal padding allows first/last card to snap to center */
+    padding: 4px 0 6px;
+    padding-inline: calc(50% - 140px);
+    cursor: grab;
+    user-select: none;
+}
+
+.carousel-track.is-dragging {
+    cursor: grabbing;
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-track .project-pane {
+    min-width: 280px;
+    flex: 0 0 280px;
+    transition: opacity 0.3s ease, transform 0.3s ease,
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Side cards are dimmed — softer than before so it doesn't feel too harsh */
+.carousel-track .project-pane.carousel-dimmed {
+    opacity: 0.62;
+    transform: scale(0.97);
+}
+
+.carousel-track .project-pane.carousel-dimmed:hover {
+    opacity: 0.78;
+    transform: translateY(-2px) scale(0.99);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* Center card — full brightness, normal hover */
+.carousel-track .project-pane.carousel-focused {
+    opacity: 1;
+}
+
+.carousel-track .project-pane.carousel-focused:hover {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Arrow buttons — grey circle, bigger chevron; hover fills grey + purple icon (mirrors nav-link) */
+.carousel-arrow {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: rgba(210, 210, 210, 0.8);  /* light-grey chevron at rest */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background-color 0.15s ease, color 0.15s ease, opacity 0.2s ease;
+}
+
+.carousel-arrow:hover {
+    background-color: #454545;  /* same grey fill as nav-link hover */
+    color: #c084fc;              /* purple chevron on hover */
+}
+
+.carousel-arrow:active {
+    background-color: #383838;
+    transform: scale(0.92);
+}
+
+/* Card counter — bottom-right of row */
+.carousel-counter {
+    text-align: right;
+    font-size: 0.72rem;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.35);
+    margin-top: 2px;
+    margin-bottom: -14px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+.carousel-counter.counter-active {
+    color: rgba(192, 132, 252, 0.7);
+}
+
 .footer-bg {
     background-color: #2A2A2A;
     font-family: "Plus Jakarta Sans", system-ui, sans-serif;

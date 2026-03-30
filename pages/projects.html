@@ -875,23 +875,34 @@
             <div class="mb-12">
                 <h2 class="text-2xl font-bold mb-2 accent-purple">Graduate Work</h2>
                 <p class="text-gray-400 mb-6">Upcoming projects for this semester I am specifically looking forward to while attaining my Master's in Marketing.</p>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="agentic-rag-modal">
-                        <h3 class="text-xl font-semibold mb-2">Agentic RAG Business Workflow</h3>
-                        <p class="text-white">First-semester master’s AI systems project</p>
-                        <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
+                <div class="carousel-wrapper">
+                    <button class="carousel-arrow carousel-arrow-left" id="grad-arrow-left" aria-label="Scroll left">
+                        <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" id="graduate-carousel">
+                            <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="agentic-rag-modal">
+                                <h3 class="text-xl font-semibold mb-2">Agentic RAG Business Workflow</h3>
+                                <p class="text-white">First-semester master’s AI systems project</p>
+                                <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
+                            </div>
+                            <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="vinho-rio-modal">
+                                <h3 class="text-xl font-semibold mb-2">Harvard Simulation: Vinho Rio</h3>
+                                <p class="text-white">International marketing simulation project</p>
+                                <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
+                            </div>
+                            <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="marketing-research-methods-modal">
+                                <h3 class="text-xl font-semibold mb-2">Marketing Research Methods</h3>
+                                <p class="text-white">Quantitative &amp; qualitative research methods</p>
+                                <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="vinho-rio-modal">
-                        <h3 class="text-xl font-semibold mb-2">Harvard Simulation: Vinho Rio</h3>
-                        <p class="text-white">International marketing simulation project</p>
-                        <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
-                    </div>
-                    <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="marketing-research-methods-modal">
-                        <h3 class="text-xl font-semibold mb-2">Marketing Research Methods</h3>
-                        <p class="text-white">Quantitative &amp; qualitative research methods</p>
-                        <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
-                    </div>
+                    <button class="carousel-arrow carousel-arrow-right" id="grad-arrow-right" aria-label="Scroll right">
+                        <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M5 3L9 7L5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>
+                <p class="carousel-counter" id="grad-counter">2 / 3</p>
                 </div>
             </div>
         </div>
@@ -900,67 +911,100 @@
             <div class="mb-12">
                 <h2 class="text-2xl font-bold mb-2 accent-purple">Undergrad Work</h2>
                 <p class="text-gray-400 mb-6">Key projects from my time studying Business Administration.</p>
-                <div class="undergrad-work-grid">
-                    <div class="project-pane p-6 rounded-lg capstone-card" data-project="capstone">
-                        <h3 class="text-xl font-semibold mb-2">Capstone Project</h3>
-                        <p class="text-white">BSBA Graduation Project</p>
-                        <p class="text-accent-muted text-sm mt-3">Senior Year</p>
+                <div class="carousel-wrapper">
+                    <button class="carousel-arrow carousel-arrow-left" id="undergrad-arrow-left" aria-label="Scroll left">
+                        <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" id="undergrad-carousel">
+                            <div class="project-pane p-6 rounded-lg capstone-card" data-project="capstone">
+                                <h3 class="text-xl font-semibold mb-2">Capstone Project</h3>
+                                <p class="text-white">BSBA Graduation Project</p>
+                                <p class="text-accent-muted text-sm mt-3">Senior Year</p>
+                            </div>
+                            <div class="project-pane p-6 rounded-lg persona-card" data-project="persona">
+                                <h3 class="text-xl font-semibold mb-2">Professional Persona Analysis</h3>
+                                <p class="text-white">Self vs Peer Perception Survey</p>
+                                <p class="text-accent-muted text-sm mt-3">Junior Year</p>
+                            </div>
+                            <div class="project-pane p-6 rounded-lg case-comp-card" data-project="case-comp">
+                                <h3 class="text-xl font-semibold mb-2">Case Competition Presentation</h3>
+                                <p class="text-white">Presented by Insight</p>
+                                <p class="text-accent-muted text-sm mt-3">Junior Year</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="project-pane p-6 rounded-lg persona-card" data-project="persona">
-                        <h3 class="text-xl font-semibold mb-2">Professional Persona Analysis</h3>
-                        <p class="text-white">Self vs Peer Perception Survey</p>
-                        <p class="text-accent-muted text-sm mt-3">Junior Year</p>
-                    </div>
-                    <div class="project-pane p-6 rounded-lg case-comp-card" data-project="case-comp">
-                        <h3 class="text-xl font-semibold mb-2">Case Competition Presentation</h3>
-                        <p class="text-white">Presented by Insight</p>
-                        <p class="text-accent-muted text-sm mt-3">Junior Year</p>
-                    </div>
+                    <button class="carousel-arrow carousel-arrow-right" id="undergrad-arrow-right" aria-label="Scroll right">
+                        <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M5 3L9 7L5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>
+                <p class="carousel-counter" id="undergrad-counter">2 / 3</p>
             </div>
 
             <div class="mb-12">
                 <h2 class="text-2xl font-bold mb-2 accent-purple">Independent Projects</h2>
                 <p class="text-gray-400 mb-6">Self-driven projects, highschool work, personal experiments, and in general more creative personal works.</p>
-                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    <div class="project-pane p-6 rounded-lg case-study-card" data-case-study-trigger role="button" tabindex="0" aria-haspopup="dialog">
-                        <h3 class="text-xl font-semibold mb-2 accent-purple">Campaign Efficiency Case Study</h3>
-                        <p class="text-white">Data modeling, SQL analysis, and visualization workflow</p>
-                        <p class="text-accent-muted text-sm mt-3">Independent Project — Jan 2026</p>
+                <div class="carousel-wrapper">
+                    <button class="carousel-arrow carousel-arrow-left" id="indep-arrow-left" aria-label="Scroll left">
+                        <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" id="indep-carousel">
+                            <div class="project-pane p-6 rounded-lg case-study-card" data-case-study-trigger role="button" tabindex="0" aria-haspopup="dialog">
+                                <h3 class="text-xl font-semibold mb-2 accent-purple">Campaign Efficiency Case Study</h3>
+                                <p class="text-white">Data modeling, SQL analysis, and visualization workflow</p>
+                                <p class="text-accent-muted text-sm mt-3">Independent Project — Jan 2026</p>
+                            </div>
+                            <div class="project-pane p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold mb-2 accent-purple">Photography</h3>
+                                <p class="text-white">Personal Portfolio Series</p>
+                                <p class="text-accent-muted text-sm mt-3">Independent Project — Coming Soon</p>
+                            </div>
+                            <div class="project-pane p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold mb-2 accent-purple">Writing</h3>
+                                <p class="text-white">Essays &amp; Long-Form Work</p>
+                                <p class="text-accent-muted text-sm mt-3">Independent Project — Coming Soon</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2 accent-purple">Photography</h3>
-                        <p class="text-white">Personal Portfolio Series</p>
-                        <p class="text-accent-muted text-sm mt-3">Independent Project — Coming Soon</p>
-                    </div>
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2 accent-purple">Writing</h3>
-                        <p class="text-white">Essays &amp; Long-Form Work</p>
-                        <p class="text-accent-muted text-sm mt-3">Independent Project — Coming Soon</p>
-                    </div>
+                    <button class="carousel-arrow carousel-arrow-right" id="indep-arrow-right" aria-label="Scroll right">
+                        <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M5 3L9 7L5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>
+                <p class="carousel-counter" id="indep-counter">2 / 3</p>
             </div>
 
             <div class="mb-12">
                 <h2 class="text-2xl font-bold mb-2 accent-purple">In Progress / Learning</h2>
                 <p class="text-gray-400 mb-6">Skills and projects I'm currently building.</p>
-                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Building My Website</h3>
-                        <p class="text-white">Design &amp; Development Iterations</p>
-                        <p class="text-accent-muted text-sm mt-3">In Progress</p>
+                <div class="carousel-wrapper">
+                    <button class="carousel-arrow carousel-arrow-left" id="wip-arrow-left" aria-label="Scroll left">
+                        <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="carousel-track-outer">
+                        <div class="carousel-track" id="wip-carousel">
+                            <div class="project-pane p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold mb-2">Building My Website</h3>
+                                <p class="text-white">Design &amp; Development Iterations</p>
+                                <p class="text-accent-muted text-sm mt-3">In Progress</p>
+                            </div>
+                            <div class="project-pane p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold mb-2">SQL Practice</h3>
+                                <p class="text-white">Query Building &amp; Data Modeling</p>
+                                <p class="text-accent-muted text-sm mt-3">In Progress</p>
+                            </div>
+                            <div class="project-pane p-6 rounded-lg">
+                                <h3 class="text-xl font-semibold mb-2">Tableau Project</h3>
+                                <p class="text-white">Dashboard Design &amp; Storytelling</p>
+                                <p class="text-accent-muted text-sm mt-3">In Progress</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">SQL Practice</h3>
-                        <p class="text-white">Query Building &amp; Data Modeling</p>
-                        <p class="text-accent-muted text-sm mt-3">In Progress</p>
-                    </div>
-                    <div class="project-pane p-6 rounded-lg">
-                        <h3 class="text-xl font-semibold mb-2">Tableau Project</h3>
-                        <p class="text-white">Dashboard Design &amp; Storytelling</p>
-                        <p class="text-accent-muted text-sm mt-3">In Progress</p>
-                    </div>
+                    <button class="carousel-arrow carousel-arrow-right" id="wip-arrow-right" aria-label="Scroll right">
+                        <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M5 3L9 7L5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>
+                <p class="carousel-counter" id="wip-counter">2 / 3</p>
             </div>
         </section>
     </main>
@@ -2503,6 +2547,312 @@
             "barmode": "group"
           }
         }
+    </script>
+    <script>
+        // Graduate Work carousel — 3-card, bounded, drag-to-scroll, center-focus
+        document.addEventListener('DOMContentLoaded', function() {
+            var track    = document.getElementById('graduate-carousel');
+            var leftBtn  = document.getElementById('grad-arrow-left');
+            var rightBtn = document.getElementById('grad-arrow-right');
+            if (!track || !leftBtn || !rightBtn) return;
+
+            var CARD_PX   = 280;
+            var GAP_PX    = 24;
+            var CARD_STEP = CARD_PX + GAP_PX; // 304px per slot
+
+            var cards = Array.from(track.querySelectorAll('.project-pane'));
+            var N     = cards.length; // 3
+
+            // ── Start centered on card 2 (Harvard Simulation) ────────────
+            requestAnimationFrame(function() {
+                track.scrollLeft = CARD_STEP; // one step in = card 2 at center
+                updateFocus();
+                updateArrows();
+            });
+
+            // ── Custom smooth scroll ─────────────────────────────────────
+            var rafId = null;
+            function smoothScrollBy(delta, duration) {
+                if (rafId) cancelAnimationFrame(rafId);
+                var start = track.scrollLeft;
+                var t0    = null;
+                function step(ts) {
+                    if (!t0) t0 = ts;
+                    var pct  = Math.min((ts - t0) / duration, 1);
+                    var ease = 1 - Math.pow(1 - pct, 3);
+                    track.scrollLeft = start + delta * ease;
+                    if (pct < 1) {
+                        rafId = requestAnimationFrame(step);
+                    } else {
+                        track.scrollLeft = start + delta;
+                        rafId = null;
+                        updateFocus();
+                        updateArrows();
+                    }
+                }
+                rafId = requestAnimationFrame(step);
+            }
+
+            // ── Arrow enable/disable at hard boundaries ───────────────────
+            function updateArrows() {
+                var atStart = track.scrollLeft <= 2;
+                var atEnd   = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+                leftBtn.style.opacity       = atStart ? '0.25' : '1';
+                leftBtn.style.pointerEvents = atStart ? 'none' : '';
+                rightBtn.style.opacity      = atEnd   ? '0.25' : '1';
+                rightBtn.style.pointerEvents = atEnd  ? 'none' : '';
+            }
+
+            // ── Drag-to-scroll ───────────────────────────────────────────
+            var isDragging = false;
+            var dragStartX = 0;
+            var dragAnchor = 0;
+            var dragMoved  = false;
+
+            track.addEventListener('mousedown', function(e) {
+                if (e.button !== 0) return;
+                if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+                isDragging = true;
+                dragMoved  = false;
+                dragStartX = e.clientX;
+                dragAnchor = track.scrollLeft;
+                track.classList.add('is-dragging');
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                var dx = e.clientX - dragStartX;
+                if (Math.abs(dx) > 3) dragMoved = true;
+                track.scrollLeft = dragAnchor - dx;
+                updateFocus();
+                updateArrows();
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (!isDragging) return;
+                isDragging = false;
+                track.classList.remove('is-dragging');
+                if (dragMoved) snapToNearest();
+            });
+
+            // Block click after drag so card modals don't fire
+            track.addEventListener('click', function(e) {
+                if (dragMoved) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    dragMoved = false;
+                }
+            }, true);
+
+            // ── Snap to nearest card center ──────────────────────────────
+            function snapToNearest() {
+                var trackRect  = track.getBoundingClientRect();
+                var viewCenter = trackRect.left + trackRect.width / 2;
+                var nearest = null, minDist = Infinity;
+                cards.forEach(function(card) {
+                    var r    = card.getBoundingClientRect();
+                    var dist = Math.abs((r.left + r.width / 2) - viewCenter);
+                    if (dist < minDist) { minDist = dist; nearest = card; }
+                });
+                if (!nearest) return;
+                var nr     = nearest.getBoundingClientRect();
+                var offset = (nr.left + nr.width / 2) - viewCenter;
+                smoothScrollBy(offset, 340);
+            }
+
+            // ── Arrow clicks ─────────────────────────────────────────────
+            leftBtn.addEventListener('click', function() {
+                smoothScrollBy(-CARD_STEP, 380);
+            });
+            rightBtn.addEventListener('click', function() {
+                smoothScrollBy(CARD_STEP, 380);
+            });
+
+            // ── Center-card focus dimming + counter ──────────────────────
+            var counter        = document.getElementById('grad-counter');
+            var counterTimer   = null;
+            var lastFocusedIdx = -1;
+
+            function updateFocus() {
+                var trackRect  = track.getBoundingClientRect();
+                var viewCenter = trackRect.left + trackRect.width / 2;
+                var nearest = null, minDist = Infinity;
+                cards.forEach(function(card) {
+                    var r    = card.getBoundingClientRect();
+                    var dist = Math.abs((r.left + r.width / 2) - viewCenter);
+                    if (dist < minDist) { minDist = dist; nearest = card; }
+                });
+                cards.forEach(function(card) {
+                    card.classList.remove('carousel-focused', 'carousel-dimmed');
+                    card.classList.add(card === nearest ? 'carousel-focused' : 'carousel-dimmed');
+                });
+
+                if (nearest && counter) {
+                    var idx = cards.indexOf(nearest) + 1; // 1-based
+                    if (idx !== lastFocusedIdx) {
+                        lastFocusedIdx = idx;
+                        counter.textContent = idx + ' / ' + N;
+                        counter.classList.add('counter-active');
+                        clearTimeout(counterTimer);
+                        counterTimer = setTimeout(function() {
+                            counter.classList.remove('counter-active');
+                        }, 600);
+                    }
+                }
+            }
+
+            track.addEventListener('scroll', function() {
+                if (!isDragging && !rafId) updateFocus();
+                updateArrows();
+            });
+        });
+    </script>
+    <script>
+        // Shared carousel factory — reused for Undergrad, Independent, WIP rows
+        function initCarousel(trackId, leftId, rightId, counterId) {
+            var track    = document.getElementById(trackId);
+            var leftBtn  = document.getElementById(leftId);
+            var rightBtn = document.getElementById(rightId);
+            var counter  = document.getElementById(counterId);
+            if (!track || !leftBtn || !rightBtn) return;
+
+            var CARD_PX   = 280;
+            var GAP_PX    = 24;
+            var CARD_STEP = CARD_PX + GAP_PX;
+
+            var cards = Array.from(track.querySelectorAll('.project-pane'));
+            var N     = cards.length;
+
+            requestAnimationFrame(function() {
+                track.scrollLeft = CARD_STEP;
+                updateFocus();
+                updateArrows();
+            });
+
+            var rafId = null;
+            function smoothScrollBy(delta, duration) {
+                if (rafId) cancelAnimationFrame(rafId);
+                var start = track.scrollLeft;
+                var t0    = null;
+                function step(ts) {
+                    if (!t0) t0 = ts;
+                    var pct  = Math.min((ts - t0) / duration, 1);
+                    var ease = 1 - Math.pow(1 - pct, 3);
+                    track.scrollLeft = start + delta * ease;
+                    if (pct < 1) {
+                        rafId = requestAnimationFrame(step);
+                    } else {
+                        track.scrollLeft = start + delta;
+                        rafId = null;
+                        updateFocus();
+                        updateArrows();
+                    }
+                }
+                rafId = requestAnimationFrame(step);
+            }
+
+            function updateArrows() {
+                var atStart = track.scrollLeft <= 2;
+                var atEnd   = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+                leftBtn.style.opacity        = atStart ? '0.25' : '1';
+                leftBtn.style.pointerEvents  = atStart ? 'none' : '';
+                rightBtn.style.opacity       = atEnd   ? '0.25' : '1';
+                rightBtn.style.pointerEvents = atEnd   ? 'none' : '';
+            }
+
+            var isDragging = false, dragStartX = 0, dragAnchor = 0, dragMoved = false;
+
+            track.addEventListener('mousedown', function(e) {
+                if (e.button !== 0) return;
+                if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+                isDragging = true;
+                dragMoved  = false;
+                dragStartX = e.clientX;
+                dragAnchor = track.scrollLeft;
+                track.classList.add('is-dragging');
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                var dx = e.clientX - dragStartX;
+                if (Math.abs(dx) > 3) dragMoved = true;
+                track.scrollLeft = dragAnchor - dx;
+                updateFocus();
+                updateArrows();
+            });
+
+            document.addEventListener('mouseup', function() {
+                if (!isDragging) return;
+                isDragging = false;
+                track.classList.remove('is-dragging');
+                if (dragMoved) snapToNearest();
+            });
+
+            track.addEventListener('click', function(e) {
+                if (dragMoved) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    dragMoved = false;
+                }
+            }, true);
+
+            function snapToNearest() {
+                var trackRect  = track.getBoundingClientRect();
+                var viewCenter = trackRect.left + trackRect.width / 2;
+                var nearest = null, minDist = Infinity;
+                cards.forEach(function(card) {
+                    var r    = card.getBoundingClientRect();
+                    var dist = Math.abs((r.left + r.width / 2) - viewCenter);
+                    if (dist < minDist) { minDist = dist; nearest = card; }
+                });
+                if (!nearest) return;
+                var nr     = nearest.getBoundingClientRect();
+                var offset = (nr.left + nr.width / 2) - viewCenter;
+                smoothScrollBy(offset, 340);
+            }
+
+            leftBtn.addEventListener('click', function() { smoothScrollBy(-CARD_STEP, 380); });
+            rightBtn.addEventListener('click', function() { smoothScrollBy(CARD_STEP, 380); });
+
+            var counterTimer = null, lastFocusedIdx = -1;
+            function updateFocus() {
+                var trackRect  = track.getBoundingClientRect();
+                var viewCenter = trackRect.left + trackRect.width / 2;
+                var nearest = null, minDist = Infinity;
+                cards.forEach(function(card) {
+                    var r    = card.getBoundingClientRect();
+                    var dist = Math.abs((r.left + r.width / 2) - viewCenter);
+                    if (dist < minDist) { minDist = dist; nearest = card; }
+                });
+                cards.forEach(function(card) {
+                    card.classList.remove('carousel-focused', 'carousel-dimmed');
+                    card.classList.add(card === nearest ? 'carousel-focused' : 'carousel-dimmed');
+                });
+                if (nearest && counter) {
+                    var idx = cards.indexOf(nearest) + 1;
+                    if (idx !== lastFocusedIdx) {
+                        lastFocusedIdx = idx;
+                        counter.textContent = idx + ' / ' + N;
+                        counter.classList.add('counter-active');
+                        clearTimeout(counterTimer);
+                        counterTimer = setTimeout(function() {
+                            counter.classList.remove('counter-active');
+                        }, 600);
+                    }
+                }
+            }
+
+            track.addEventListener('scroll', function() {
+                if (!isDragging && !rafId) updateFocus();
+                updateArrows();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initCarousel('undergrad-carousel', 'undergrad-arrow-left', 'undergrad-arrow-right', 'undergrad-counter');
+            initCarousel('indep-carousel',     'indep-arrow-left',     'indep-arrow-right',     'indep-counter');
+            initCarousel('wip-carousel',       'wip-arrow-left',       'wip-arrow-right',       'wip-counter');
+        });
     </script>
     <script id="field-marketing-csv-data" type="text/plain">
 campaign_type,total_pipeline,total_cost,roi
