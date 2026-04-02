@@ -847,7 +847,6 @@ code {
 
 .phase-connector {
     width: 2px;
-    min-height: 100%;
     margin: 0 auto;
     grid-column: 2;
     align-self: stretch;
