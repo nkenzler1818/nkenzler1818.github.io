@@ -337,7 +337,7 @@
                             <div class="flex gap-4">
                                 <a href="https://www.linkedin.com/in/nathanael-kenzler/" class="icon-btn" title="LinkedIn"><img src="Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn"></a>
                                 <a href="mailto:nkenzler@arizona.edu" class="icon-btn" title="Email"><img src="Project Files/Link Icons/icons8-email-48.png" alt="Email"></a>
-                                <button class="icon-btn" id="resume-icon-btn" title="Resume" style="background:none;border:none;padding:0.5rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;border-radius:0.5rem;"><img src="Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="Resume" style="width:24px;height:24px;pointer-events:none;"></button>
+                                <button class="icon-btn" id="resume-pdf-btn" title="Resume"><img src="Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="Resume" style="width:24px;height:24px;pointer-events:none;"></button>
                             </div>
                         </div>
                         <p class="mb-4 -mt-2.5 md:mt-0"><em>See the "Building this Site..." blog post for the story of this interactive portfolio. Also, while the site is viewable on mobile devices, the site is optimized for a desktop view!</em></p>
@@ -743,9 +743,10 @@
             </div>
         </div>
     </div>
+    </div>
 
     <!-- Resume PDF Viewer Popup -->
-    <div id="resume-pdf-overlay" class="pdf-popup-overlay">
+    <div id="resume-pdf-overlay" class="pdf-popup-overlay hidden">
         <div class="pdf-popup-content">
             <button class="pdf-popup-close" id="resume-pdf-close" aria-label="Close PDF viewer">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -754,36 +755,49 @@
         </div>
     </div>
     <script>
-        (function() {
-            var btn      = document.getElementById('resume-icon-btn');
+        document.addEventListener('DOMContentLoaded', function() {
+            var btn      = document.getElementById('resume-pdf-btn');
             var overlay  = document.getElementById('resume-pdf-overlay');
             var frame    = document.getElementById('resume-pdf-frame');
             var closeBtn = document.getElementById('resume-pdf-close');
+            if (!btn || !overlay) return;
 
-            function openPdf(e) {
-                e.preventDefault();
+            function openPdf() {
                 frame.src = 'assets/docs/Kenzler_CV2025.pdf';
+                overlay.classList.remove('hidden');
                 overlay.style.display = 'flex';
-                overlay.style.opacity = '1';
+                requestAnimationFrame(function() { overlay.classList.add('active'); });
                 document.body.style.overflow = 'hidden';
             }
 
             function closePdf() {
-                overlay.style.opacity = '0';
+                overlay.classList.remove('active');
                 setTimeout(function() {
+                    overlay.classList.add('hidden');
                     overlay.style.display = 'none';
                     frame.src = '';
                 }, 250);
                 document.body.style.overflow = '';
             }
 
-            btn.addEventListener('click', openPdf);
-            closeBtn.addEventListener('click', function(e) { e.stopPropagation(); closePdf(); });
-            overlay.addEventListener('click', function(e) { if (e.target === overlay) closePdf(); });
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && overlay.style.display === 'flex') closePdf();
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openPdf();
             });
-        })();
+
+            closeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                closePdf();
+            });
+
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) closePdf();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closePdf();
+            });
+        });
     </script>
 </body>
 </html>
