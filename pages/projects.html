@@ -874,7 +874,7 @@
 
             <div class="mb-12">
                 <h2 class="text-2xl font-bold mb-2 accent-purple">Graduate Work</h2>
-                <p class="text-gray-400 mb-6">Upcoming projects for this semester I am specifically looking forward to while attaining my Master's in Marketing.</p>
+                <p class="text-gray-400 mb-6">Projects completed so far while attaining my Master's in Marketing.</p>
                 <div class="carousel-wrapper">
                     <button class="carousel-arrow carousel-arrow-left" id="grad-arrow-left" aria-label="Scroll left">
                         <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -882,19 +882,19 @@
                     <div class="carousel-track-outer">
                         <div class="carousel-track" id="graduate-carousel">
                             <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="vinho-rio-modal">
-                                <h3 class="text-xl font-semibold mb-2">Harvard Simulation: Vinho Rio</h3>
-                                <p class="text-white">International marketing simulation project</p>
-                                <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
+                                <h3 class="text-xl font-semibold mb-2">Native × Japan Market Entry Presentation</h3>
+                                <p class="text-white">International marketing project</p>
+                                <p class="text-accent-muted text-sm mt-3">Completed — Spring 2026</p>
                             </div>
                             <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="agentic-rag-modal">
                                 <h3 class="text-xl font-semibold mb-2">Pharmacovigilance RAG Pipeline</h3>
-                                <p class="text-white">Agentic RAG system for pharmaceutical drug safety signal triage.</p>
-                                <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
+                                <p class="text-white">Agentic RAG system for pharmacovigilance.</p>
+                                <p class="text-accent-muted text-sm mt-3">Completed — May 2026</p>
                             </div>
                             <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="marketing-research-methods-modal">
-                                <h3 class="text-xl font-semibold mb-2">Marketing Research Methods</h3>
-                                <p class="text-white">Quantitative &amp; qualitative research methods</p>
-                                <p class="text-accent-muted text-sm mt-3">In Progress — Spring 2026</p>
+                                <h3 class="text-xl font-semibold mb-2">AI Trust in Digital Search</h3>
+                                <p class="text-white">Quantitative research design: hypothesis testing &amp; evidence-based insights</p>
+                                <p class="text-accent-muted text-sm mt-3">Completed — Spring 2026</p>
                             </div>
                         </div>
                     </div>
@@ -1055,11 +1055,11 @@
             <div class="graduate-scroll-inner">
                 <div class="graduate-focus-header">
                     <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Pharmacovigilance RAG Pipeline</h2>
-                    <p class="text-white text-lg text-center">First-semester master's AI systems project — automating pharmacovigilance workflows with multi-agent RAG.</p>
+                    <p class="text-white text-lg text-center">First-semester master's AI systems project automating pharmacovigilance workflows with multi-agent RAG.</p>
                 </div>
                 <div class="graduate-focus-article">
                     <h3 class="text-xl font-semibold mb-4 text-white">Project Overview</h3>
-                    <p class="text-gray-300 mb-4 leading-relaxed">Built for BNAN/MKTG 570, this project applies Retrieval-Augmented Generation and multi-agent orchestration to pharmacovigilance — the post-marketing drug safety function. The system automates routine analyst tasks like literature retrieval, FAERS trend analysis, and draft summary generation, while preserving human judgment for clinical signal validation.</p>
+                    <p class="text-gray-300 mb-4 leading-relaxed">Built for BNAN/MKTG 570, this project applies Retrieval-Augmented Generation and multi-agent orchestration to pharmacovigilance (the post-marketing drug safety function). The system automates routine analyst tasks like literature retrieval, FAERS trend analysis, and draft summary generation, while preserving human judgment for clinical signal validation.</p>
                     <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
                         <button class="proposal-btn" id="proposal-pdf-btn">
                             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 2v3h3M5 7h4M5 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
@@ -1093,6 +1093,85 @@
                         <li>• <span class="text-white">Synthesis</span> — generates structured regulatory summaries for analyst review</li>
                     </ul>
 
+                    <h3 class="text-xl font-semibold mb-4 text-white">System Performance &amp; Results</h3>
+                    <p class="text-gray-300 mb-4 leading-relaxed">The system's routing intelligence is validated through measurable performance tradeoffs documented during development. Simple PRR lookups resolve in 2–3 seconds via the Naive chain; comprehensive multi-agent analyses take 8–12 seconds with four parallel LLM calls, a deliberate tradeoff and not an oversight. The on-topic relevance guardrail, running on every query via gpt-4o-mini, achieves over 95% classification accuracy at roughly 1/20th the cost of gpt-4o, demonstrating that right-sizing AI to task complexity is itself a performance strategy.</p>
+                    <p class="text-gray-300 mb-6 leading-relaxed">The system processes queries against 17,313 FAERS rows across five document types, with parent-child chunking (2,000/400 chars) ensuring both precise semantic retrieval and rich contextual generation in the final response.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">AI Judgment: Automation vs. Human Control</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">PharmaSignal RAG automates the initial triage phase (literature retrieval, FAERS trend analysis, and draft summary generation) while deliberately preserving human judgment for clinical signal validation. The system's guardrails encode this boundary directly: queries asking for medical advice or clinical decisions are blocked, not answered. This is intentional architecture, not a limitation. In regulated environments like pharmacovigilance, understanding where AI should stop is as important as knowing where it can help. The system is designed to accelerate analyst workflows, not replace analyst judgment.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Code &amp; Implementation</h3>
+                    <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
+                        <a href="https://github.com/nkenzler1818/pharmacovigilance-rag" target="_blank" rel="noopener noreferrer" class="proposal-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                            View Full Code on GitHub
+                        </a>
+                    </div>
+                    <p class="text-gray-300 mb-3 leading-relaxed">System architecture: a 9-layer pipeline from query intake to response delivery:</p>
+                    <div style="margin:0 0 1.5rem; border:1px solid #2a2a2a; border-radius:8px; overflow:hidden; font-size:0.78rem; line-height:1.4;">
+                        <div style="background:#1c1c2e; border-bottom:1px solid #2a2a2a; padding:0.55rem 1rem; text-align:center;">
+                            <div style="color:#a78bfa; font-weight:600;">Gradio Interface</div>
+                            <div style="color:#6b7280; font-size:0.72rem;">User Input</div>
+                        </div>
+                        <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                        <div style="background:#1e1a3a; border-bottom:1px solid #2a2a2a; border-top:2px solid #6d28d9; padding:0.55rem 1rem; text-align:center;">
+                            <div style="color:#c4b5fd; font-weight:600;">Guardrails Layer — Input Protection</div>
+                            <div style="color:#6b7280; font-size:0.72rem;">Blocked topics · Prompt injection detection · On-topic check (gpt-4o-mini, &gt;95% accuracy)</div>
+                        </div>
+                        <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                        <div style="background:#162a2a; border-bottom:1px solid #2a2a2a; border-top:2px solid #0d9488; padding:0.55rem 1rem; text-align:center;">
+                            <div style="color:#34d399; font-weight:600;">Meta-Intelligent Router</div>
+                            <div style="color:#6b7280; font-size:0.72rem;">LLM Query Classification (gpt-4o) with keyword fallback</div>
+                        </div>
+                        <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-bottom:1px solid #2a2a2a; border-top:2px solid #2563eb;">
+                            <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
+                                <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Naive</div>
+                                <div style="color:#6b7280; font-size:0.7rem;">Simple RAG Chain<br>2–3 sec</div>
+                            </div>
+                            <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
+                                <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Intelligent</div>
+                                <div style="color:#6b7280; font-size:0.7rem;">Context Management<br>3-tool sequence</div>
+                            </div>
+                            <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
+                                <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Supervisor</div>
+                                <div style="color:#6b7280; font-size:0.7rem;">Quality Evaluation<br>+30–40% latency</div>
+                            </div>
+                            <div style="background:#1a1e2e; padding:0.5rem; text-align:center;">
+                                <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Multi-Agent</div>
+                                <div style="color:#6b7280; font-size:0.7rem;">3 Parallel Specialists<br>8–12 sec</div>
+                            </div>
+                        </div>
+                        <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                        <div style="background:#1a2318; border-bottom:1px solid #2a2a2a; border-top:2px solid #16a34a; padding:0.55rem 1rem; text-align:center;">
+                            <div style="color:#86efac; font-weight:600;">Enhanced Retrieval Layer (Shared)</div>
+                            <div style="color:#6b7280; font-size:0.72rem;">Query Expansion → Vector Search (k=10) → Cohere Rerank (top 5) → Parent-Child Swap (400→2000 chars)</div>
+                        </div>
+                        <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                        <div style="background:#1a271a; border-bottom:1px solid #2a2a2a; border-top:2px solid #22c55e; padding:0.55rem 1rem; text-align:center;">
+                            <div style="color:#4ade80; font-weight:600;">ChromaDB Vector Store</div>
+                            <div style="color:#6b7280; font-size:0.72rem;">OpenAI text-embedding-ada-002 · Parent chunks: 2000 chars · Child chunks: 400 chars</div>
+                        </div>
+                        <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                        <div style="background:#271a1a; border-bottom:1px solid #2a2a2a; border-top:2px solid #dc2626; padding:0.55rem 1rem; text-align:center;">
+                            <div style="color:#f87171; font-weight:600;">FAERS Knowledge Base</div>
+                            <div style="color:#6b7280; font-size:0.72rem;">17,313 rows · drug-outcome signals · indications · outcomes · case drugs · severity classifications</div>
+                        </div>
+                        <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                        <div style="background:#1e1a3a; border-bottom:1px solid #2a2a2a; border-top:2px solid #6d28d9; padding:0.55rem 1rem; text-align:center;">
+                            <div style="color:#c4b5fd; font-weight:600;">Guardrails Layer — Output Filtering</div>
+                            <div style="color:#6b7280; font-size:0.72rem;">PII detection · Sensitive information filter before delivery</div>
+                        </div>
+                        <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                        <div style="background:#1c1c2e; border-top:2px solid #4c1d95; padding:0.55rem 1rem; text-align:center;">
+                            <div style="color:#a78bfa; font-weight:600;">Gradio Interface</div>
+                            <div style="color:#6b7280; font-size:0.72rem;">User Output — Response Delivered</div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Learnings &amp; Future Iterations</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">The most instructive limitation is the absence of conversation memory: each query is stateless. In a real analyst workflow, follow-up questions like "what about the ROR for that drug?" are essential, but the current architecture requires users to restate context every call. A production version would implement context windowing (last 5–10 exchanges) and a dynamic knowledge base refresh pipeline for quarterly FAERS updates. The architecture is right; operational completeness is the next iteration.</p>
+
                     <h3 class="text-xl font-semibold mb-4 text-white">Project Status</h3>
                     <div class="phase-tracker">
                         <div class="phase-item phase-complete">
@@ -1123,29 +1202,31 @@
                                 <p class="phase-desc">Implemented document loading, chunking, embedding, and ChromaDB storage. Built Gradio interface and tuned retrieval hyperparameters.</p>
                             </div>
                         </div>
-                        <div class="phase-item phase-active">
+                        <div class="phase-item phase-complete">
                             <div class="phase-node">
-                                <div class="phase-pulse"></div>
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </div>
                             <div class="phase-connector"></div>
                             <div class="phase-body">
                                 <div class="phase-label-row">
                                     <span class="phase-number">Phase 3</span>
-                                    <span class="phase-badge phase-badge-active">In Progress</span>
+                                    <span class="phase-badge phase-badge-done">Complete</span>
                                 </div>
                                 <p class="phase-title">Agentic Orchestration &amp; Refinement</p>
-                                <p class="phase-desc">Transitioning to multi-agent workflow where specialized agents collaborate sequentially to retrieve evidence, analyze data, and generate structured reports.</p>
+                                <p class="phase-desc">Implemented multi-agent workflow with meta-intelligent routing, four specialized strategies, and enhanced retrieval layer with Cohere reranking.</p>
                             </div>
                         </div>
-                        <div class="phase-item phase-upcoming">
-                            <div class="phase-node"></div>
+                        <div class="phase-item phase-complete">
+                            <div class="phase-node">
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
                             <div class="phase-body">
                                 <div class="phase-label-row">
                                     <span class="phase-number">Phase 4</span>
-                                    <span class="phase-badge phase-badge-upcoming">Upcoming</span>
+                                    <span class="phase-badge phase-badge-done">Complete</span>
                                 </div>
                                 <p class="phase-title">Final Presentation &amp; System Delivery</p>
-                                <p class="phase-desc">Live demonstration, fully commented Colab notebook, and critical analysis of performance, governance, and production deployment requirements.</p>
+                                <p class="phase-desc">Live demonstration delivered, fully commented notebook published, and critical analysis of performance, governance, and production deployment requirements completed.</p>
                             </div>
                         </div>
                     </div>
@@ -1164,14 +1245,36 @@
             </button>
             <div class="graduate-scroll-inner">
                 <div class="graduate-focus-header">
-                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Harvard Simulation: Vinho Rio LiveCase</h2>
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Native × Japan Market Entry Presentation</h2>
                 </div>
                 <div class="graduate-focus-article">
-                    <p class="text-gray-300 mb-6 leading-relaxed">This team-based simulation uses Harvard Business School’s Vinho Rio LiveCase to explore international marketing strategy, competitive dynamics, and global market entry decisions. The project focuses on adapting marketing strategy across regions while managing trade-offs in pricing, positioning, and growth.</p>
-                    <h3 class="text-xl font-semibold mb-4 text-white">Timing</h3>
-                    <p class="text-gray-300 mb-6 leading-relaxed">Spring 2026</p>
-                    <h3 class="text-xl font-semibold mb-4 text-white">Course Context</h3>
-                    <p class="text-gray-300 mb-6 leading-relaxed">This simulation is a core graded component of International Marketing and contributes to both the team project and participation portions of the course grade.</p>
+                    <h3 class="text-xl font-semibold mb-3 text-white">Market Entry Strategy Presentation</h3>
+                    <div class="bg-slate-50 rounded-lg overflow-hidden mb-6" style="position:relative; width:100%; padding-bottom:56.25%;">
+                        <iframe src="../Project%20Files/Native%20%C3%97%20Japan%20-%20Market%20Entry%20Presentation.pdf" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" title="Market Entry Strategy Presentation"></iframe>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Project Overview &amp; Market Opportunity</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Japan’s beauty market is worth $32 billion, yet deodorant penetration sits at only 55%—far below the global average of 92%. This gap exists because of cultural factors: minimal odor expectations due to daily bathing habits and genetic factors (ABCC11 gene variation means less body odor for East Asian populations). But this also means tremendous upside for the right brand entering at the right time. Native, as a premium natural deodorant aligned with wellness trends, has a real opportunity to capture share in Japan’s growing consciousness around freshness and personal care.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">The Regulatory Barrier Becomes a Strategic Advantage</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Japan classifies deodorants containing antiperspirant actives as quasi-drugs, requiring 12–18 months of Ministry of Health, Labour and Welfare (MHLW) approval. Instead of treating this as a blocker, the strategy uses it as a sequencing tool: Phase 1 launches Native as a cosmetic-classified body fragrance/deodorant through e-commerce (Amazon Japan, Rakuten) to build brand awareness and consumer reviews. Phase 2 runs the regulatory approval process in parallel while gathering market data. Phase 3, upon approval, transitions to full deodorant launch in retail channels with Japan-exclusive formulations.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Cultural Positioning: "Kirei" Over Function</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">The biggest insight: don’t sell deodorant in Japan. Sell "kirei"—the concept of freshness, cleanliness, and wholeness. Position Native as a wellness product aligned with Japanese beauty standards around minimal scent, natural ingredients, and purity. The marketing, scent profiles, and retail placement all emphasize wellness category positioning, not functional odor control (which carries cultural stigma). This required repositioning the entire brand narrative for the market.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Why This Matters</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">This case demonstrates sophisticated strategic thinking: how to navigate regulatory constraints as sequencing opportunities, how cultural understanding reshapes positioning, and how phased rollout enables data-driven decisions at each stage. It shows the ability to synthesize market research, regulatory environment, competitive positioning, and cultural adaptation into a coherent go-to-market strategy. This is the kind of multi-variable decision-making that matters in real marketing leadership roles.</p>
+
+                    <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
+                        <a href="../Project%20Files/Native_Japan_Report_Final_Draft.pdf" download class="proposal-btn" style="border-color:rgba(96,165,250,0.35); background:rgba(96,165,250,0.07); color:#60a5fa;">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 2v3h3M5 7h4M5 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                            Download Full Report (PDF)
+                        </a>
+                    </div>
+
+                    <div style="text-align:center; margin-top:1rem; margin-bottom:0.5rem;">
+                        <span style="display:inline-block; padding:4px 14px; border-radius:999px; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3); color:#4ade80; font-size:0.78rem; font-weight:600;">Completed — Spring 2026</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1189,11 +1292,43 @@
                     <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Marketing Research Methods</h2>
                 </div>
                 <div class="graduate-focus-article">
-                    <p class="text-gray-300 mb-6 leading-relaxed">This project series covers the full marketing research process, including exploratory and conclusive research methods. Work includes empathy-based research, interviews, focus groups, observations, netnography, survey design, experimental research, and statistical analysis using original data.</p>
-                    <h3 class="text-xl font-semibold mb-4 text-white">Timing</h3>
-                    <p class="text-gray-300 mb-6 leading-relaxed">Spring 2026 (multiple projects across the semester)</p>
-                    <h3 class="text-xl font-semibold mb-4 text-white">Course Context</h3>
-                    <p class="text-gray-300 mb-6 leading-relaxed">These projects collectively represent a significant portion of the grade in Marketing Research for Managers and emphasize end-to-end research design, execution, and insight development.</p>
+                    <h3 class="text-xl font-semibold mb-3 text-white">AI Trust Research: Full Presentation</h3>
+                    <div class="bg-slate-50 rounded-lg overflow-hidden mb-6" style="position:relative; width:100%; padding-bottom:56.25%;">
+                        <iframe src="../Project%20Files/MKTG%20572%20Final%20Presentation%20Group%206.pdf" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" title="AI Trust Research: Full Presentation"></iframe>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Project: AI Trust in Digital Search Platforms</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">In MKTG 572 Marketing Research for Managers, our team designed and executed a controlled experiment investigating how AI integration transparency affects user trust in digital search platforms. The core research question was whether presenting an AI advisory feature as optional and hidden rather than prominently displayed would affect trust levels. Our hypothesis predicted that AI shown as an optional, collapsible feature would yield higher trust than AI forced and visible by default. We tested this against a realistic food discovery search interface using a between-subjects experimental design.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Experimental Design &amp; Methodology</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">We ran a between-subjects experiment with two conditions: <span class="text-white">AI Present</span> (AI expanded by default, prominently visible) and <span class="text-white">AI Optional</span> (AI collapsed by default, accessible via a "Try AI Advisor" button). Participants interacted with the search interface and completed a validated 7-point trust scale. Cronbach's alpha equaled 0.78, confirming acceptable scale reliability. The sample had an average age of 42, reflecting a broad adult consumer perspective. We ran independent-samples t-tests in SPSS to compare trust scores across conditions, with Cohen's d calculated to assess practical significance beyond statistical thresholds.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Data Collection &amp; Sample</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Participant data was collected through Cloud Research, a professional research panel platform. Cloud Research enabled efficient recruitment of a representative sample with an average age of 42, reflecting a broad adult consumer perspective. This paid panel methodology is standard in rigorous marketing research for avoiding the selection bias common in convenience samples, ensuring that results generalize beyond a student or self-selected population.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Key Findings: Null Result, Strong Insight</h3>
+                    <p class="text-gray-300 mb-4 leading-relaxed">Results showed no statistically significant difference in trust between conditions (AI Present M = 3.93 out of 7, AI Optional M = 3.76 out of 7; p = 0.489; Cohen's d = 0.14, indicating small effect size). Our hypothesis was not supported. However, qualitative responses clarified why: participants reported distrust driven by accuracy concerns and lack of control, not by AI visibility. Representative quotes captured the pattern: <em>"I don't like how the first page is just all AI instead of actual results"</em> and <em>"I do not trust AI systems to make critical decisions for me, I always have the last word."</em></p>
+                    <p class="text-gray-300 mb-6 leading-relaxed">The critical finding: trust was driven by perceived accuracy, transparency, and user control rather than whether AI was visually present or hidden.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Business Implications &amp; Strategic Insight</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">These findings challenge the common UX assumption that surfacing AI features more prominently increases trust. If trust is governed by accuracy and control rather than visibility, brands adding AI to consumer experiences should prioritize explainability and user override capabilities, not AI prominence. Future research should strengthen the manipulation by showing ranking logic explicitly and extend to higher-stakes decisions where trust effects would be more pronounced. A null result here is itself informative for any product team making AI integration decisions.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Research Rigor &amp; Data Literacy</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">This project demonstrates full-cycle quantitative research literacy: experimental design, Qualtrics survey construction, SPSS statistical analysis including t-tests, Cronbach's alpha, and effect sizes, plus evidence-based interpretation. Critically, we showed the discipline to accurately report and learn from null results. Knowing when data contradicts your hypothesis is as important as knowing when it confirms it. This is the foundation of evidence-based decision-making in any organization.</p>
+
+                    <h3 class="text-xl font-semibold mb-4 text-white">Methodology &amp; Tools</h3>
+                    <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                        <li>• <span class="text-white">Design:</span> Between-subjects experiment, 2 conditions</li>
+                        <li>• <span class="text-white">Scale:</span> 7-point trust measure (Cronbach's &alpha; = 0.78)</li>
+                        <li>• <span class="text-white">Qualtrics</span> — survey and experimental administration platform</li>
+                        <li>• <span class="text-white">Cloud Research</span> — participant recruitment and data collection</li>
+                        <li>• <span class="text-white">SPSS</span> — t-tests, Cronbach's alpha, Cohen's d</li>
+                        <li>• <span class="text-white">Team:</span> 6 members &nbsp;|&nbsp; <span class="text-white">Completed:</span> Spring 2026</li>
+                    </ul>
+
+                    <div style="text-align:center; margin-top:1rem; margin-bottom:0.5rem;">
+                        <span style="display:inline-block; padding:4px 14px; border-radius:999px; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3); color:#4ade80; font-size:0.78rem; font-weight:600;">Completed — Spring 2026</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2720,7 +2855,7 @@
             var cards = Array.from(track.querySelectorAll('.project-pane'));
             var N     = cards.length; // 3
 
-            // ── Start centered on card 2 (Harvard Simulation) ────────────
+            // ── Start centered on card 2 (Native × Japan Market Entry Presentation) ────────────
             requestAnimationFrame(function() {
                 track.scrollLeft = CARD_STEP; // one step in = card 2 at center
                 updateFocus();

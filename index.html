@@ -330,7 +330,7 @@
                     <div class="flex-1 -mt-3 md:mt-0">
                         <h1 class="text-4xl font-bold text-white mb-4"><span class="wave-emoji" aria-hidden="true">👋</span> Hello, world!</h1>
                         <h2 class="text-2xl font-semibold mb-4"><span class="text-white">I am</span> <span class="accent-purple">Nathanael Kenzler</span></h2>
-                        <p class="text-lg mb-4">M.S. in Marketing Candidate | Aspiring Business and Marketing Professional</p>
+                        <p class="text-lg mb-4">M.S. in Marketing Candidate | Aspiring Marketing Professional</p>
                         <p class="mb-6">I am a first-generation graduate student pursuing a Master of Science in Marketing at the University of Arizona. My background spans marketing support, operations, and client-facing roles, with a focus on clarity, execution, and data-driven storytelling.</p>
                         <div class="flex flex-wrap gap-2 mb-6">
                             <a href="pages/about.html" class="btn-dark-purple">More about me</a>
@@ -349,17 +349,17 @@
         <section id="projects" class="mb-16">
             <h2 class="text-3xl font-bold mb-8">Featured Projects</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="project-card p-6 rounded-lg" onclick="showHomeModal('home-capstone-modal')">
-                    <h3 class="text-xl font-semibold mb-2">Capstone Project</h3>
-                    <p class="text-white mb-4">A semester-long business strategy simulation focused on competitive positioning, decision-making, and performance analysis. Led weekly strategy coordination and translated complex data into actionable insights.</p>
+                <div class="project-card p-6 rounded-lg" onclick="showHomeModal('home-native-japan-modal')">
+                    <h3 class="text-xl font-semibold mb-2">Native × Japan Market Entry</h3>
+                    <p class="text-white mb-4">International marketing strategy project. Developed a phased market entry plan for Native deodorant entering Japan's $32B beauty market, navigating regulatory barriers and cultural repositioning.</p>
                 </div>
                 <div class="project-card p-6 rounded-lg" onclick="showHomeModal('home-persona-modal')">
                     <h3 class="text-xl font-semibold mb-2">Professional Persona Analysis</h3>
                     <p class="text-white mb-4">A self-perception versus peer-perception study examining leadership communication, working style, and professional presence. Combines survey analysis, reflection, and applied business communication theory.</p>
                 </div>
                 <div class="project-card p-6 rounded-lg" onclick="showHomeModal('home-casecomp-modal')">
-                    <h3 class="text-xl font-semibold mb-2">Case Competition Presentation</h3>
-                    <p class="text-white mb-4">A team-based case competition sponsored by Insight, addressing internal communication overload through an immersive VR-based communication strategy. Focused on research, positioning, and executive-level storytelling.</p>
+                    <h3 class="text-xl font-semibold mb-2">Pharmacovigilance RAG Pipeline</h3>
+                    <p class="text-white mb-4">Agentic RAG system for pharmaceutical drug safety signal triage. Multi-agent architecture combining LangChain, ChromaDB, and Cohere Rerank to automate pharmacovigilance analyst workflows.</p>
                 </div>
             </div>
         </section>
@@ -440,106 +440,46 @@
         </div>
     </div>
 
-    <!-- Home Capstone Modal -->
-    <div class="capstone-focus-overlay capstone-modal hidden home-project-modal" id="home-capstone-modal">
-        <div class="capstone-focus-content">
-            <button class="capstone-close-btn" aria-label="Close focused view">
+    <!-- Home Native × Japan Modal -->
+    <div class="blog-focus-overlay blog-modal hidden home-project-modal" id="home-native-japan-modal">
+        <div class="blog-focus-content" style="height: 85vh; max-height: 85vh;">
+            <button class="capstone-close-btn" aria-label="Close modal">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
             </button>
-            <div class="capstone-scroll-inner">
-                <div class="capstone-focus-header">
-                    <div class="capstone-badge">
-                        <a href="https://www.bsg-online.com" target="_blank" rel="noopener noreferrer" title="View Business Strategy Game">
-                            <img src="Project Files/Link Icons/bsg-icon.png" alt="Business Strategy Game" class="bsg-logo">
-                        </a>
-                    </div>
-                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Capstone Project</h2>
-                    <p class="text-white text-lg text-center">A dynamic business simulation showcasing market strategy, competition, and adaptive decision-making over time.</p>
+            <div class="blog-scroll-inner">
+                <div class="blog-focus-header">
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Native × Japan Market Entry Presentation</h2>
                 </div>
-
-                <div class="capstone-focus-main">
-                    <div class="capstone-focus-article">
-                        <h3 class="text-xl font-semibold mb-4 text-white">Project Overview</h3>
-                        <p class="text-gray-300 mb-6 leading-relaxed">In this capstone, I participated in a weekly business simulation called the Business Strategy Game (BSG), where teams operated virtual athletic footwear companies and competed directly against one another for market share. Each Sunday, the simulation processed all team decisions and generated performance reports, which we then analyzed before submitting updated strategies for the following week.</p>
-                        <p class="text-gray-300 mb-6 leading-relaxed">At the outset, teams selected a strategic positioning, choosing whether to compete as a high-quality, premium brand or a lower-cost, higher-volume producer. I served as the designated decision coordinator, responsible for consolidating team input and submitting a unified strategy each week to avoid conflicting changes and ensure consistency in execution.</p>
-                        <h4 class="text-lg font-medium mb-2 text-gray-200">Weekly Competitive Adjustments</h4>
-                        <p class="text-gray-300 mb-4 leading-relaxed">Each week, I analyzed the Sunday performance reports to assess how our decisions compared against competing teams. By Year 13, execution issues began to surface, particularly around quality planning and channel alignment. These challenges resulted in a sharp decline in our ranking, as shown in the early scoreboard results (Image A).</p>
-                        <h4 class="text-lg font-medium mb-2 text-gray-200">Identifying the Underlying Problem</h4>
-                        <p class="text-gray-300 mb-4 leading-relaxed">To diagnose the root cause of our decline, I conducted a deeper competitive analysis using Comparative Competitive Efforts reports (Image B). This analysis revealed that:</p>
-                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
-                            <li>• Our private-label S/Q rating fell below retailer requirements, eliminating sales in that segment</li>
-                            <li>• Pricing and celebrity appeal lagged behind competitors with similar product quality</li>
-                            <li>• An aggressive growth strategy, supported by short-term debt, assumed revenue that did not materialize</li>
-                        </ul>
-                        <p class="text-gray-300 mb-6 leading-relaxed">This comparative benchmarking clarified that the issue was not a single decision, but a misalignment between production quality, channel requirements, and financial assumptions.</p>
-                        <h4 class="text-lg font-medium mb-2 text-gray-200">Finding the Strategic Opportunity</h4>
-                        <p class="text-gray-300 mb-4 leading-relaxed">As I expanded the analysis to include subsequent rounds (Image C), a broader industry pattern became clear. Most teams were aggressively competing in internet sales, creating a saturated and highly competitive environment. In contrast, wholesale distribution was significantly underutilized across the industry.</p>
-                        <p class="text-gray-300 mb-6 leading-relaxed">Recognizing this gap, I identified wholesale as a strategic opportunity to scale volume, reduce direct competition, and stabilize performance while maintaining selective internet sales.</p>
-                        <h4 class="text-lg font-medium mb-2 text-gray-200">Strategy Shift and Execution</h4>
-                        <p class="text-gray-300 mb-4 leading-relaxed">Based on these insights, our team devised and implemented a coordinated strategy shift focused on execution discipline and channel alignment:</p>
-                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
-                            <li>• Corrected S/Q ratings to meet retailer thresholds</li>
-                            <li>• Adjusted TQM and Six Sigma investments to stabilize quality</li>
-                            <li>• Repositioned pricing to emphasize affordability at scale</li>
-                            <li>• Increased marketing and celebrity appeal to reinforce brand credibility</li>
-                            <li>• Shifted production emphasis toward wholesale distribution</li>
-                        </ul>
-                        <p class="text-gray-300 mb-6 leading-relaxed">These changes were executed over multiple rounds, with each decision cycle aligned to reinforce the broader strategy (Image D).</p>
-                        <h4 class="text-lg font-medium mb-2 text-gray-200">Recovery and Performance Outcomes</h4>
-                        <p class="text-gray-300 mb-4 leading-relaxed">The impact of the strategy shift became visible quickly. By Year 15, our ranking rebounded sharply, jumping from near the bottom of the scoreboard to the top tier in a single year (Image E). Performance gains continued through the final rounds of the simulation.</p>
-                        <p class="text-gray-300 mb-6 leading-relaxed">By Year 20, our company achieved:</p>
-                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
-                            <li>• Stock price of $559, compared to competitors as low as $21</li>
-                            <li>• Earnings per share of $23, the highest in the industry</li>
-                            <li>• Return on equity of 43 percent</li>
-                            <li>• A+ credit rating and A+ image rating</li>
-                            <li>• $1.8 million in total sales (Image F)</li>
-                            <li>• Second place finish in the class</li>
-                        </ul>
-                        <div class="reflection-block">
-                            <h3 class="text-xl font-semibold text-white mb-4">Looking Back and Moving Forward</h3>
-                            <p class="text-gray-300 mb-6 leading-relaxed">Beyond the results, this project reinforced my confidence in stepping into a leadership role and driving performance under pressure. In concrete terms, by Year 20, we secured first place for that final year (Image G) and finished second overall in the entire simulation (Image H). We turned a slow start into a strong upward trajectory, proving that a well-executed strategic pivot can achieve top-tier results.</p>
-                            <p class="text-gray-300 mb-6 leading-relaxed">But more than just the numbers, this experience was about navigating early setbacks, identifying the right strategic pivot, and coordinating execution across multiple rounds. It demonstrated my ability to lead data-driven decision-making and elevate a team's performance to a high level. Ultimately, that's the kind of impact I aim to bring into any real-world marketing scenario: turning insights into action and guiding a team to success.</p>
-                            <p class="text-gray-300 mb-6 leading-relaxed"><em>P.S. Apologies for some of the highlights on the images to the side. The BSG is a subscription-based platform, and my class session has ended, so I couldn't specifically download the reports again. I had to find what I could from my old files.</em></p>
-                            <p class="text-gray-300 mb-6 leading-relaxed"><em>Thank you!</em></p>
+                <div class="blog-focus-main">
+                    <div class="blog-focus-article">
+                        <h3 class="text-xl font-semibold mb-3 text-white">Market Entry Strategy Presentation</h3>
+                        <div class="bg-slate-50 rounded-lg overflow-hidden mb-6" style="position:relative; width:100%; padding-bottom:56.25%;">
+                            <iframe src="Project%20Files/Native%20%C3%97%20Japan%20-%20Market%20Entry%20Presentation.pdf" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" title="Market Entry Strategy Presentation"></iframe>
                         </div>
-                    </div>
-                    <div class="capstone-focus-media">
-                        <div class="capstone-media-grid">
-                            <div class="capstone-media-item">
-                                <img src="BSG/year-13-scoreboard.png" alt="Year 13 Scoreboard showing early performance decline" class="w-full h-48 object-cover rounded-lg">
-                                <p class="text-gray-400 text-sm mt-2 text-center">Image A – Year 13 Scoreboard</p>
-                            </div>
-                            <div class="capstone-media-item">
-                                <img src="BSG/comparative-competitive-efforts-year-13.png" alt="Comparative Competitive Efforts analysis for Year 13" class="w-full h-48 object-cover rounded-lg">
-                                <p class="text-gray-400 text-sm mt-2 text-center">Image B – Comparative Competitive Efforts (Year 13)</p>
-                            </div>
-                            <div class="capstone-media-item">
-                                <img src="BSG/comparative-competitive-efforts-year-14.png" alt="Comparative Competitive Efforts analysis for Year 14" class="w-full h-48 object-cover rounded-lg">
-                                <p class="text-gray-400 text-sm mt-2 text-center">Image C – Comparative Competitive Efforts (Year 14)</p>
-                            </div>
-                            <div class="capstone-media-item">
-                                <img src="BSG/year-14-scoreboard.png" alt="Year 14 Scoreboard showing lowest ranking point" class="w-full h-48 object-cover rounded-lg">
-                                <p class="text-gray-400 text-sm mt-2 text-center">Image D – Year 14 Scoreboard</p>
-                            </div>
-                            <div class="capstone-media-item">
-                                <img src="BSG/year-15-scoreboard.png" alt="Year 15 Scoreboard showing post-strategy recovery" class="w-full h-48 object-cover rounded-lg">
-                                <p class="text-gray-400 text-sm mt-2 text-center">Image E – Year 15 Scoreboard</p>
-                            </div>
-                            <div class="capstone-media-item">
-                                <img src="BSG/performance-highlights-year-20.png" alt="Performance Highlights for Year 20 final outcomes" class="w-full h-48 object-cover rounded-lg">
-                                <p class="text-gray-400 text-sm mt-2 text-center">Image F – Performance Highlights (Year 20)</p>
-                            </div>
-                            <div class="capstone-media-item">
-                                <img src="BSG/endofgamegametodatescoreboard.png" alt="End of Game to Date Scoreboard showing first place for Year 20" class="w-full h-48 object-cover rounded-lg">
-                                <p class="text-gray-400 text-sm mt-2 text-center">Image G – End of Game to Date Scoreboard</p>
-                            </div>
-                            <div class="capstone-media-item">
-                                <img src="BSG/year20scoreboard.png" alt="Year 20 Scoreboard showing second place overall finish" class="w-full h-48 object-cover rounded-lg">
-                                <p class="text-gray-400 text-sm mt-2 text-center">Image H – Year 20 Scoreboard</p>
-                            </div>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Project Overview &amp; Market Opportunity</h3>
+                        <p class="text-gray-300 mb-6 leading-relaxed">Japan's beauty market is worth $32 billion, yet deodorant penetration sits at only 55%—far below the global average of 92%. This gap exists because of cultural factors: minimal odor expectations due to daily bathing habits and genetic factors (ABCC11 gene variation means less body odor for East Asian populations). But this also means tremendous upside for the right brand entering at the right time. Native, as a premium natural deodorant aligned with wellness trends, has a real opportunity to capture share in Japan's growing consciousness around freshness and personal care.</p>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">The Regulatory Barrier Becomes a Strategic Advantage</h3>
+                        <p class="text-gray-300 mb-6 leading-relaxed">Japan classifies deodorants containing antiperspirant actives as quasi-drugs, requiring 12–18 months of Ministry of Health, Labour and Welfare (MHLW) approval. Instead of treating this as a blocker, the strategy uses it as a sequencing tool: Phase 1 launches Native as a cosmetic-classified body fragrance/deodorant through e-commerce (Amazon Japan, Rakuten) to build brand awareness and consumer reviews. Phase 2 runs the regulatory approval process in parallel while gathering market data. Phase 3, upon approval, transitions to full deodorant launch in retail channels with Japan-exclusive formulations.</p>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Cultural Positioning: "Kirei" Over Function</h3>
+                        <p class="text-gray-300 mb-6 leading-relaxed">The biggest insight: don't sell deodorant in Japan. Sell "kirei"—the concept of freshness, cleanliness, and wholeness. Position Native as a wellness product aligned with Japanese beauty standards around minimal scent, natural ingredients, and purity. The marketing, scent profiles, and retail placement all emphasize wellness category positioning, not functional odor control (which carries cultural stigma). This required repositioning the entire brand narrative for the market.</p>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Why This Matters</h3>
+                        <p class="text-gray-300 mb-6 leading-relaxed">This case demonstrates sophisticated strategic thinking: how to navigate regulatory constraints as sequencing opportunities, how cultural understanding reshapes positioning, and how phased rollout enables data-driven decisions at each stage. It shows the ability to synthesize market research, regulatory environment, competitive positioning, and cultural adaptation into a coherent go-to-market strategy. This is the kind of multi-variable decision-making that matters in real marketing leadership roles.</p>
+
+                        <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
+                            <a href="Project%20Files/Native_Japan_Report_Final_Draft.pdf" download class="proposal-btn" style="border-color:rgba(96,165,250,0.35); background:rgba(96,165,250,0.07); color:#60a5fa;">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 2v3h3M5 7h4M5 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                                Download Full Report (PDF)
+                            </a>
+                        </div>
+
+                        <div style="text-align:center; margin-top:1rem; margin-bottom:0.5rem;">
+                            <span style="display:inline-block; padding:4px 14px; border-radius:999px; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3); color:#4ade80; font-size:0.78rem; font-weight:600;">Completed — Spring 2026</span>
                         </div>
                     </div>
                 </div>
@@ -604,7 +544,7 @@
 
     <!-- Home Case Comp Modal -->
     <div class="blog-focus-overlay blog-modal hidden home-project-modal" id="home-casecomp-modal">
-        <div class="blog-focus-content">
+        <div class="blog-focus-content" style="height: 85vh; max-height: 85vh;">
             <button class="case-comp-close-btn" aria-label="Close modal">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -612,132 +552,184 @@
             </button>
             <div class="blog-scroll-inner">
                 <div class="blog-focus-header">
-                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Case Competition Presentation</h2>
-                    <p class="text-white text-lg text-center">Communication Strategy Presentation</p>
+                    <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Pharmacovigilance RAG Pipeline</h2>
+                    <p class="text-white text-lg text-center">First-semester master's AI systems project automating pharmacovigilance workflows with multi-agent RAG.</p>
                 </div>
 
                 <div class="blog-focus-main">
                     <div class="blog-focus-article">
                         <h3 class="text-xl font-semibold mb-4 text-white">Project Overview</h3>
-                        <p class="text-gray-300 mb-6 leading-relaxed">In this project, I participated in a case competition hosted by Insight, a company dealing with communication overload among employees. We were one of about 40 or 50 teams in total, and in our specific group, we competed against five other teams. After a few weeks of preparation, two representatives from Insight reviewed our proposals. We were encouraged to think beyond common tools like Slack or GroupMe and explore new, creative communication methods. This led our team to brainstorm innovative ideas, and we ultimately arrived at a virtual reality solution to address the problem.</p>
-                        <h3 class="text-xl font-semibold mb-4 text-white">Presentation Slides</h3>
-                        <iframe src="assets/docs/CaseCompPresentation.pdf" width="100%" height="600px" style="border: none;"></iframe>
-                        <h3 class="text-xl font-semibold mb-4 text-white" style="margin-top: 35px;">Key Highlights from the Presentation</h3>
-                        <table class="presentation-table">
-                            <thead>
-                                <tr>
-                                    <th>Section & Context</th>
-                                    <th>Slide Range</th>
-                                    <th>Overview</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Section & Context">Title & Team Introduction</td>
-                                    <td data-label="Slide Range">1–2</td>
-                                    <td data-label="Overview">Introduced the case competition, team identity (Team H9), and team members, establishing the context for the Insight-sponsored challenge.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Agenda & Presentation Flow</td>
-                                    <td data-label="Slide Range">3</td>
-                                    <td data-label="Overview">Outlined the presentation agenda, including the situation, background analysis, benchmark, recommendation, response and impact, and conclusion.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Introduction & Situation</td>
-                                    <td data-label="Slide Range">4</td>
-                                    <td data-label="Overview">Framed the core challenge facing Insight and introduced the need for a new internal communication strategy to address engagement and information transfer.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Issue & Opportunity</td>
-                                    <td data-label="Slide Range">5</td>
-                                    <td data-label="Overview">Identified key communication issues including information overload, miscommunication, missed messages, and the opportunity to consolidate and improve engagement.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Attentiveness in a Virtual World</td>
-                                    <td data-label="Slide Range">6</td>
-                                    <td data-label="Overview">Highlighted research showing increased attentiveness and reduced distractions in immersive virtual environments.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Retaining Information</td>
-                                    <td data-label="Slide Range">7</td>
-                                    <td data-label="Overview">Demonstrated how VR improves information retention through multi-sensory engagement and experiential learning.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Educational & Workplace Landscape</td>
-                                    <td data-label="Slide Range">8–9</td>
-                                    <td data-label="Overview">Provided examples of VR adoption across education and the workplace, emphasizing improved focus, confidence, and training outcomes.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Target Audience & Communication Levels</td>
-                                    <td data-label="Slide Range">10–11</td>
-                                    <td data-label="Overview">Defined Insight's employee audience and outlined differing communication needs across in-person, remote, and hybrid environments.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Industry Context & Best Practices</td>
-                                    <td data-label="Slide Range">12–14</td>
-                                    <td data-label="Overview">Positioned VR as a rapidly growing industry and established best practices centered on immersive and interactive communication.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Benchmark & Memory Retention</td>
-                                    <td data-label="Slide Range">15–17</td>
-                                    <td data-label="Overview">Used Accenture as a benchmark to illustrate memory loss in traditional training and improved retention through VR when scaled to Insight.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Applying VR to Insight</td>
-                                    <td data-label="Slide Range">18</td>
-                                    <td data-label="Overview">Connected VR capabilities directly to Insight's communication needs, focusing on updates, training, and engagement.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Insight VR Hub Concept</td>
-                                    <td data-label="Slide Range">19</td>
-                                    <td data-label="Overview">Introduced Insight VR Hub as a conceptual centralized virtual space for internal communication and engagement.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Personalized VR Experience</td>
-                                    <td data-label="Slide Range">20</td>
-                                    <td data-label="Overview">Showcased personalized VR sessions designed to deliver role-relevant information and reduce unnecessary communication noise.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Simulation & Interactive Features</td>
-                                    <td data-label="Slide Range">21</td>
-                                    <td data-label="Overview">Detailed immersive simulations, AI-driven interactions, and voice recognition as core engagement features.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Gamification & Engagement</td>
-                                    <td data-label="Slide Range">22</td>
-                                    <td data-label="Overview">Introduced leaderboards and gamified elements to increase participation, motivation, and performance.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Response & Impact</td>
-                                    <td data-label="Slide Range">23</td>
-                                    <td data-label="Overview">Summarized expected engagement improvements and performance impact resulting from the proposed VR communication strategy.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Implementation Timeline</td>
-                                    <td data-label="Slide Range">24</td>
-                                    <td data-label="Overview">Outlined phased implementation including development and testing, pilot launch, and full rollout with monitoring.</td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Section & Context">Budget Allocation</td>
-                                    <td data-label="Slide Range">25</td>
-                                    <td data-label="Overview">Presented budget details including 500 Meta Quest 2 headsets and an incentive program to drive adoption.</td>
-                                </tr>
-                                <tr>
-                                <td data-label="Section & Context">KPIs & Measurement</td>
-                                <td data-label="Slide Range">26</td>
-                                <td data-label="Overview">Defined success metrics such as quiz completion rates and accuracy to measure engagement and effectiveness.</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Section & Context">Conclusion & Close</td>
-                                <td data-label="Slide Range">27–28</td>
-                                <td data-label="Overview">Recapped the problem, solution, research support, and implementation plan, concluding with questions and discussion.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="reflection-block">
-                        <h3 class="text-xl font-semibold text-white mb-4">Looking Back and Moving Forward</h3>
-                        <p class="text-gray-300 mb-4 leading-relaxed">This project was not just about exploring VR technology; it was a pivotal moment in my development as a team leader and marketer. Working with a group that included younger teammates, I had the opportunity to step up into a leadership role. Guiding our team through the case competition helped me hone my skills in coordinating tasks, communicating complex ideas, and ensuring that everyone's strengths were utilized.</p>
-                        <p class="text-gray-300 leading-relaxed">Reflecting on this experience now, it's clear how much it contributed to my growth in marketing and leadership. It taught me the importance of adapting my communication style to different audiences and fostering a collaborative environment where new ideas could thrive. This project underscored how stepping into a leadership role and working closely with a diverse team can shape you into a more well-rounded and strategic professional.</p>
+                        <p class="text-gray-300 mb-4 leading-relaxed">Built for BNAN/MKTG 570, this project applies Retrieval-Augmented Generation and multi-agent orchestration to pharmacovigilance (the post-marketing drug safety function). The system automates routine analyst tasks like literature retrieval, FAERS trend analysis, and draft summary generation, while preserving human judgment for clinical signal validation.</p>
+                        <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
+                            <button class="proposal-btn">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 2v3h3M5 7h4M5 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                                View Original Proposal
+                            </button>
+                        </div>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Tech Stack</h3>
+                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                            <li>• <span class="text-white">Python</span> — core pipeline and orchestration logic</li>
+                            <li>• <span class="text-white">LangChain</span> — agent framework and chain management</li>
+                            <li>• <span class="text-white">ChromaDB</span> — vector store for retrieved document embeddings</li>
+                            <li>• <span class="text-white">OpenAI GPT-4</span> — primary language model for analysis and synthesis</li>
+                            <li>• <span class="text-white">Cohere Rerank</span> — relevance reranking for retrieval precision</li>
+                            <li>• <span class="text-white">Gradio</span> — interface layer for analyst interaction</li>
+                        </ul>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Data Sources</h3>
+                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                            <li>• FDA FAERS adverse event reports</li>
+                            <li>• PubMed abstracts</li>
+                            <li>• FDA drug labels</li>
+                        </ul>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Agent Architecture</h3>
+                        <p class="text-gray-300 mb-4 leading-relaxed">The system coordinates four specialized agents, each scoped to a distinct step of the pharmacovigilance workflow:</p>
+                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                            <li>• <span class="text-white">Research Retrieval</span> — queries PubMed and FDA labels for relevant literature</li>
+                            <li>• <span class="text-white">Adverse Event Analysis</span> — surfaces trends and signal patterns from FAERS data</li>
+                            <li>• <span class="text-white">Regulatory Context</span> — cross-references label indications, warnings, and prior actions</li>
+                            <li>• <span class="text-white">Synthesis</span> — generates structured regulatory summaries for analyst review</li>
+                        </ul>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">System Performance &amp; Results</h3>
+                        <p class="text-gray-300 mb-4 leading-relaxed">The system's routing intelligence is validated through measurable performance tradeoffs documented during development. Simple PRR lookups resolve in 2–3 seconds via the Naive chain; comprehensive multi-agent analyses take 8–12 seconds with four parallel LLM calls, a deliberate tradeoff and not an oversight. The on-topic relevance guardrail, running on every query via gpt-4o-mini, achieves over 95% classification accuracy at roughly 1/20th the cost of gpt-4o, demonstrating that right-sizing AI to task complexity is itself a performance strategy.</p>
+                        <p class="text-gray-300 mb-6 leading-relaxed">The system processes queries against 17,313 FAERS rows across five document types, with parent-child chunking (2,000/400 chars) ensuring both precise semantic retrieval and rich contextual generation in the final response.</p>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">AI Judgment: Automation vs. Human Control</h3>
+                        <p class="text-gray-300 mb-6 leading-relaxed">PharmaSignal RAG automates the initial triage phase (literature retrieval, FAERS trend analysis, and draft summary generation) while deliberately preserving human judgment for clinical signal validation. The system's guardrails encode this boundary directly: queries asking for medical advice or clinical decisions are blocked, not answered. This is intentional architecture, not a limitation. In regulated environments like pharmacovigilance, understanding where AI should stop is as important as knowing where it can help. The system is designed to accelerate analyst workflows, not replace analyst judgment.</p>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Code &amp; Implementation</h3>
+                        <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
+                            <a href="https://github.com/nkenzler1818/pharmacovigilance-rag" target="_blank" rel="noopener noreferrer" class="proposal-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                                View Full Code on GitHub
+                            </a>
+                        </div>
+                        <p class="text-gray-300 mb-3 leading-relaxed">System architecture: a 9-layer pipeline from query intake to response delivery:</p>
+                        <div style="margin:0 0 1.5rem; border:1px solid #2a2a2a; border-radius:8px; overflow:hidden; font-size:0.78rem; line-height:1.4;">
+                            <div style="background:#1c1c2e; border-bottom:1px solid #2a2a2a; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#a78bfa; font-weight:600;">Gradio Interface</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">User Input</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1e1a3a; border-bottom:1px solid #2a2a2a; border-top:2px solid #6d28d9; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#c4b5fd; font-weight:600;">Guardrails Layer — Input Protection</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">Blocked topics · Prompt injection detection · On-topic check (gpt-4o-mini, &gt;95% accuracy)</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#162a2a; border-bottom:1px solid #2a2a2a; border-top:2px solid #0d9488; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#34d399; font-weight:600;">Meta-Intelligent Router</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">LLM Query Classification (gpt-4o) with keyword fallback</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-bottom:1px solid #2a2a2a; border-top:2px solid #2563eb;">
+                                <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
+                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Naive</div>
+                                    <div style="color:#6b7280; font-size:0.7rem;">Simple RAG Chain<br>2–3 sec</div>
+                                </div>
+                                <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
+                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Intelligent</div>
+                                    <div style="color:#6b7280; font-size:0.7rem;">Context Management<br>3-tool sequence</div>
+                                </div>
+                                <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
+                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Supervisor</div>
+                                    <div style="color:#6b7280; font-size:0.7rem;">Quality Evaluation<br>+30–40% latency</div>
+                                </div>
+                                <div style="background:#1a1e2e; padding:0.5rem; text-align:center;">
+                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Multi-Agent</div>
+                                    <div style="color:#6b7280; font-size:0.7rem;">3 Parallel Specialists<br>8–12 sec</div>
+                                </div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1a2318; border-bottom:1px solid #2a2a2a; border-top:2px solid #16a34a; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#86efac; font-weight:600;">Enhanced Retrieval Layer (Shared)</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">Query Expansion → Vector Search (k=10) → Cohere Rerank (top 5) → Parent-Child Swap (400→2000 chars)</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1a271a; border-bottom:1px solid #2a2a2a; border-top:2px solid #22c55e; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#4ade80; font-weight:600;">ChromaDB Vector Store</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">OpenAI text-embedding-ada-002 · Parent chunks: 2000 chars · Child chunks: 400 chars</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#271a1a; border-bottom:1px solid #2a2a2a; border-top:2px solid #dc2626; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#f87171; font-weight:600;">FAERS Knowledge Base</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">17,313 rows · drug-outcome signals · indications · outcomes · case drugs · severity classifications</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1e1a3a; border-bottom:1px solid #2a2a2a; border-top:2px solid #6d28d9; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#c4b5fd; font-weight:600;">Guardrails Layer — Output Filtering</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">PII detection · Sensitive information filter before delivery</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1c1c2e; border-top:2px solid #4c1d95; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#a78bfa; font-weight:600;">Gradio Interface</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">User Output — Response Delivered</div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Learnings &amp; Future Iterations</h3>
+                        <p class="text-gray-300 mb-6 leading-relaxed">The most instructive limitation is the absence of conversation memory: each query is stateless. In a real analyst workflow, follow-up questions like "what about the ROR for that drug?" are essential, but the current architecture requires users to restate context every call. A production version would implement context windowing (last 5–10 exchanges) and a dynamic knowledge base refresh pipeline for quarterly FAERS updates. The architecture is right; operational completeness is the next iteration.</p>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Project Status</h3>
+                        <div class="phase-tracker">
+                            <div class="phase-item phase-complete">
+                                <div class="phase-node">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </div>
+                                <div class="phase-connector"></div>
+                                <div class="phase-body">
+                                    <div class="phase-label-row">
+                                        <span class="phase-number">Phase 1</span>
+                                        <span class="phase-badge phase-badge-done">Complete</span>
+                                    </div>
+                                    <p class="phase-title">Project Proposal &amp; Data Strategy</p>
+                                    <p class="phase-desc">Defined the pharmacovigilance signal triage workflow, outlined data sources, and scoped the four agent roles.</p>
+                                </div>
+                            </div>
+                            <div class="phase-item phase-complete">
+                                <div class="phase-node">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </div>
+                                <div class="phase-connector"></div>
+                                <div class="phase-body">
+                                    <div class="phase-label-row">
+                                        <span class="phase-number">Phase 2</span>
+                                        <span class="phase-badge phase-badge-done">Complete</span>
+                                    </div>
+                                    <p class="phase-title">Core RAG Pipeline Construction</p>
+                                    <p class="phase-desc">Implemented document loading, chunking, embedding, and ChromaDB storage. Built Gradio interface and tuned retrieval hyperparameters.</p>
+                                </div>
+                            </div>
+                            <div class="phase-item phase-complete">
+                                <div class="phase-node">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </div>
+                                <div class="phase-connector"></div>
+                                <div class="phase-body">
+                                    <div class="phase-label-row">
+                                        <span class="phase-number">Phase 3</span>
+                                        <span class="phase-badge phase-badge-done">Complete</span>
+                                    </div>
+                                    <p class="phase-title">Agentic Orchestration &amp; Refinement</p>
+                                    <p class="phase-desc">Implemented multi-agent workflow with meta-intelligent routing, four specialized strategies, and enhanced retrieval layer with Cohere reranking.</p>
+                                </div>
+                            </div>
+                            <div class="phase-item phase-complete">
+                                <div class="phase-node">
+                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </div>
+                                <div class="phase-body">
+                                    <div class="phase-label-row">
+                                        <span class="phase-number">Phase 4</span>
+                                        <span class="phase-badge phase-badge-done">Complete</span>
+                                    </div>
+                                    <p class="phase-title">Final Presentation &amp; System Delivery</p>
+                                    <p class="phase-desc">Live demonstration delivered, fully commented notebook published, and critical analysis of performance, governance, and production deployment requirements completed.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
