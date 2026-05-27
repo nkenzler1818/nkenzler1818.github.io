@@ -49,51 +49,51 @@
         });
 
         // Home Featured Project Modals functionality
+        // SimpleBar uses native browser scroll (overflow-y:scroll on .simplebar-content-wrapper).
+        // Page scroll is contained by overscroll-behavior:none on that element (CSS).
+        // Do NOT preventDefault on wheel events — that kills SimpleBar's native scroll.
+
         function showHomeModal(modalId) {
-            const modal = document.getElementById(modalId);
+            var modal = document.getElementById(modalId);
             if (!modal) return;
 
-            // Create and add backdrop
-            const backdrop = document.createElement('div');
-            backdrop.className = 'modal-backdrop';
-            document.body.appendChild(backdrop);
-
-            // Show modal
-            modal.classList.remove('hidden');
-            modal.classList.add('active');
-
-            // Initialize scrollbar if needed
-            const scrollInner = modal.querySelector('.blog-scroll-inner') || modal.querySelector('.capstone-scroll-inner');
+            // Init SimpleBar while element is still hidden (display:none) —
+            // exact same sequence as the working persona modal on projects.html.
+            var scrollInner = modal.querySelector('.persona-scroll-inner') || modal.querySelector('.blog-scroll-inner');
             if (scrollInner) {
                 new SimpleBar(scrollInner);
             }
 
-            // Disable scroll
+            var backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop';
+            document.body.appendChild(backdrop);
+
+            // Show immediately — no requestAnimationFrame (matches persona pattern).
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+
             document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
         }
 
         function closeHomeModal() {
-            // Hide all home modals
-            const modals = document.querySelectorAll('.home-project-modal');
-            modals.forEach(modal => {
+            var modals = document.querySelectorAll('.home-project-modal');
+            modals.forEach(function(modal) {
                 modal.classList.remove('active');
                 modal.classList.add('hidden');
             });
 
-            // Remove backdrop
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
+            var backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) { backdrop.remove(); }
 
-            // Re-enable scroll
             document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
         }
 
         // Event listeners for home modals
         document.addEventListener('DOMContentLoaded', function() {
             // Close buttons for all home modals
-            const closeBtns = document.querySelectorAll('.capstone-close-btn, .persona-close-btn, .case-comp-close-btn');
+            const closeBtns = document.querySelectorAll('.capstone-close-btn, .persona-close-btn');
             closeBtns.forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -442,7 +442,7 @@
 
     <!-- Home Native × Japan Modal -->
     <div class="blog-focus-overlay blog-modal hidden home-project-modal" id="home-native-japan-modal">
-        <div class="blog-focus-content" style="height: 85vh; max-height: 85vh;">
+        <div class="blog-focus-content">
             <button class="capstone-close-btn" aria-label="Close modal">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -543,14 +543,14 @@
     </div>
 
     <!-- Home Case Comp Modal -->
-    <div class="blog-focus-overlay blog-modal hidden home-project-modal" id="home-casecomp-modal">
-        <div class="blog-focus-content" style="height: 85vh; max-height: 85vh;">
-            <button class="case-comp-close-btn" aria-label="Close modal">
+    <div class="persona-focus-overlay persona-modal hidden home-project-modal" id="home-casecomp-modal">
+        <div class="persona-focus-content">
+            <button class="persona-close-btn" aria-label="Close modal">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
             </button>
-            <div class="blog-scroll-inner">
+            <div class="persona-scroll-inner">
                 <div class="blog-focus-header">
                     <h2 class="text-3xl font-bold mb-3 accent-purple text-center">Pharmacovigilance RAG Pipeline</h2>
                     <p class="text-white text-lg text-center">First-semester master's AI systems project automating pharmacovigilance workflows with multi-agent RAG.</p>

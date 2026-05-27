@@ -1188,6 +1188,7 @@ code {
     left: 0;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -1219,9 +1220,6 @@ code {
 .blog-scroll-inner {
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
     padding: 0 2.5rem 2.5rem 4rem;
     margin-top: 0;
     direction: ltr;
@@ -1259,6 +1257,13 @@ code {
     background: #767676;
 }
 
+.blog-scroll-inner .simplebar-content-wrapper,
+.persona-scroll-inner .simplebar-content-wrapper,
+.capstone-scroll-inner .simplebar-content-wrapper,
+.graduate-scroll-inner .simplebar-content-wrapper {
+    overscroll-behavior: none;
+}
+
 .blog-scroll-inner {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -1270,6 +1275,12 @@ code {
 
 .blog-focus-overlay.active .blog-focus-content {
     /* transform: scale(1); */
+}
+
+/* Home project modals: definite height so flex children don't collapse */
+.home-project-modal .blog-focus-content {
+    height: 85vh;
+    max-height: 85vh;
 }
 
 .blog-focus-header {
@@ -1483,6 +1494,7 @@ code {
     left: 0;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -1499,6 +1511,7 @@ code {
     position: relative;
     width: 100%;
     max-width: 1000px;
+    height: 85vh;
     max-height: 85vh;
     margin: auto;
     background: #141414;
