@@ -51,13 +51,13 @@
         // Home Featured Project Modals functionality
         // SimpleBar uses native browser scroll (overflow-y:scroll on .simplebar-content-wrapper).
         // Page scroll is contained by overscroll-behavior:none on that element (CSS).
-        // Do NOT preventDefault on wheel events — that kills SimpleBar's native scroll.
+        // Do NOT preventDefault on wheel events - that kills SimpleBar's native scroll.
 
         function showHomeModal(modalId) {
             var modal = document.getElementById(modalId);
             if (!modal) return;
 
-            // Init SimpleBar while element is still hidden (display:none) —
+            // Init SimpleBar while element is still hidden (display:none) -
             // exact same sequence as the working persona modal on projects.html.
             var scrollInner = modal.querySelector('.persona-scroll-inner') || modal.querySelector('.blog-scroll-inner');
             if (scrollInner) {
@@ -68,7 +68,7 @@
             backdrop.className = 'modal-backdrop';
             document.body.appendChild(backdrop);
 
-            // Show immediately — no requestAnimationFrame (matches persona pattern).
+            // Show immediately - no requestAnimationFrame (matches persona pattern).
             modal.classList.remove('hidden');
             modal.classList.add('active');
 
@@ -460,26 +460,26 @@
                         </div>
 
                         <h3 class="text-xl font-semibold mb-4 text-white">Project Overview &amp; Market Opportunity</h3>
-                        <p class="text-gray-300 mb-6 leading-relaxed">Japan's beauty market is worth $32 billion, yet deodorant penetration sits at only 55%—far below the global average of 92%. This gap exists because of cultural factors: minimal odor expectations due to daily bathing habits and genetic factors (ABCC11 gene variation means less body odor for East Asian populations). But this also means tremendous upside for the right brand entering at the right time. Native, as a premium natural deodorant aligned with wellness trends, has a real opportunity to capture share in Japan's growing consciousness around freshness and personal care.</p>
+                        <p class="text-gray-300 mb-6 leading-relaxed">Japan's beauty market is worth $32 billion, yet deodorant penetration sits at only 55% which is far below the global average of 92%. This gap exists because of cultural factors: minimal odor expectations due to daily bathing habits and genetic factors (ABCC11 gene variation means less body odor for East Asian populations). But this also means tremendous upside for the right brand entering at the right time. Native, as a premium natural deodorant aligned with wellness trends, has a real opportunity to capture share in Japan's growing consciousness around freshness and personal care.</p>
 
                         <h3 class="text-xl font-semibold mb-4 text-white">The Regulatory Barrier Becomes a Strategic Advantage</h3>
                         <p class="text-gray-300 mb-6 leading-relaxed">Japan classifies deodorants containing antiperspirant actives as quasi-drugs, requiring 12–18 months of Ministry of Health, Labour and Welfare (MHLW) approval. Instead of treating this as a blocker, the strategy uses it as a sequencing tool: Phase 1 launches Native as a cosmetic-classified body fragrance/deodorant through e-commerce (Amazon Japan, Rakuten) to build brand awareness and consumer reviews. Phase 2 runs the regulatory approval process in parallel while gathering market data. Phase 3, upon approval, transitions to full deodorant launch in retail channels with Japan-exclusive formulations.</p>
 
                         <h3 class="text-xl font-semibold mb-4 text-white">Cultural Positioning: "Kirei" Over Function</h3>
-                        <p class="text-gray-300 mb-6 leading-relaxed">The biggest insight: don't sell deodorant in Japan. Sell "kirei"—the concept of freshness, cleanliness, and wholeness. Position Native as a wellness product aligned with Japanese beauty standards around minimal scent, natural ingredients, and purity. The marketing, scent profiles, and retail placement all emphasize wellness category positioning, not functional odor control (which carries cultural stigma). This required repositioning the entire brand narrative for the market.</p>
+                        <p class="text-gray-300 mb-6 leading-relaxed">The biggest insight: don't sell deodorant in Japan. Sell "kirei"-the concept of freshness, cleanliness, and wholeness. Position Native as a wellness product aligned with Japanese beauty standards around minimal scent, natural ingredients, and purity. The marketing, scent profiles, and retail placement all emphasize wellness category positioning, not functional odor control (which carries cultural stigma). This required repositioning the entire brand narrative for the market.</p>
 
                         <h3 class="text-xl font-semibold mb-4 text-white">Why This Matters</h3>
                         <p class="text-gray-300 mb-6 leading-relaxed">This case demonstrates sophisticated strategic thinking: how to navigate regulatory constraints as sequencing opportunities, how cultural understanding reshapes positioning, and how phased rollout enables data-driven decisions at each stage. It shows the ability to synthesize market research, regulatory environment, competitive positioning, and cultural adaptation into a coherent go-to-market strategy. This is the kind of multi-variable decision-making that matters in real marketing leadership roles.</p>
 
                         <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
-                            <a href="Project%20Files/Native_Japan_Report_Final_Draft.pdf" download class="proposal-btn" style="border-color:rgba(96,165,250,0.35); background:rgba(96,165,250,0.07); color:#60a5fa;">
+                            <button id="japan-report-btn" class="proposal-btn">
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 2v3h3M5 7h4M5 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-                                Download Full Report (PDF)
-                            </a>
+                                View Full Report (PDF)
+                            </button>
                         </div>
 
                         <div style="text-align:center; margin-top:1rem; margin-bottom:0.5rem;">
-                            <span style="display:inline-block; padding:4px 14px; border-radius:999px; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3); color:#4ade80; font-size:0.78rem; font-weight:600;">Completed — Spring 2026</span>
+                            <span style="display:inline-block; padding:4px 14px; border-radius:999px; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.3); color:#4ade80; font-size:0.78rem; font-weight:600;">Completed - Spring 2026</span>
                         </div>
                     </div>
                 </div>
@@ -512,7 +512,7 @@
                         <p class="text-gray-300 mb-4 leading-relaxed">To cross reference with my own perceptions (red circle), survey responses from five colleagues, including managers and peers, were collected to assess perceptions of my work style and personality (Image A).</p>
                         <div class="persona-inline-figure">
                             <img src="Project Files/peoplestyles.png" alt="People Styles perceptual map showing self vs peer perception" class="rounded-lg">
-                            <p class="text-gray-400 text-sm mt-2 text-center">Image A — People Styles: Responsiveness vs Assertiveness</p>
+                            <p class="text-gray-400 text-sm mt-2 text-center">Image A - People Styles: Responsiveness vs Assertiveness</p>
                         </div>
                         <p class="text-gray-300 mb-6 leading-relaxed">While I see myself as amiable, colleagues perceive me as more assertive and driven. These differences in perception emphasize the significance of understanding how others view my behavior. Addressing these discrepancies is vital for fostering effective communication and building stronger working relationships.</p>
                         <h3 class="text-xl font-semibold mb-4 text-white">Recognizing my true nature</h3>
@@ -528,12 +528,12 @@
                         </div>
                         <div class="border-t border-gray-700 pt-6 mt-8">
                             <div class="flex justify-center items-center">
-                                <a href="assets/docs/ProfessionalPersonaReport.pdf" target="_blank" rel="noreferrer" class="inline-flex items-center px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm rounded-md transition-colors">
+                                <button id="persona-pdf-btn" class="proposal-btn">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                     </svg>
                                     View Original Assignment PDF
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -561,116 +561,11 @@
                         <h3 class="text-xl font-semibold mb-4 text-white">Project Overview</h3>
                         <p class="text-gray-300 mb-4 leading-relaxed">Built for BNAN/MKTG 570, this project applies Retrieval-Augmented Generation and multi-agent orchestration to pharmacovigilance (the post-marketing drug safety function). The system automates routine analyst tasks like literature retrieval, FAERS trend analysis, and draft summary generation, while preserving human judgment for clinical signal validation.</p>
                         <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
-                            <button class="proposal-btn">
+                            <button class="proposal-btn" id="pharmaco-proposal-btn">
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 2v3h3M5 7h4M5 9.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
                                 View Original Proposal
                             </button>
                         </div>
-
-                        <h3 class="text-xl font-semibold mb-4 text-white">Tech Stack</h3>
-                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
-                            <li>• <span class="text-white">Python</span> — core pipeline and orchestration logic</li>
-                            <li>• <span class="text-white">LangChain</span> — agent framework and chain management</li>
-                            <li>• <span class="text-white">ChromaDB</span> — vector store for retrieved document embeddings</li>
-                            <li>• <span class="text-white">OpenAI GPT-4</span> — primary language model for analysis and synthesis</li>
-                            <li>• <span class="text-white">Cohere Rerank</span> — relevance reranking for retrieval precision</li>
-                            <li>• <span class="text-white">Gradio</span> — interface layer for analyst interaction</li>
-                        </ul>
-
-                        <h3 class="text-xl font-semibold mb-4 text-white">Data Sources</h3>
-                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
-                            <li>• FDA FAERS adverse event reports</li>
-                            <li>• PubMed abstracts</li>
-                            <li>• FDA drug labels</li>
-                        </ul>
-
-                        <h3 class="text-xl font-semibold mb-4 text-white">Agent Architecture</h3>
-                        <p class="text-gray-300 mb-4 leading-relaxed">The system coordinates four specialized agents, each scoped to a distinct step of the pharmacovigilance workflow:</p>
-                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
-                            <li>• <span class="text-white">Research Retrieval</span> — queries PubMed and FDA labels for relevant literature</li>
-                            <li>• <span class="text-white">Adverse Event Analysis</span> — surfaces trends and signal patterns from FAERS data</li>
-                            <li>• <span class="text-white">Regulatory Context</span> — cross-references label indications, warnings, and prior actions</li>
-                            <li>• <span class="text-white">Synthesis</span> — generates structured regulatory summaries for analyst review</li>
-                        </ul>
-
-                        <h3 class="text-xl font-semibold mb-4 text-white">System Performance &amp; Results</h3>
-                        <p class="text-gray-300 mb-4 leading-relaxed">The system's routing intelligence is validated through measurable performance tradeoffs documented during development. Simple PRR lookups resolve in 2–3 seconds via the Naive chain; comprehensive multi-agent analyses take 8–12 seconds with four parallel LLM calls, a deliberate tradeoff and not an oversight. The on-topic relevance guardrail, running on every query via gpt-4o-mini, achieves over 95% classification accuracy at roughly 1/20th the cost of gpt-4o, demonstrating that right-sizing AI to task complexity is itself a performance strategy.</p>
-                        <p class="text-gray-300 mb-6 leading-relaxed">The system processes queries against 17,313 FAERS rows across five document types, with parent-child chunking (2,000/400 chars) ensuring both precise semantic retrieval and rich contextual generation in the final response.</p>
-
-                        <h3 class="text-xl font-semibold mb-4 text-white">AI Judgment: Automation vs. Human Control</h3>
-                        <p class="text-gray-300 mb-6 leading-relaxed">PharmaSignal RAG automates the initial triage phase (literature retrieval, FAERS trend analysis, and draft summary generation) while deliberately preserving human judgment for clinical signal validation. The system's guardrails encode this boundary directly: queries asking for medical advice or clinical decisions are blocked, not answered. This is intentional architecture, not a limitation. In regulated environments like pharmacovigilance, understanding where AI should stop is as important as knowing where it can help. The system is designed to accelerate analyst workflows, not replace analyst judgment.</p>
-
-                        <h3 class="text-xl font-semibold mb-4 text-white">Code &amp; Implementation</h3>
-                        <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
-                            <a href="https://github.com/nkenzler1818/pharmacovigilance-rag" target="_blank" rel="noopener noreferrer" class="proposal-btn">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-                                View Full Code on GitHub
-                            </a>
-                        </div>
-                        <p class="text-gray-300 mb-3 leading-relaxed">System architecture: a 9-layer pipeline from query intake to response delivery:</p>
-                        <div style="margin:0 0 1.5rem; border:1px solid #2a2a2a; border-radius:8px; overflow:hidden; font-size:0.78rem; line-height:1.4;">
-                            <div style="background:#1c1c2e; border-bottom:1px solid #2a2a2a; padding:0.55rem 1rem; text-align:center;">
-                                <div style="color:#a78bfa; font-weight:600;">Gradio Interface</div>
-                                <div style="color:#6b7280; font-size:0.72rem;">User Input</div>
-                            </div>
-                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
-                            <div style="background:#1e1a3a; border-bottom:1px solid #2a2a2a; border-top:2px solid #6d28d9; padding:0.55rem 1rem; text-align:center;">
-                                <div style="color:#c4b5fd; font-weight:600;">Guardrails Layer — Input Protection</div>
-                                <div style="color:#6b7280; font-size:0.72rem;">Blocked topics · Prompt injection detection · On-topic check (gpt-4o-mini, &gt;95% accuracy)</div>
-                            </div>
-                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
-                            <div style="background:#162a2a; border-bottom:1px solid #2a2a2a; border-top:2px solid #0d9488; padding:0.55rem 1rem; text-align:center;">
-                                <div style="color:#34d399; font-weight:600;">Meta-Intelligent Router</div>
-                                <div style="color:#6b7280; font-size:0.72rem;">LLM Query Classification (gpt-4o) with keyword fallback</div>
-                            </div>
-                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-bottom:1px solid #2a2a2a; border-top:2px solid #2563eb;">
-                                <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
-                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Naive</div>
-                                    <div style="color:#6b7280; font-size:0.7rem;">Simple RAG Chain<br>2–3 sec</div>
-                                </div>
-                                <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
-                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Intelligent</div>
-                                    <div style="color:#6b7280; font-size:0.7rem;">Context Management<br>3-tool sequence</div>
-                                </div>
-                                <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
-                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Supervisor</div>
-                                    <div style="color:#6b7280; font-size:0.7rem;">Quality Evaluation<br>+30–40% latency</div>
-                                </div>
-                                <div style="background:#1a1e2e; padding:0.5rem; text-align:center;">
-                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Multi-Agent</div>
-                                    <div style="color:#6b7280; font-size:0.7rem;">3 Parallel Specialists<br>8–12 sec</div>
-                                </div>
-                            </div>
-                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
-                            <div style="background:#1a2318; border-bottom:1px solid #2a2a2a; border-top:2px solid #16a34a; padding:0.55rem 1rem; text-align:center;">
-                                <div style="color:#86efac; font-weight:600;">Enhanced Retrieval Layer (Shared)</div>
-                                <div style="color:#6b7280; font-size:0.72rem;">Query Expansion → Vector Search (k=10) → Cohere Rerank (top 5) → Parent-Child Swap (400→2000 chars)</div>
-                            </div>
-                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
-                            <div style="background:#1a271a; border-bottom:1px solid #2a2a2a; border-top:2px solid #22c55e; padding:0.55rem 1rem; text-align:center;">
-                                <div style="color:#4ade80; font-weight:600;">ChromaDB Vector Store</div>
-                                <div style="color:#6b7280; font-size:0.72rem;">OpenAI text-embedding-ada-002 · Parent chunks: 2000 chars · Child chunks: 400 chars</div>
-                            </div>
-                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
-                            <div style="background:#271a1a; border-bottom:1px solid #2a2a2a; border-top:2px solid #dc2626; padding:0.55rem 1rem; text-align:center;">
-                                <div style="color:#f87171; font-weight:600;">FAERS Knowledge Base</div>
-                                <div style="color:#6b7280; font-size:0.72rem;">17,313 rows · drug-outcome signals · indications · outcomes · case drugs · severity classifications</div>
-                            </div>
-                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
-                            <div style="background:#1e1a3a; border-bottom:1px solid #2a2a2a; border-top:2px solid #6d28d9; padding:0.55rem 1rem; text-align:center;">
-                                <div style="color:#c4b5fd; font-weight:600;">Guardrails Layer — Output Filtering</div>
-                                <div style="color:#6b7280; font-size:0.72rem;">PII detection · Sensitive information filter before delivery</div>
-                            </div>
-                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
-                            <div style="background:#1c1c2e; border-top:2px solid #4c1d95; padding:0.55rem 1rem; text-align:center;">
-                                <div style="color:#a78bfa; font-weight:600;">Gradio Interface</div>
-                                <div style="color:#6b7280; font-size:0.72rem;">User Output — Response Delivered</div>
-                            </div>
-                        </div>
-
-                        <h3 class="text-xl font-semibold mb-4 text-white">Learnings &amp; Future Iterations</h3>
-                        <p class="text-gray-300 mb-6 leading-relaxed">The most instructive limitation is the absence of conversation memory: each query is stateless. In a real analyst workflow, follow-up questions like "what about the ROR for that drug?" are essential, but the current architecture requires users to restate context every call. A production version would implement context windowing (last 5–10 exchanges) and a dynamic knowledge base refresh pipeline for quarterly FAERS updates. The architecture is right; operational completeness is the next iteration.</p>
 
                         <h3 class="text-xl font-semibold mb-4 text-white">Project Status</h3>
                         <div class="phase-tracker">
@@ -730,6 +625,112 @@
                                 </div>
                             </div>
                         </div>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Tech Stack</h3>
+                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                            <li>• <span class="text-white">Python</span> - core pipeline and orchestration logic</li>
+                            <li>• <span class="text-white">LangChain</span> - agent framework and chain management</li>
+                            <li>• <span class="text-white">ChromaDB</span> - vector store for retrieved document embeddings</li>
+                            <li>• <span class="text-white">OpenAI GPT-4</span> - primary language model for analysis and synthesis</li>
+                            <li>• <span class="text-white">Cohere Rerank</span> - relevance reranking for retrieval precision</li>
+                            <li>• <span class="text-white">Gradio</span> - interface layer for analyst interaction</li>
+                        </ul>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Data Sources</h3>
+                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                            <li>• FDA FAERS adverse event reports</li>
+                            <li>• PubMed abstracts</li>
+                            <li>• FDA drug labels</li>
+                        </ul>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Agent Architecture</h3>
+                        <p class="text-gray-300 mb-4 leading-relaxed">The system coordinates four specialized agents, each scoped to a distinct step of the pharmacovigilance workflow:</p>
+                        <ul class="text-gray-300 mb-6 space-y-2 ml-4">
+                            <li>• <span class="text-white">Research Retrieval</span> - queries PubMed and FDA labels for relevant literature</li>
+                            <li>• <span class="text-white">Adverse Event Analysis</span> - surfaces trends and signal patterns from FAERS data</li>
+                            <li>• <span class="text-white">Regulatory Context</span> - cross-references label indications, warnings, and prior actions</li>
+                            <li>• <span class="text-white">Synthesis</span> - generates structured regulatory summaries for analyst review</li>
+                        </ul>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">System Performance &amp; Results</h3>
+                        <p class="text-gray-300 mb-4 leading-relaxed">The system's routing intelligence is validated through measurable performance tradeoffs documented during development. Simple PRR lookups resolve in 2–3 seconds via the Naive chain; comprehensive multi-agent analyses take 8–12 seconds with four parallel LLM calls, a deliberate tradeoff and not an oversight. The on-topic relevance guardrail, running on every query via gpt-4o-mini, achieves over 95% classification accuracy at roughly 1/20th the cost of gpt-4o, demonstrating that right-sizing AI to task complexity is itself a performance strategy.</p>
+                        <p class="text-gray-300 mb-6 leading-relaxed">The system processes queries against 17,313 FAERS rows across five document types, with parent-child chunking (2,000/400 chars) ensuring both precise semantic retrieval and rich contextual generation in the final response.</p>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">AI Judgment: Automation vs. Human Control</h3>
+                        <p class="text-gray-300 mb-6 leading-relaxed">PharmaSignal RAG automates the initial triage phase (literature retrieval, FAERS trend analysis, and draft summary generation) while deliberately preserving human judgment for clinical signal validation. The system's guardrails encode this boundary directly: queries asking for medical advice or clinical decisions are blocked, not answered. This is intentional architecture, not a limitation. In regulated environments like pharmacovigilance, understanding where AI should stop is as important as knowing where it can help. The system is designed to accelerate analyst workflows, not replace analyst judgment.</p>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Code &amp; Implementation</h3>
+                        <div style="text-align:center; margin-top:0.5rem; margin-bottom:1.5rem;">
+                            <a href="https://github.com/nkenzler1818/pharmacovigilance-rag" target="_blank" rel="noopener noreferrer" class="proposal-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+                                View Full Code on GitHub
+                            </a>
+                        </div>
+                        <p class="text-gray-300 mb-3 leading-relaxed">System architecture: a 9-layer pipeline from query intake to response delivery:</p>
+                        <div style="margin:0 0 1.5rem; border:1px solid #2a2a2a; border-radius:8px; overflow:hidden; font-size:0.78rem; line-height:1.4;">
+                            <div style="background:#1c1c2e; border-bottom:1px solid #2a2a2a; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#a78bfa; font-weight:600;">Gradio Interface</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">User Input</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1e1a3a; border-bottom:1px solid #2a2a2a; border-top:2px solid #6d28d9; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#c4b5fd; font-weight:600;">Guardrails Layer - Input Protection</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">Blocked topics · Prompt injection detection · On-topic check (gpt-4o-mini, &gt;95% accuracy)</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#162a2a; border-bottom:1px solid #2a2a2a; border-top:2px solid #0d9488; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#34d399; font-weight:600;">Meta-Intelligent Router</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">LLM Query Classification (gpt-4o) with keyword fallback</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-bottom:1px solid #2a2a2a; border-top:2px solid #2563eb;">
+                                <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
+                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Naive</div>
+                                    <div style="color:#6b7280; font-size:0.7rem;">Simple RAG Chain<br>2–3 sec</div>
+                                </div>
+                                <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
+                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Intelligent</div>
+                                    <div style="color:#6b7280; font-size:0.7rem;">Context Management<br>3-tool sequence</div>
+                                </div>
+                                <div style="background:#1a1e2e; border-right:1px solid #2a2a2a; padding:0.5rem; text-align:center;">
+                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Supervisor</div>
+                                    <div style="color:#6b7280; font-size:0.7rem;">Quality Evaluation<br>+30–40% latency</div>
+                                </div>
+                                <div style="background:#1a1e2e; padding:0.5rem; text-align:center;">
+                                    <div style="color:#93c5fd; font-weight:600; font-size:0.75rem;">Multi-Agent</div>
+                                    <div style="color:#6b7280; font-size:0.7rem;">3 Parallel Specialists<br>8–12 sec</div>
+                                </div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1a2318; border-bottom:1px solid #2a2a2a; border-top:2px solid #16a34a; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#86efac; font-weight:600;">Enhanced Retrieval Layer (Shared)</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">Query Expansion → Vector Search (k=10) → Cohere Rerank (top 5) → Parent-Child Swap (400→2000 chars)</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1a271a; border-bottom:1px solid #2a2a2a; border-top:2px solid #22c55e; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#4ade80; font-weight:600;">ChromaDB Vector Store</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">OpenAI text-embedding-ada-002 · Parent chunks: 2000 chars · Child chunks: 400 chars</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#271a1a; border-bottom:1px solid #2a2a2a; border-top:2px solid #dc2626; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#f87171; font-weight:600;">FAERS Knowledge Base</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">17,313 rows · drug-outcome signals · indications · outcomes · case drugs · severity classifications</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1e1a3a; border-bottom:1px solid #2a2a2a; border-top:2px solid #6d28d9; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#c4b5fd; font-weight:600;">Guardrails Layer - Output Filtering</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">PII detection · Sensitive information filter before delivery</div>
+                            </div>
+                            <div style="text-align:center; color:#374151; padding:0.1rem 0; font-size:0.7rem;">▼</div>
+                            <div style="background:#1c1c2e; border-top:2px solid #4c1d95; padding:0.55rem 1rem; text-align:center;">
+                                <div style="color:#a78bfa; font-weight:600;">Gradio Interface</div>
+                                <div style="color:#6b7280; font-size:0.72rem;">User Output - Response Delivered</div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-semibold mb-4 text-white">Learnings &amp; Future Iterations</h3>
+                        <p class="text-gray-300 mb-6 leading-relaxed">The most instructive limitation is the absence of conversation memory: each query is stateless. In a real analyst workflow, follow-up questions like "what about the ROR for that drug?" are essential, but the current architecture requires users to restate context every call. A production version would implement context windowing (last 5–10 exchanges) and a dynamic knowledge base refresh pipeline for quarterly FAERS updates. The architecture is right; operational completeness is the next iteration.</p>
+
                     </div>
                 </div>
             </div>
@@ -739,11 +740,13 @@
 
     <!-- Resume PDF Viewer Popup -->
     <div id="resume-pdf-overlay" class="pdf-popup-overlay hidden">
-        <div class="pdf-popup-content">
+        <div class="pdf-popup-wrapper">
+            <div class="pdf-popup-content">
+                <iframe id="resume-pdf-frame" src="" class="pdf-popup-frame" title="Resume PDF"></iframe>
+            </div>
             <button class="pdf-popup-close" id="resume-pdf-close" aria-label="Close PDF viewer">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             </button>
-            <iframe id="resume-pdf-frame" src="" class="pdf-popup-frame" title="Resume PDF"></iframe>
         </div>
     </div>
     <script>
@@ -754,8 +757,8 @@
             var closeBtn = document.getElementById('resume-pdf-close');
             if (!btn || !overlay) return;
 
-            function openPdf() {
-                frame.src = 'assets/docs/Kenzler_CV2025.pdf';
+            function openPdf(src) {
+                frame.src = src;
                 overlay.classList.remove('hidden');
                 overlay.style.display = 'flex';
                 requestAnimationFrame(function() { overlay.classList.add('active'); });
@@ -774,7 +777,7 @@
 
             btn.addEventListener('click', function(e) {
                 e.stopPropagation();
-                openPdf();
+                openPdf('assets/docs/Kenzler_CV2026.pdf#view=FitH');
             });
 
             closeBtn.addEventListener('click', function(e) {
@@ -788,6 +791,122 @@
 
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closePdf();
+            });
+
+            var proposalBtn = document.getElementById('pharmaco-proposal-btn');
+            if (proposalBtn) {
+                proposalBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openPdf('assets/docs/Group_6_Team_Project.pdf#view=FitH');
+                });
+            }
+
+            var personaBtn = document.getElementById('persona-pdf-btn');
+            if (personaBtn) {
+                personaBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openPdf('assets/docs/ProfessionalPersonaReport.pdf#view=FitH');
+                });
+            }
+
+            var japanReportBtn = document.getElementById('japan-report-btn');
+            if (japanReportBtn) {
+                japanReportBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openPdf('Project%20Files/Native_Japan_Report_Final_Draft.pdf#view=FitH');
+                });
+            }
+        });
+    </script>
+    <script>
+        // Image lightbox functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            let lightboxOverlay = null;
+            let isLightboxOpen = false;
+
+            function createLightbox() {
+                if (lightboxOverlay) return;
+
+                lightboxOverlay = document.createElement('div');
+                lightboxOverlay.className = 'image-lightbox-overlay';
+                lightboxOverlay.innerHTML = `
+                    <div class="image-lightbox-content">
+                        <img>
+                        <p class="image-lightbox-caption"></p>
+                        <button class="image-lightbox-close-btn" aria-label="Close image view">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(lightboxOverlay);
+
+                const closeBtn = lightboxOverlay.querySelector('.image-lightbox-close-btn');
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeLightbox();
+                });
+
+                lightboxOverlay.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (e.target === lightboxOverlay) {
+                        closeLightbox();
+                    }
+                });
+            }
+
+            function openLightbox(imgSrc, altText, captionText) {
+                if (isLightboxOpen) return;
+
+                if (!lightboxOverlay) createLightbox();
+
+                const content = lightboxOverlay.querySelector('.image-lightbox-content');
+                const img = content.querySelector('img');
+                const caption = content.querySelector('.image-lightbox-caption');
+
+                img.src = imgSrc;
+                img.alt = altText;
+                img.loading = 'lazy';
+                caption.textContent = captionText;
+
+                const personaOverlay = document.querySelector('.persona-focus-overlay');
+                if (personaOverlay) {
+                    personaOverlay.style.pointerEvents = 'none';
+                }
+
+                lightboxOverlay.classList.add('active');
+                isLightboxOpen = true;
+            }
+
+            function closeLightbox() {
+                if (!isLightboxOpen) return;
+
+                const personaOverlay = document.querySelector('.persona-focus-overlay');
+                if (personaOverlay) {
+                    personaOverlay.style.pointerEvents = '';
+                }
+
+                lightboxOverlay.classList.remove('active');
+                isLightboxOpen = false;
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isLightboxOpen) {
+                    e.preventDefault();
+                    closeLightbox();
+                }
+            });
+
+            const mediaItems = document.querySelectorAll('.capstone-media-item img, .persona-inline-figure img, .case-study-artifact-image');
+            mediaItems.forEach(img => {
+                img.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const caption = this.nextElementSibling ? this.nextElementSibling.textContent : '';
+                    openLightbox(this.src, this.alt, caption);
+                });
             });
         });
     </script>
