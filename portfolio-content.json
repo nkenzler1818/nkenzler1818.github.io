@@ -1,6 +1,13 @@
 {
   "blog": [
     {
+      "title": "RSS Feed: Now Live on the Blog",
+      "slug": "rss-feed-now-live",
+      "link": "https://nathanaelkenzler.org/blog.html",
+      "pubDate": "2026-05-31",
+      "description": "A quick test post to confirm the new RSS feed is working correctly and syndicating content as expected."
+    },
+    {
       "title": "Mastering New Skills – Marketing Research at UArizona",
       "slug": "mastering-new-skills",
       "link": "https://nathanaelkenzler.org/blog.html",
