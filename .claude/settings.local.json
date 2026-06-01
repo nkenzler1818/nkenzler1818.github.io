@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/natha/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/5a250d6a-507b-4418-a69a-912936ffdcbc/294dc085-a08e-4220-b58f-bbc25ac99955/skills/pdf/**)",
+      "Bash(python -c ' *)",
+      "Bash(which python3 *)"
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "blog": [
+    {
+      "title": "Mastering New Skills – Marketing Research at UArizona",
+      "slug": "mastering-new-skills",
+      "link": "https://nathanaelkenzler.org/blog.html",
+      "pubDate": "2026-01-14",
+      "description": "A snapshot of the tools, research methods, and analytical skills I'm beginning to develop as I start my master's coursework at the University of Arizona."
+    },
+    {
+      "title": "Building This Site – Bringing My Creative Side Into Marketing",
+      "slug": "building-this-site",
+      "link": "https://nathanaelkenzler.org/blog.html",
+      "pubDate": "2026-01-04",
+      "description": "My first post explaining why I built this website, how I approached it as a project, and what I want it to become over time."
+    }
+  ],
+  "projects": [
+    {
+      "title": "Capstone – Business Strategy Game",
+      "slug": "capstone-bsg",
+      "link": "https://nathanaelkenzler.org/projects.html",
+      "pubDate": "2026-01-06",
+      "description": "Senior-year capstone project simulating a competitive business environment, focused on strategic decision-making, execution, and performance improvement."
+    },
+    {
+      "title": "Professional Persona Analysis",
+      "slug": "professional-persona-analysis",
+      "link": "https://nathanaelkenzler.org/projects.html",
+      "pubDate": "2026-01-06",
+      "description": "Junior-year project analyzing self-perception versus peer perception through survey research, data synthesis, and insight development."
+    },
+    {
+      "title": "Case Competition Presentation",
+      "slug": "case-competition-presentation",
+      "link": "https://nathanaelkenzler.org/projects.html",
+      "pubDate": "2026-01-06",
+      "description": "Junior-year case competition project presented through Insight, emphasizing research, strategic thinking, and clear communication of recommendations."
+    }
+  ]
+}
