@@ -7,8 +7,18 @@
     <description>New projects and blog posts from my personal portfolio.</description>
     <language>en-us</language>
     <generator>Automated Portfolio RSS</generator>
-    <lastBuildDate>Mon, 01 Jun 2026 05:40:44 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 01 Jun 2026 06:06:40 GMT</lastBuildDate>
 
+    <item>
+      <title>Blog: RSS Feed: Now Live on the Blog</title>
+      <link>https://nathanaelkenzler.org/blog.html</link>
+      <guid>https://nathanaelkenzler.org/blog.html#rss-feed-now-live</guid>
+      <pubDate>Sun, 31 May 2026 00:00:00 GMT</pubDate>
+      <category>Blog</category>
+      <description><![CDATA[
+        A quick test post to confirm the new RSS feed is working correctly and syndicating content as expected.
+      ]]></description>
+    </item>
     <item>
       <title>Blog: Mastering New Skills – Marketing Research at UArizona</title>
       <link>https://nathanaelkenzler.org/blog.html</link>
