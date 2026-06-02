@@ -43,6 +43,13 @@
       "link": "https://nathanaelkenzler.org/projects.html",
       "pubDate": "2026-01-06",
       "description": "Junior-year case competition project presented through Insight, emphasizing research, strategic thinking, and clear communication of recommendations."
+    },
+    {
+      "title": "Photography Gallery",
+      "slug": "photography-gallery",
+      "link": "https://nathanaelkenzler.org/pages/photography.html",
+      "pubDate": "2026-06-01",
+      "description": "A curated photography collection spanning 10 series including dog portraits, long exposure experiments, black and white studies, drone shots, and more. Shot across DSLRs and mirrorless systems, edited in Lightroom and Photoshop."
     }
   ]
 }
