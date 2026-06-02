@@ -7,7 +7,7 @@
     <description>New projects and blog posts from my personal portfolio.</description>
     <language>en-us</language>
     <generator>Automated Portfolio RSS</generator>
-    <lastBuildDate>Mon, 01 Jun 2026 06:06:40 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 02 Jun 2026 03:57:41 GMT</lastBuildDate>
 
     <item>
       <title>Blog: RSS Feed: Now Live on the Blog</title>
@@ -67,6 +67,16 @@
       <category>Projects</category>
       <description><![CDATA[
         Junior-year case competition project presented through Insight, emphasizing research, strategic thinking, and clear communication of recommendations.
+      ]]></description>
+    </item>
+    <item>
+      <title>Project: Photography Gallery</title>
+      <link>https://nathanaelkenzler.org/pages/photography.html</link>
+      <guid>https://nathanaelkenzler.org/pages/photography.html#photography-gallery</guid>
+      <pubDate>Mon, 01 Jun 2026 00:00:00 GMT</pubDate>
+      <category>Projects</category>
+      <description><![CDATA[
+        A curated photography collection spanning 10 series including dog portraits, long exposure experiments, black and white studies, drone shots, and more. Shot across DSLRs and mirrorless systems, edited in Lightroom and Photoshop.
       ]]></description>
     </item>
 
