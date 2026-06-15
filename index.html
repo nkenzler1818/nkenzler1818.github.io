@@ -456,7 +456,7 @@
                     <div class="blog-focus-article">
                         <h3 class="text-xl font-semibold mb-3 text-white">Market Entry Strategy Presentation</h3>
                         <div class="bg-slate-50 rounded-lg overflow-hidden mb-6" style="position:relative; width:100%; padding-bottom:56.25%;">
-                            <iframe src="Project%20Files/Native%20%C3%97%20Japan%20-%20Market%20Entry%20Presentation.pdf" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" title="Market Entry Strategy Presentation"></iframe>
+                            <iframe src="Project%20Files/Native%20%C3%97%20Japan%20-%20Market%20Entry%20Presentation.pdf" class="inline-pdf-iframe" style="position:absolute; top:0; left:0; width:100%; height:100%; border:none;" title="Market Entry Strategy Presentation"></iframe>
                         </div>
 
                         <h3 class="text-xl font-semibold mb-4 text-white">Project Overview &amp; Market Opportunity</h3>
@@ -757,7 +757,17 @@
             var closeBtn = document.getElementById('resume-pdf-close');
             if (!btn || !overlay) return;
 
+            // iOS Safari cannot render PDFs in iframes — open natively instead
+            function isIOS() {
+                return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            }
+
             function openPdf(src) {
+                if (isIOS()) {
+                    window.open(src.split('#')[0], '_blank');
+                    return;
+                }
                 frame.src = src;
                 overlay.classList.remove('hidden');
                 overlay.style.display = 'flex';
@@ -814,6 +824,25 @@
                 japanReportBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     openPdf('Project%20Files/Native_Japan_Report_Final_Draft.pdf#view=FitH');
+                });
+            }
+
+            // Replace inline PDF iframes with a tap-to-open link on iOS
+            if (isIOS()) {
+                document.querySelectorAll('.inline-pdf-iframe').forEach(function(iframe) {
+                    var pdfSrc = iframe.src;
+                    var wrapper = iframe.parentElement;
+                    wrapper.style.paddingBottom = '0';
+                    wrapper.style.height = 'auto';
+                    iframe.remove();
+                    var link = document.createElement('a');
+                    link.href = pdfSrc;
+                    link.target = '_blank';
+                    link.rel = 'noopener';
+                    link.className = 'proposal-btn';
+                    link.style.cssText = 'display:inline-flex;align-items:center;gap:8px;margin:1rem 0;';
+                    link.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 3h7l3 3v7H3V3z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 3v3h3M6 8h4M6 10.5h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg> Open Presentation PDF';
+                    wrapper.appendChild(link);
                 });
             }
         });
