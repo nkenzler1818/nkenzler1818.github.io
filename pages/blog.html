@@ -1,372 +1,510 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Blog - Nathanael Kenzler</title>
-    <meta name="description" content="Read Nathanael Kenzler's thoughts on marketing, AI, and business.">
+    <meta
+      name="description"
+      content="Read Nathanael Kenzler's thoughts on marketing, AI, and business."
+    />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css">
+    <link rel="stylesheet" href="../css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/simplebar@latest/dist/simplebar.css"
+    />
     <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <script>
-        function fitPageTitle() {
-            const heading = document.querySelector('.projects-heading');
-            if (!heading) return;
+      function fitPageTitle() {
+        const heading = document.querySelector(".projects-heading");
+        if (!heading) return;
 
-            const container = heading.parentElement;
-            const baseSize = 72;
-            const minSize = 48;
-            const buffer = 24;
-            const available = (container?.clientWidth || heading.parentElement.clientWidth) - buffer;
+        const container = heading.parentElement;
+        const baseSize = 72;
+        const minSize = 48;
+        const buffer = 24;
+        const available =
+          (container?.clientWidth || heading.parentElement.clientWidth) -
+          buffer;
 
-            heading.classList.add('auto-fit');
-            heading.style.setProperty('--heading-size', `${baseSize}px`);
+        heading.classList.add("auto-fit");
+        heading.style.setProperty("--heading-size", `${baseSize}px`);
 
-            if (heading.scrollWidth <= available) {
-                return;
-            }
-
-            const scale = Math.max(minSize / baseSize, available / heading.scrollWidth);
-            const nextSize = Math.max(minSize, Math.min(baseSize, baseSize * scale));
-            heading.style.setProperty('--heading-size', `${nextSize}px`);
+        if (heading.scrollWidth <= available) {
+          return;
         }
 
-        // Blog modal functionality - adapted from capstone modal
-        document.addEventListener('DOMContentLoaded', function() {
-            const blogCards = document.querySelectorAll('.blog-card');
-            const blogOverlay = document.querySelector('.blog-focus-overlay');
-            const closeBtn = document.querySelector('.blog-close-btn');
-            let isBlogOpen = false;
-            let modalBackdrop = null;
+        const scale = Math.max(
+          minSize / baseSize,
+          available / heading.scrollWidth,
+        );
+        const nextSize = Math.max(
+          minSize,
+          Math.min(baseSize, baseSize * scale),
+        );
+        heading.style.setProperty("--heading-size", `${nextSize}px`);
+      }
 
-            function updateHoverState() {
-                // Disable hover effects when blog modal is open
-                if (isBlogOpen) {
-                    blogCards.forEach(card => {
-                        card.style.transform = 'none';
-                        card.style.transition = 'none';
-                        card.classList.add('blog-open');
-                    });
-                } else {
-                    blogCards.forEach(card => {
-                        card.style.transition = '';
-                        card.classList.remove('blog-open');
-                    });
-                }
-            }
+      // Blog modal functionality - adapted from capstone modal
+      document.addEventListener("DOMContentLoaded", function () {
+        const blogCards = document.querySelectorAll(".blog-card");
+        const blogOverlay = document.querySelector(".blog-focus-overlay");
+        const closeBtn = document.querySelector(".blog-close-btn");
+        let isBlogOpen = false;
+        let modalBackdrop = null;
 
-            function showBlog(blogData) {
-                if (isBlogOpen) return;
-
-                isBlogOpen = true;
-
-                // Create and add backdrop
-                modalBackdrop = document.createElement('div');
-                modalBackdrop.className = 'modal-backdrop';
-                document.body.appendChild(modalBackdrop);
-
-                // Populate modal content
-                const titleEl = document.querySelector('.blog-focus-title');
-                const descEl = document.querySelector('.blog-focus-desc');
-                const readTimeEl = document.querySelector('.blog-focus-read-time');
-                const articleEl = document.querySelector('.blog-focus-article-text');
-
-                if (titleEl) titleEl.textContent = blogData.title;
-                if (descEl) descEl.textContent = blogData.description;
-                if (readTimeEl) readTimeEl.textContent = blogData.readTime;
-                if (articleEl) {
-                    articleEl.innerHTML = '';
-                    const paragraphs = blogData.articleText.split('\n\n');
-                    paragraphs.forEach(p => {
-                        const pEl = document.createElement('p');
-                        pEl.className = 'text-white leading-relaxed mb-4';
-                        const lines = p.split('\n');
-                        if (lines.length > 1) {
-                            const heading = lines.shift().trim();
-                            const rest = lines.join(' ').trim();
-                            const headingEl = document.createElement('strong');
-                            headingEl.className = 'blog-course-heading';
-                            headingEl.textContent = heading;
-                            pEl.appendChild(headingEl);
-                            pEl.appendChild(document.createElement('br'));
-                            pEl.appendChild(document.createTextNode(rest));
-                        } else {
-                            pEl.textContent = p;
-                        }
-                        articleEl.appendChild(pEl);
-                    });
-                }
-
-                // Initialize or update custom scrollbar after content is injected
-                const scrollInner = document.querySelector('.blog-scroll-inner');
-                if (scrollInner) {
-                    if (scrollInner.SimpleBar) {
-                        scrollInner.SimpleBar.recalculate();
-                    } else {
-                        new SimpleBar(scrollInner, { autoHide: false });
-                    }
-                }
-
-                // Update hover state
-                updateHoverState();
-
-                // Show overlay
-                blogOverlay.classList.remove('hidden');
-                blogOverlay.classList.add('active');
-
-                // Disable scroll
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeBlog() {
-                if (!isBlogOpen) return;
-
-                isBlogOpen = false;
-
-                // Remove backdrop
-                if (modalBackdrop) {
-                    modalBackdrop.remove();
-                    modalBackdrop = null;
-                }
-
-                // Hide overlay
-                blogOverlay.classList.remove('active');
-                blogOverlay.classList.add('hidden');
-
-                // Re-enable scroll
-                document.body.style.overflow = '';
-
-                // Restore hover state
-                updateHoverState();
-            }
-
-            // Card click to open
-            blogCards.forEach((card, index) => {
-                card.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    if (!isBlogOpen && !blogOverlay.contains(e.target)) {
-                        const title = this.querySelector('h3').textContent;
-                        const description = this.querySelector('p').textContent;
-                        const readTime = this.querySelector('span').textContent;
-                        const isPublished = this.hasAttribute('data-published');
-                        let articleText;
-                        if (isPublished) {
-                            if (title.includes("Building This Site")) {
-                                articleText = "Over the past few weeks, I have built this site as a way to share more than what a traditional resume can show. For me, this site is a blend of my technical skills and my creative side, a place where I can demonstrate how I use AI tools and marketing insights to build something meaningful.\n\nI have learned a lot in the process, not just about coding and design but also about how to tell my own story and highlight what I bring to the table. This blog is a small window into who I am: someone who loves turning strategy into impact and using both creativity and data to make it happen.\n\nLooking ahead, I plan to share insights about the industry, updates on my academic and professional journey, and reflections on what I am learning along the way. Whether it is about the challenges of mastering new tools or the excitement of applying marketing concepts in real projects, I hope to offer something of value. I want this site to be a space where I can connect more personally, share what excites me, and give you a genuine glimpse into my journey.\n\nI hope you find a bit of that spirit here and enjoy following along!";
-                            } else if (title.includes("RSS Feed")) {
-                                articleText = "Just a quick test post to make sure the RSS feed is set up and working correctly.\n\nThe goal down the road is to have this fully connected so that anyone interested can subscribe and get notified whenever I publish new blog posts or share updates on new projects. I think that's a really useful thing to have, and I want to make it easy for people to follow along without having to check back manually.\n\nFor now it's still in the testing phase, so I'm just making sure all the pieces are talking to each other the way they should. More coming soon.";
-                            } else if (title.includes("Mastering New Skills")) {
-                                articleText = "Hello,\n\nI'm thrilled to share that I'm settling back into life in Arizona and officially kicking off my master's journey at the University of Arizona. This post is a one-week snapshot capturing my first impressions as I dive into coursework, meet my professors, and begin exploring the tools and techniques that will shape this semester. I'll be updating it briefly over the next few days before leaving it as a reflection of what's ahead.\n\nMarketing 572: Marketing Research for Managers\nThis course, led by Professor Martin Reimann, PhD, focuses on how marketing research informs business decisions; from defining problems to analyzing data. We'll work with qualitative and quantitative techniques, using tools like SPSS and Qualtrics. I'll also pursue a CITI certification in research ethics, building a solid foundation for ethical data collection.\n\nBNAN 570: Generative AI: Insights and Strategy\nTaught by Professor Bikram Ghosh, PhD, this class excites me because we'll build a RAG-based LLM system. We'll start with foundational LLMs and move toward applying AI in business contexts. The big project will test everything from prompt engineering to agentic RAG development.\n\nMKTG 546: Competitive Marketing Strategy\nProfessor Mrinal Ghosh, PhD, is teaching us how to develop holistic competitive strategies by evaluating customers, competitors, and market dynamics. The course focuses on integrating pricing, branding, and channels to achieve long-term success in competitive environments. I'm excited to build these analytical skills, as they will help me create strategies that deliver real customer value.\n\nMKTG 560: International Marketing\nInstructed by Professor Tirthankar Roy, PhD, is guiding us through the complexities of international marketing. We are learning how to adapt strategies across different countries, taking into account cultural, economic, and regulatory differences. This week, we began exploring brand positioning and how it shifts across markets, setting the stage for building competitive global strategies.\n\nIn short, this first week has laid out a clear path and a strong foundation. I'm eager to see how these skills grow and shape me into a strategic, data-driven marketer. Thanks for following along.";
-                            } else if (title.includes("Building This Summer")) {
-                                articleText = "A Strong Semester to Build From\nHeading into this summer, I felt good about where I stood.\n\nThis past semester, I took courses that gave me both deeper marketing foundations and more hands-on, applicable skills. Marketing Research for Managers (MKTG 572) sharpened my ability to ask the right research questions, design studies, and translate findings into strategic decisions. Generative AI: Insights and Strategy (BNAN 570) pushed me to actually build things. The end of semester project was a multi-agent RAG system for post-market drug safety monitoring, built end-to-end with LangChain, ChromaDB, and Gradio. Building it from the knowledge base to the agents to the interface taught me more about applied AI than any classroom exercise could.\n\nEvery course this semester added something. I finished with a 4.0.\n\nFirst Look at the Real Thing\nAt the same time I was wrapping up coursework, my internship at SignifyMD was picking up. It's a growth-stage healthcare communications company, which means the team is lean and the work is wide. I've been building out lead generation systems, doing KOL brand development, and auditing and restructuring the website. It's been my first extended look at professional marketing and communications work, not a case study or simulation. Real stakeholders, real constraints, real feedback loops. The breadth of operations at a growth-stage company means you don't get to specialize prematurely. You figure out what needs to happen and you make it happen.\n\nThe Summer's Own Agenda\nThe internship is only part of the story. This summer I've also been running my own parallel curriculum.\n\nI'm working through Harvard's CS50. I could skip it. But I clearly want to understand SQL and Python at a deeper level, and after doing more research into this, it's clear that you need a fundamental understanding of coding before moving into different languages and syntax. The lens you develop from building things from scratch isn't something you can get from a tutorial.\n\nThe same logic applies more broadly: do the hard part first. Know what's happening under the hood. I'm a systematic person. Understanding precedent matters to me. Foundational knowledge doesn't just fill in gaps. It changes how you see problems, the way you frame a question before you even start solving it, the way you recognize when something is getting inefficient before it breaks.\n\nBeyond the structured learning, I've been spending serious time exploring the AI industry, day by day, trying to get up to speed on where professionals actually are: the tools they're using, the workflows they've built, where the trends are pointing. That research led me to Obsidian. And then, over the course of a few days, to building a full personal knowledge management system inside it.\n\nThat's when, one night around 11:30, something clicked.\n\n11:30 PM. One Thing Led to the Other.\nI'd had a long day. Was winding down, nearly ready to sleep. But something kept pulling at me.\n\nI'd come across an ACE classification system while researching how professionals structure their personal knowledge bases. ACE stands for Atlas, Calendar, and Efforts. Atlas covers general knowledge, evergreen frameworks, mental models you return to over time. Calendar covers time-based information, deadlines, events, things that expire. Efforts covers project-specific notes, transcripts, case-by-case work that lives and dies with the project.\n\nIt was one of those ideas that just landed. So I started adapting it. I began building out my own protocol using ACE classification in tandem with YAML frontmatter inside Obsidian, tagging every note by how fast it decays and what it's tied to. As I did, the next thing surfaced on its own: I didn't just need hierarchy. I needed escalation logic. Start at the project level. If I need something broader, escalate to cross-project patterns. If I hit something that doesn't fit, go to the operating layer where I actually make decisions. Navigation based on what you're trying to do, not just where things are stored.\n\nAnd from there: dependencies needed to go both ways. If one file uses another, the second file should know it's being depended on. That's how you know what breaks when something changes, and it means you need a regular protocol to check it.\n\nThat night was the first crystallization. In the days that followed, I kept building. I added index files, skill files, and more layers to make the whole thing more deterministic. Cleaner routing. Tighter protocols. The goal was to build something that wouldn't just hold information but would actively stay current and organized.\n\nWhat I ended up with is a fully agentic and deterministic memory system. The centerpiece is a systems protocol folder that works in tandem with a skill called vault synthesis, which operates in three modes: Research (pull relevant information out of the vault on demand), Documentation (synthesize new information into properly formatted, indexed entries), and Health Check (a cleaning and verification pass that references dedicated protocol documents to keep everything tight). Every note is classified, every dependency is tracked, every change cascades to the right places.\n\nIt's not just notes. It's a memory system that can update itself, reference itself, and stay clean over time.\n\nThe Next Layer\nThe vault was phase one. Phase two is the dashboard.\n\nI had ideas for other projects I wanted to build. But the more I thought about it, the more I realized they would all be better for having a strong foundation underneath them first. Rather than building projects and then trying to retrofit a system around them after the fact, I want the system in place so that knowledge and experience can accumulate alongside the work as it happens. That's the right order.\n\nSo I'm building a personal AI operating system, a GUI that lives locally, is owned entirely by me, and runs the way I actually work. Not a subscription tool, not something locked to any one platform. The memory system will be the backbone. The dashboard will be the interface that sits on top of it. What it includes from there is honestly an open question, and that's kind of the point. Just like the memory system kept growing and evolving as I built it, the dashboard will too. More ideas, more use cases, more integrations as they become relevant.\n\nThe reason I'm building it myself, rather than using an existing tool, is the same reason I'm taking CS50. Doing it manually the first time gives you something that shortcuts can't. You see what the tools skip over. You see what could be done better. You know what's actually happening. And when the tools change, which they will, because this industry changes every few weeks, you're not lost. You know what to look for.\n\nBuilding it myself means it's tied to me, not to any one platform or AI system. I understand it. I can update it. It evolves as I evolve.\n\nIt's my system.\n\nWhere I'm Heading\nI've been having a lot of conversations this year with working professionals, people in industry, and friends who have built careers in and around the spaces I'm trying to move into. One of those conversations was with a friend who works at a startup in San Francisco, someone who has spent time in rooms at companies I'd like to eventually work at or alongside. I told him what I was building toward. He said it sounded like a GTM engineer.\n\nI looked into it. He was right.\n\nGTM engineering sits at the intersection of technical capability and go-to-market execution. It means building the systems and integrations that make sales and marketing teams actually work well: understanding the full stack, the CRM, the data, the automations, the messaging, the handoffs. It requires being able to communicate across the whole org. It requires knowing where AI fits and where it doesn't.\n\nBut GTM isn't the only direction that resonates. Partner marketing and events marketing speak to a lot of the same instincts, building relationships, creating experiences, coordinating cross-functional work that drives real pipeline. The common thread across all three is the same: operating at the intersection of strategy, people, and execution.\n\nI might not end up with any one of those exact titles. That's fine. But the skill clusters behind them are exactly what I'm building toward. I'd rather be over-prepared. These skills move across functions, and the more I learn, the more I see how much of modern marketing is really just systems thinking applied to people and pipeline.\n\nI'm a marketer building a niche in software development and AI integration. Not a developer who markets. A marketer who can build.\n\nWhat Comes Next\nBy the end of this summer, I want to look back on something real. I want to have applied and continued to build on what school gave me, both in a real professional environment at SignifyMD and in my own time. Built something from scratch that I actually understand and actually use. Developed a skill set that holds up in any room I walk into, technical enough to earn credibility, marketing-native enough to put it to work.\n\nEverything I'm doing this summer is a launchpad. It carries into the fall semester. It carries into the roles I'll pursue when I graduate. It carries into the professional I'm becoming through hard work, discipline, and genuine curiosity about where all of this is going.\n\nI'm excited. Not just about what I'll be able to do. About who I'll be when I'm looking back on this summer from the other side of it.\n\nIf any of this resonates with you, whether you're working on something similar, you think there's something about the industry I'm missing, or you're interested in working together, I'd love to connect. You can find my contact information in my portfolio.\n\nLet's talk.";
-                            }
-                        } else {
-                            articleText = "This blog post is coming soon. Stay tuned for more insights on marketing, AI, and business strategy!";
-                        }
-
-                        showBlog({ title, description, readTime, articleText });
-                    }
-                });
+        function updateHoverState() {
+          // Disable hover effects when blog modal is open
+          if (isBlogOpen) {
+            blogCards.forEach((card) => {
+              card.style.transform = "none";
+              card.style.transition = "none";
+              card.classList.add("blog-open");
             });
-
-            // Close button
-            closeBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                closeBlog();
+          } else {
+            blogCards.forEach((card) => {
+              card.style.transition = "";
+              card.classList.remove("blog-open");
             });
+          }
+        }
 
-            // Backdrop click to close
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('modal-backdrop') && isBlogOpen) {
-                    closeBlog();
-                }
+        function showBlog(blogData) {
+          if (isBlogOpen) return;
+
+          isBlogOpen = true;
+
+          // Create and add backdrop
+          modalBackdrop = document.createElement("div");
+          modalBackdrop.className = "modal-backdrop";
+          document.body.appendChild(modalBackdrop);
+
+          // Populate modal content
+          const titleEl = document.querySelector(".blog-focus-title");
+          const descEl = document.querySelector(".blog-focus-desc");
+          const readTimeEl = document.querySelector(".blog-focus-read-time");
+          const articleEl = document.querySelector(".blog-focus-article-text");
+
+          if (titleEl) titleEl.textContent = blogData.title;
+          if (descEl) descEl.textContent = blogData.description;
+          if (readTimeEl) readTimeEl.textContent = blogData.readTime;
+          if (articleEl) {
+            articleEl.innerHTML = "";
+            const paragraphs = blogData.articleText.split("\n\n");
+            paragraphs.forEach((p) => {
+              const pEl = document.createElement("p");
+              pEl.className = "text-white leading-relaxed mb-4";
+              const lines = p.split("\n");
+              if (lines.length > 1) {
+                const heading = lines.shift().trim();
+                const rest = lines.join(" ").trim();
+                const headingEl = document.createElement("strong");
+                headingEl.className = "blog-course-heading";
+                headingEl.textContent = heading;
+                pEl.appendChild(headingEl);
+                pEl.appendChild(document.createElement("br"));
+                pEl.appendChild(document.createTextNode(rest));
+              } else {
+                pEl.textContent = p;
+              }
+              articleEl.appendChild(pEl);
             });
+          }
 
-            // Modal content click - prevent closing
-            blogOverlay.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-
-            // Initialize
-            updateHoverState();
-        });
-
-        window.addEventListener('scroll', function() {
-            const nav = document.querySelector('nav');
-            const isMobile = window.innerWidth <= 768;
-
-            if (isMobile) {
-                // Mobile: start shrunk, shrink more when scrolling
-                if (window.scrollY > 0) {
-                    nav.classList.add('mobile-shrunk');
-                } else {
-                    nav.classList.remove('mobile-shrunk');
-                }
+          // Initialize or update custom scrollbar after content is injected
+          const scrollInner = document.querySelector(".blog-scroll-inner");
+          if (scrollInner) {
+            if (scrollInner.SimpleBar) {
+              scrollInner.SimpleBar.recalculate();
             } else {
-                // Desktop: normal shrink behavior
-                if (window.scrollY > 0) {
-                    nav.classList.add('shrunk');
-                } else {
-                    nav.classList.remove('shrunk');
-                }
+              new SimpleBar(scrollInner, { autoHide: false });
             }
-        });
+          }
 
-        function toggleDropdown() {
-            const dropdown = document.getElementById('more-dropdown');
-            dropdown.classList.toggle('hidden');
+          // Update hover state
+          updateHoverState();
+
+          // Show overlay
+          blogOverlay.classList.remove("hidden");
+          blogOverlay.classList.add("active");
+
+          // Disable scroll
+          document.body.style.overflow = "hidden";
         }
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('more-dropdown');
-            const button = document.querySelector('.more-btn');
-            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
+        function closeBlog() {
+          if (!isBlogOpen) return;
+
+          isBlogOpen = false;
+
+          // Remove backdrop
+          if (modalBackdrop) {
+            modalBackdrop.remove();
+            modalBackdrop = null;
+          }
+
+          // Hide overlay
+          blogOverlay.classList.remove("active");
+          blogOverlay.classList.add("hidden");
+
+          // Re-enable scroll
+          document.body.style.overflow = "";
+
+          // Restore hover state
+          updateHoverState();
+        }
+
+        // Card click to open
+        blogCards.forEach((card, index) => {
+          card.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!isBlogOpen && !blogOverlay.contains(e.target)) {
+              const title = this.querySelector("h3").textContent;
+              const description = this.querySelector("p").textContent;
+              const readTime = this.querySelector("span").textContent;
+              const isPublished = this.hasAttribute("data-published");
+              let articleText;
+              if (isPublished) {
+                if (title.includes("Building This Site")) {
+                  articleText =
+                    "Over the past few weeks, I have built this site as a way to share more than what a traditional resume can show. For me, this site is a blend of my technical skills and my creative side, a place where I can demonstrate how I use AI tools and marketing insights to build something meaningful.\n\nI have learned a lot in the process, not just about coding and design but also about how to tell my own story and highlight what I bring to the table. This blog is a small window into who I am: someone who loves turning strategy into impact and using both creativity and data to make it happen.\n\nLooking ahead, I plan to share insights about the industry, updates on my academic and professional journey, and reflections on what I am learning along the way. Whether it is about the challenges of mastering new tools or the excitement of applying marketing concepts in real projects, I hope to offer something of value. I want this site to be a space where I can connect more personally, share what excites me, and give you a genuine glimpse into my journey.\n\nI hope you find a bit of that spirit here and enjoy following along!";
+                } else if (title.includes("RSS Feed")) {
+                  articleText =
+                    "Just a quick test post to make sure the RSS feed is set up and working correctly.\n\nThe goal down the road is to have this fully connected so that anyone interested can subscribe and get notified whenever I publish new blog posts or share updates on new projects. I think that's a really useful thing to have, and I want to make it easy for people to follow along without having to check back manually.\n\nFor now it's still in the testing phase, so I'm just making sure all the pieces are talking to each other the way they should. More coming soon.";
+                } else if (title.includes("Mastering New Skills")) {
+                  articleText =
+                    "Hello,\n\nI'm thrilled to share that I'm settling back into life in Arizona and officially kicking off my master's journey at the University of Arizona. This post is a one-week snapshot capturing my first impressions as I dive into coursework, meet my professors, and begin exploring the tools and techniques that will shape this semester. I'll be updating it briefly over the next few days before leaving it as a reflection of what's ahead.\n\nMarketing 572: Marketing Research for Managers\nThis course, led by Professor Martin Reimann, PhD, focuses on how marketing research informs business decisions; from defining problems to analyzing data. We'll work with qualitative and quantitative techniques, using tools like SPSS and Qualtrics. I'll also pursue a CITI certification in research ethics, building a solid foundation for ethical data collection.\n\nBNAN 570: Generative AI: Insights and Strategy\nTaught by Professor Bikram Ghosh, PhD, this class excites me because we'll build a RAG-based LLM system. We'll start with foundational LLMs and move toward applying AI in business contexts. The big project will test everything from prompt engineering to agentic RAG development.\n\nMKTG 546: Competitive Marketing Strategy\nProfessor Mrinal Ghosh, PhD, is teaching us how to develop holistic competitive strategies by evaluating customers, competitors, and market dynamics. The course focuses on integrating pricing, branding, and channels to achieve long-term success in competitive environments. I'm excited to build these analytical skills, as they will help me create strategies that deliver real customer value.\n\nMKTG 560: International Marketing\nInstructed by Professor Tirthankar Roy, PhD, is guiding us through the complexities of international marketing. We are learning how to adapt strategies across different countries, taking into account cultural, economic, and regulatory differences. This week, we began exploring brand positioning and how it shifts across markets, setting the stage for building competitive global strategies.\n\nIn short, this first week has laid out a clear path and a strong foundation. I'm eager to see how these skills grow and shape me into a strategic, data-driven marketer. Thanks for following along.";
+                } else if (title.includes("Building This Summer")) {
+                  articleText =
+                    "A Strong Semester to Build From\nHeading into this summer, I felt good about where I stood.\n\nThis past semester, I took courses that gave me both deeper marketing foundations and more hands-on, applicable skills. Marketing Research for Managers (MKTG 572) sharpened my ability to ask the right research questions, design studies, and translate findings into strategic decisions. Generative AI: Insights and Strategy (BNAN 570) pushed me to actually build things. The end of semester project was a multi-agent RAG system for post-market drug safety monitoring, built end-to-end with LangChain, ChromaDB, and Gradio. Building it from the knowledge base to the agents to the interface taught me more about applied AI than any classroom exercise could.\n\nEvery course this semester added something, and after all was said and done, I finished with a 4.0.\n\nFirst Look at the Real Thing\nAt the same time I was wrapping up coursework, my internship at SignifyMD was picking up. It's a growth-stage healthcare communications company, which means the team is lean and the work is wide. I've been building out lead generation systems, doing KOL brand development, and auditing and restructuring the website. It's been my first extended look at professional marketing and communications work, not a case study or simulation. Real stakeholders, real constraints, real feedback loops. The breadth of operations at a growth-stage company means you don't get to specialize prematurely. You figure out what needs to happen and you make it happen.\n\nThe Summer's Own Agenda\nThe internship is only part of the story. This summer I've also been running my own parallel curriculum.\n\nI'm working through Harvard's CS50. I could skip it, but I clearly want to understand SQL and Python at a deeper level, and after doing more research into this, it's clear that you need a fundamental understanding of coding before moving into different languages and syntax. The lens you develop from building things from scratch isn't something you can get from a tutorial.\n\nThe same logic applies more broadly: do the hard part first and know what's happening under the hood. I'm a systematic person, and understanding precedent matters to me. Foundational knowledge doesn't just fill in gaps; it changes how you see problems, the way you frame a question before you even start solving it, the way you recognize when something is getting inefficient before it breaks.\n\nBeyond the structured learning, I've been spending serious time exploring the AI industry, day by day, trying to get up to speed on where professionals actually are: the tools they're using, the workflows they've built, where the trends are pointing. That research led me to Obsidian, and then, over the course of a few days, to building a full personal knowledge management system inside it.\n\nThat's when, one night around 11:30, something clicked.\n\n11:30 PM. One Thing Led to the Other.\nI'd had a long day, was winding down, and was nearly ready to sleep, but something kept pulling at me.\n\nI'd come across an ACE classification system while researching how professionals structure their personal knowledge bases. ACE stands for Atlas, Calendar, and Efforts. Atlas covers general knowledge, evergreen frameworks, mental models you return to over time. Calendar covers time-based information, deadlines, events, things that expire. Efforts covers project-specific notes, transcripts, case-by-case work that lives and dies with the project.\n\nIt was one of those ideas that just landed. So I started adapting it. I began building out my own protocol using ACE classification in tandem with YAML frontmatter inside Obsidian, tagging every note by how fast it decays and what it's tied to. As I did, the next thing surfaced on its own: I didn't just need hierarchy, I needed escalation logic. Start at the project level, and if I need something broader, escalate to cross-project patterns. If I hit something that doesn't fit, go to the operating layer where I actually make decisions. The idea was navigation based on what you're trying to do, not just where things are stored.\n\nAnd from there: dependencies needed to go both ways. If one file uses another, the second file should know it's being depended on. That's how you know what breaks when something changes, and it means you need a regular protocol to check it.\n\nThat night was the first crystallization. In the days that followed, I kept building. I added index files, skill files, and more layers to make the whole thing more deterministic, with cleaner routing and tighter protocols. The goal was to build something that wouldn't just hold information but would actively stay current and organized.\n\nWhat I ended up with is a fully agentic and deterministic memory system. The centerpiece is a systems protocol folder that works in tandem with a skill called vault synthesis, which operates in three modes: Research (pull relevant information out of the vault on demand), Documentation (synthesize new information into properly formatted, indexed entries), and Health Check (a cleaning and verification pass that references dedicated protocol documents to keep everything tight). Every note is classified, every dependency is tracked, and every change cascades to the right places.\n\nIt's not just notes. It's a memory system that can update itself, reference itself, and stay clean over time.\n\nThe Next Layer\nThe vault was phase one. Phase two is the dashboard.\n\nI had ideas for other projects I wanted to build, but the more I thought about it, the more I realized they would all be better for having a strong foundation underneath them first. Rather than building projects and then trying to retrofit a system around them after the fact, I want the system in place so that knowledge and experience can accumulate alongside the work as it happens. That's the right order.\n\nSo I'm building a personal AI operating system, a GUI that lives locally, is owned entirely by me, and runs the way I actually work, not tied to any subscription or locked to any one platform. The memory system will be the backbone, and the dashboard will be the interface that sits on top of it. What it includes from there is honestly an open question, and that's kind of the point. Just like the memory system kept growing and evolving as I built it, the dashboard will too, with more ideas, more use cases, and more integrations as they become relevant.\n\nThe reason I'm building it myself, rather than using an existing tool, is the same reason I'm taking CS50. Doing it manually the first time gives you something that shortcuts can't. You see what the tools skip over, you see what could be done better, and you know what's actually happening. And when the tools change, which they will because this industry changes every few weeks, you're not lost. You know what to look for.\n\nBuilding it myself means it's tied to me, not to any one platform or AI system. I understand it, I can update it, and it evolves as I evolve.\n\nIt's my system.\n\nWhere I'm Heading\nI've been having a lot of conversations this year with working professionals, people in industry, and friends who have built careers in and around the spaces I'm trying to move into. One of those conversations was with a friend who works at a startup in San Francisco, someone who has spent time in rooms at companies I'd like to eventually work at or alongside. I told him what I was building toward, and he said it sounded like a GTM engineer.\n\nI looked into it, and he was right.\n\nGTM engineering sits at the intersection of technical capability and go-to-market execution. It means building the systems and integrations that make sales and marketing teams actually work well: understanding the full stack, the CRM, the data, the automations, the messaging, the handoffs. It requires being able to communicate across the whole org and knowing where AI fits and where it doesn't.\n\nBut GTM isn't the only direction that resonates. Partner marketing and events marketing speak to a lot of the same instincts, building relationships, creating experiences, and coordinating cross-functional work that drives real pipeline. The common thread across all three is the same: operating at the intersection of strategy, people, and execution.\n\nI might not end up with any one of those exact titles, and that's fine. The skill clusters behind them are exactly what I'm building toward, and I'd rather be over-prepared. These skills move across functions, and the more I learn, the more I see how much of modern marketing is really just systems thinking applied to people and pipeline.\n\nI'm a marketer building a niche in software development and AI integration. Not a developer who markets. A marketer who can build.\n\nWhat Comes Next\nBy the end of this summer, I want to look back on something real. I want to have taken what school gave me and applied it in the real world, both in a professional environment at SignifyMD and in my own time. I want to have built something from scratch that I actually understand and actually use, and developed a skill set that holds up in any room I walk into, technical enough to earn credibility and marketing-native enough to put it to work.\n\nEverything I'm doing this summer is a launchpad. It carries into the fall semester, into the roles I'll pursue when I graduate, and into the professional I'm becoming through hard work, discipline, and genuine curiosity about where all of this is going.\n\nI'm excited, not just about what I'll be able to do, but about who I'll be when I'm looking back on this summer from the other side of it.\n\nIf any of this resonates with you, whether you're working on something similar, you think there's something about the industry I'm missing, or you're interested in working together, I'd love to connect. You can find my contact information in my portfolio.\n\nLet's talk.";
+                }
+              } else {
+                articleText =
+                  "This blog post is coming soon. Stay tuned for more insights on marketing, AI, and business strategy!";
+              }
+
+              showBlog({ title, description, readTime, articleText });
             }
+          });
         });
 
-        window.addEventListener('resize', fitPageTitle);
-        window.addEventListener('DOMContentLoaded', fitPageTitle);
+        // Close button
+        closeBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          closeBlog();
+        });
+
+        // Backdrop click to close
+        document.addEventListener("click", function (e) {
+          if (e.target.classList.contains("modal-backdrop") && isBlogOpen) {
+            closeBlog();
+          }
+        });
+
+        // Modal content click - prevent closing
+        blogOverlay.addEventListener("click", function (e) {
+          e.stopPropagation();
+        });
+
+        // Initialize
+        updateHoverState();
+      });
+
+      window.addEventListener("scroll", function () {
+        const nav = document.querySelector("nav");
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+          // Mobile: start shrunk, shrink more when scrolling
+          if (window.scrollY > 0) {
+            nav.classList.add("mobile-shrunk");
+          } else {
+            nav.classList.remove("mobile-shrunk");
+          }
+        } else {
+          // Desktop: normal shrink behavior
+          if (window.scrollY > 0) {
+            nav.classList.add("shrunk");
+          } else {
+            nav.classList.remove("shrunk");
+          }
+        }
+      });
+
+      function toggleDropdown() {
+        const dropdown = document.getElementById("more-dropdown");
+        dropdown.classList.toggle("hidden");
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", function (event) {
+        const dropdown = document.getElementById("more-dropdown");
+        const button = document.querySelector(".more-btn");
+        if (
+          !button.contains(event.target) &&
+          !dropdown.contains(event.target)
+        ) {
+          dropdown.classList.add("hidden");
+        }
+      });
+
+      window.addEventListener("resize", fitPageTitle);
+      window.addEventListener("DOMContentLoaded", fitPageTitle);
     </script>
-</head>
-<body class="text-white font-sans blog-page">
+  </head>
+  <body class="text-white font-sans blog-page">
     <header class="sticky top-6 z-10">
-        <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
-            <a href="../index.html" class="text-xl font-bold accent-purple nav-brand">Nathanael Kenzler</a>
-            <!-- Desktop nav -->
-            <div class="nav-desktop items-center space-x-6">
-                <a href="../index.html" class="nav-link">Home</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="projects.html" class="nav-link">Projects</a>
-                <a href="blog.html" class="nav-link">Blog</a>
-                <a href="uses.html" class="nav-link">Uses</a>
+      <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
+        <a
+          href="../index.html"
+          class="text-xl font-bold accent-purple nav-brand"
+          >Nathanael Kenzler</a
+        >
+        <!-- Desktop nav -->
+        <div class="nav-desktop items-center space-x-6">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="about.html" class="nav-link">About</a>
+          <a href="projects.html" class="nav-link">Projects</a>
+          <a href="blog.html" class="nav-link">Blog</a>
+          <a href="uses.html" class="nav-link">Uses</a>
+        </div>
+        <!-- Mobile nav -->
+        <div class="nav-mobile items-center ml-4 translate-y-px">
+          <div class="flex items-center space-x-6 mobile-primary-links">
+            <a href="../index.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="projects.html" class="nav-link">Projects</a>
+            <a href="blog.html" class="nav-link">Blog</a>
+            <a href="uses.html" class="nav-link">Uses</a>
+          </div>
+          <div class="relative ml-1 mobile-more-trigger">
+            <button
+              class="more-btn text-white p-1 rounded hover:bg-gray-700"
+              onclick="toggleDropdown()"
+            >
+              â‹®
+            </button>
+            <div
+              id="more-dropdown"
+              class="more-dropdown hidden absolute right-0 mt-1 bg-gray-800 rounded-md shadow-lg z-20"
+            >
+              <a
+                href="../index.html"
+                class="mobile-more-link more-home px-3 py-2 text-white hover:bg-gray-700 rounded-t-md"
+                >Home</a
+              >
+              <a
+                href="about.html"
+                class="mobile-more-link more-about px-3 py-2 text-white hover:bg-gray-700"
+                >About</a
+              >
+              <a
+                href="projects.html"
+                class="mobile-more-link more-projects px-3 py-2 text-white hover:bg-gray-700"
+                >Projects</a
+              >
+              <a
+                href="blog.html"
+                class="mobile-more-link more-blog px-3 py-2 text-white hover:bg-gray-700"
+                >Blog</a
+              >
+              <a
+                href="uses.html"
+                class="mobile-more-link more-uses px-3 py-2 text-white hover:bg-gray-700 rounded-b-md"
+                >Uses</a
+              >
             </div>
-            <!-- Mobile nav -->
-            <div class="nav-mobile items-center ml-4 translate-y-px">
-                <div class="flex items-center space-x-6 mobile-primary-links">
-                    <a href="../index.html" class="nav-link">Home</a>
-                    <a href="about.html" class="nav-link">About</a>
-                    <a href="projects.html" class="nav-link">Projects</a>
-                    <a href="blog.html" class="nav-link">Blog</a>
-                    <a href="uses.html" class="nav-link">Uses</a>
-                </div>
-                <div class="relative ml-1 mobile-more-trigger">
-                    <button class="more-btn text-white p-1 rounded hover:bg-gray-700" onclick="toggleDropdown()">â‹®</button>
-                    <div id="more-dropdown" class="more-dropdown hidden absolute right-0 mt-1 bg-gray-800 rounded-md shadow-lg z-20">
-                        <a href="../index.html" class="mobile-more-link more-home px-3 py-2 text-white hover:bg-gray-700 rounded-t-md">Home</a>
-                        <a href="about.html" class="mobile-more-link more-about px-3 py-2 text-white hover:bg-gray-700">About</a>
-                        <a href="projects.html" class="mobile-more-link more-projects px-3 py-2 text-white hover:bg-gray-700">Projects</a>
-                        <a href="blog.html" class="mobile-more-link more-blog px-3 py-2 text-white hover:bg-gray-700">Blog</a>
-                        <a href="uses.html" class="mobile-more-link more-uses px-3 py-2 text-white hover:bg-gray-700 rounded-b-md">Uses</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
+          </div>
+        </div>
+      </nav>
     </header>
 
     <main class="pt-24 md:pt-24 pt-12 px-4 max-w-4xl mx-auto">
-        <section class="mb-16">
-            <div class="page-title-wrap">
-                <h1 class="projects-heading text-center text-white mb-8">Blog</h1>
-            </div>
-            <div class="space-y-8">
-                <article class="blog-card p-6 rounded-lg" data-published="true">
-                    <h3 class="text-xl font-semibold mb-2">What I'm Building This Summer (And Why It Might Be the Most Important Thing I've Done)</h3>
-                    <p class="text-white mb-2">A look at the internship, the self-directed learning, and the 11:30pm moment that led to building my own agentic knowledge management system.</p>
-                    <span class="text-sm text-gray-500 text-accent-muted">June 2026 &bull; ~8 min read</span>
-                </article>
+      <section class="mb-16">
+        <div class="page-title-wrap">
+          <h1 class="projects-heading text-center text-white mb-8">Blog</h1>
+        </div>
+        <div class="space-y-8">
+          <article class="blog-card p-6 rounded-lg" data-published="true">
+            <h3 class="text-xl font-semibold mb-2">
+              What I'm Building This Summer (And Why It Might Be the Most
+              Important Thing I've Done)
+            </h3>
+            <p class="text-white mb-2">
+              A look at the internship, the self-directed learning, and the
+              11:30pm moment that led to building my own agentic knowledge
+              management system.
+            </p>
+            <span class="text-sm text-gray-500 text-accent-muted"
+              >June 2026 &bull; ~8 min read</span
+            >
+          </article>
 
-                <article class="blog-card p-6 rounded-lg" data-published="true">
-                    <h3 class="text-xl font-semibold mb-2">RSS Feed: Now Live on the Blog</h3>
-                    <p class="text-white mb-2">A quick test post to confirm the new RSS feed is working correctly and syndicating content as expected.</p>
-                    <span class="text-sm text-gray-500 text-accent-muted">5/31/2026 &bull; 1 min read</span>
-                </article>
+          <article class="blog-card p-6 rounded-lg" data-published="true">
+            <h3 class="text-xl font-semibold mb-2">
+              RSS Feed: Now Live on the Blog
+            </h3>
+            <p class="text-white mb-2">
+              A quick test post to confirm the new RSS feed is working correctly
+              and syndicating content as expected.
+            </p>
+            <span class="text-sm text-gray-500 text-accent-muted"
+              >5/31/2026 &bull; 1 min read</span
+            >
+          </article>
 
-                <article class="blog-card p-6 rounded-lg" data-published="true">
-                    <h3 class="text-xl font-semibold mb-2">Mastering New Skills: My First Week of Marketing Research at UArizona</h3>
-                    <p class="text-white mb-2">A snapshot of the tools, research methods, and analytical skills I'm beginning to develop as I start my master's coursework at the University of Arizona.</p>
-                    <span class="text-sm text-gray-500 text-accent-muted">1/14/2026 &middot; 3 min read</span>
-                </article>
+          <article class="blog-card p-6 rounded-lg" data-published="true">
+            <h3 class="text-xl font-semibold mb-2">
+              Mastering New Skills: My First Week of Marketing Research at
+              UArizona
+            </h3>
+            <p class="text-white mb-2">
+              A snapshot of the tools, research methods, and analytical skills
+              I'm beginning to develop as I start my master's coursework at the
+              University of Arizona.
+            </p>
+            <span class="text-sm text-gray-500 text-accent-muted"
+              >1/14/2026 &middot; 3 min read</span
+            >
+          </article>
 
-                <article class="blog-card p-6 rounded-lg" data-published="true">
-                    <h3 class="text-xl font-semibold mb-2">Building This Site: Bringing My Creative Side Into Marketing</h3>
-                    <p class="text-white mb-2">Read my first post on why I built this site and what I hope it becomes.</p>
-                    <span class="text-sm text-gray-500 text-accent-muted">1/4/2026 &bull; 1 min read</span>
-                </article>
+          <article class="blog-card p-6 rounded-lg" data-published="true">
+            <h3 class="text-xl font-semibold mb-2">
+              Building This Site: Bringing My Creative Side Into Marketing
+            </h3>
+            <p class="text-white mb-2">
+              Read my first post on why I built this site and what I hope it
+              becomes.
+            </p>
+            <span class="text-sm text-gray-500 text-accent-muted"
+              >1/4/2026 &bull; 1 min read</span
+            >
+          </article>
 
-                <article class="blog-card p-6 rounded-lg">
-                    <h3 class="text-xl font-semibold mb-2">More Posts Coming Soon</h3>
-                    <p class="text-white mb-2">I'm working on more articles about marketing, AI, and business strategy. Stay tuned!</p>
-                    <span class="text-sm text-gray-500 text-accent-muted">Coming Soon</span>
-                </article>
-            </div>
-        </section>
+          <article class="blog-card p-6 rounded-lg">
+            <h3 class="text-xl font-semibold mb-2">More Posts Coming Soon</h3>
+            <p class="text-white mb-2">
+              I'm working on more articles about marketing, AI, and business
+              strategy. Stay tuned!
+            </p>
+            <span class="text-sm text-gray-500 text-accent-muted"
+              >Coming Soon</span
+            >
+          </article>
+        </div>
+      </section>
     </main>
 
     <footer class="footer-bg py-12">
-        <div class="max-w-4xl mx-auto px-4">
-            <hr class="footer-divider">
+      <div class="max-w-4xl mx-auto px-4">
+        <hr class="footer-divider" />
+      </div>
+      <div class="footer-inner">
+        <div class="footer-section identity-section">
+          <h3>Nathanael Kenzler</h3>
+          <p class="footer-description">
+            <span>Enterprise-focused business &</span>
+            <span>marketing professional passionate</span>
+            <span>about turning strategy into impact.</span>
+          </p>
+          <div class="social-icons">
+            <a href="https://github.com/nkenzler1818" title="GitHub"
+              ><img
+                src="../Project Files/Link Icons/icons8-github-24.png"
+                alt="GitHub"
+                width="22"
+                height="22"
+            /></a>
+            <a
+              href="https://www.linkedin.com/in/nathanaelkenzler/"
+              title="LinkedIn"
+              ><img
+                src="../Project Files/Link Icons/icons8-linkedin-30.png"
+                alt="LinkedIn"
+                width="22"
+                height="22"
+            /></a>
+            <a href="mailto:nkenzler@arizona.edu" title="Email"
+              ><img
+                src="../Project Files/Link Icons/icons8-email-48.png"
+                alt="Email"
+                width="22"
+                height="22"
+            /></a>
+          </div>
         </div>
-        <div class="footer-inner">
-            <div class="footer-section identity-section">
-                <h3>Nathanael Kenzler</h3>
-                <p class="footer-description">
-                    <span>Enterprise-focused business &</span>
-                    <span>marketing professional passionate</span>
-                    <span>about turning strategy into impact.</span>
-                </p>
-                <div class="social-icons">
-                    <a href="https://github.com/nkenzler1818" title="GitHub"><img src="../Project Files/Link Icons/icons8-github-24.png" alt="GitHub" width="22" height="22"></a>
-                    <a href="https://www.linkedin.com/in/nathanaelkenzler/" title="LinkedIn"><img src="../Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn" width="22" height="22"></a>
-                    <a href="mailto:nkenzler@arizona.edu" title="Email"><img src="../Project Files/Link Icons/icons8-email-48.png" alt="Email" width="22" height="22"></a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h4>Navigate</h4>
-                <a href="../index.html">Home</a>
-                <a href="about.html">About</a>
-                <a href="projects.html">Projects</a>
-                <a href="blog.html">Blog</a>
-                <a href="uses.html">Uses</a>
-            </div>
-            <div class="footer-section">
-                <h4>Misc</h4>
-                <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
-                <a href="../rss.xml">RSS Feed</a>
-                <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Scroll to Top</a>
-            </div>
+        <div class="footer-section">
+          <h4>Navigate</h4>
+          <a href="../index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="projects.html">Projects</a>
+          <a href="blog.html">Blog</a>
+          <a href="uses.html">Uses</a>
         </div>
+        <div class="footer-section">
+          <h4>Misc</h4>
+          <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
+          <a href="../rss.xml">RSS Feed</a>
+          <a
+            href="#"
+            onclick="
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              return false;
+            "
+            >Scroll to Top</a
+          >
+        </div>
+      </div>
     </footer>
 
     <!-- Blog Modal (outside main, position fixed) -->
     <div class="blog-focus-overlay blog-modal hidden">
-        <div class="blog-focus-content">
-            <button class="blog-close-btn" aria-label="Close blog view">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-            </button>
-            <div class="blog-scroll-inner">
-                <div class="blog-focus-header">
-                    <h2 class="blog-focus-title text-3xl font-bold mb-3 accent-purple text-left"></h2>
-                    <p class="blog-focus-desc text-accent-muted text-lg text-left mb-4"></p>
-                    <p class="blog-focus-read-time text-sm text-gray-500 text-accent-muted text-left"></p>
-                </div>
-                <div class="blog-focus-main">
-                    <div class="blog-focus-article">
-                        <div class="blog-focus-article-text"></div>
-                    </div>
-                </div>
+      <div class="blog-focus-content">
+        <button class="blog-close-btn" aria-label="Close blog view">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 4L4 12M4 4L12 12"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+        <div class="blog-scroll-inner">
+          <div class="blog-focus-header">
+            <h2
+              class="blog-focus-title text-3xl font-bold mb-3 accent-purple text-left"
+            ></h2>
+            <p
+              class="blog-focus-desc text-accent-muted text-lg text-left mb-4"
+            ></p>
+            <p
+              class="blog-focus-read-time text-sm text-gray-500 text-accent-muted text-left"
+            ></p>
+          </div>
+          <div class="blog-focus-main">
+            <div class="blog-focus-article">
+              <div class="blog-focus-article-text"></div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
