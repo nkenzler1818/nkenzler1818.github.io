@@ -7,8 +7,18 @@
     <description>New projects and blog posts from my personal portfolio.</description>
     <language>en-us</language>
     <generator>Automated Portfolio RSS</generator>
-    <lastBuildDate>Tue, 02 Jun 2026 03:57:41 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 16 Jun 2026 00:32:03 GMT</lastBuildDate>
 
+    <item>
+      <title>Blog: What I'm Building This Summer (And Why It Might Be the Most Important Thing I've Done)</title>
+      <link>https://nathanaelkenzler.org/pages/blog.html</link>
+      <guid>https://nathanaelkenzler.org/pages/blog.html#building-this-summer</guid>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <category>Blog</category>
+      <description><![CDATA[
+        A look at the internship, the self-directed learning, and the 11:30pm moment that led to building my own agentic knowledge management system.
+      ]]></description>
+    </item>
     <item>
       <title>Blog: RSS Feed: Now Live on the Blog</title>
       <link>https://nathanaelkenzler.org/blog.html</link>
