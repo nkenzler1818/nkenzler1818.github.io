@@ -1,6 +1,13 @@
 {
   "blog": [
     {
+      "title": "What I'm Building This Summer (And Why It Might Be the Most Important Thing I've Done)",
+      "slug": "building-this-summer",
+      "link": "https://nathanaelkenzler.org/pages/blog.html",
+      "pubDate": "2026-06-15",
+      "description": "A look at the internship, the self-directed learning, and the 11:30pm moment that led to building my own agentic knowledge management system."
+    },
+    {
       "title": "RSS Feed: Now Live on the Blog",
       "slug": "rss-feed-now-live",
       "link": "https://nathanaelkenzler.org/blog.html",
