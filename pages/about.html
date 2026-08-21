@@ -2,11 +2,29 @@
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Must run before ANY paint, so the active nav pill never flashes
+      // into view before js/nav-transition.js can hide it. See that file.
+      (function () {
+        try {
+          if (window.innerWidth <= 920) return;
+          if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          var raw = sessionStorage.getItem("navPillOrigin");
+          if (!raw) return;
+          var origin = JSON.parse(raw);
+          if (!origin || typeof origin.t !== "number" || Date.now() - origin.t > 4000) return;
+          document.documentElement.classList.add("nav-pill-pending");
+          setTimeout(function () {
+            document.documentElement.classList.remove("nav-pill-pending");
+          }, 4000);
+        } catch (err) {}
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About - Nathanael Kenzler</title>
     <meta
       name="description"
-      content="Learn more about Nathanael Kenzler, M.S. in Marketing Candidate and aspiring enterprise marketer."
+      content="Learn more about Nathanael Kenzler, M.S. in Marketing Candidate focused on AI-driven marketing strategy."
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css" />
@@ -16,6 +34,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+    <script src="../js/nav-transition.js" defer></script>
     <script>
       window.addEventListener("scroll", function () {
         const nav = document.querySelector("nav");
@@ -113,17 +132,19 @@
     </script>
   </head>
   <body class="text-white font-sans about-page">
+    <div class="nav-scroll-blur" aria-hidden="true"></div>
     <header class="sticky top-6 z-10">
       <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
         <a
           href="../index.html"
           class="text-xl font-bold accent-purple nav-brand"
-          >Nathanael Kenzler</a
+          ><span class="nav-brand-full">Nathanael Kenzler</span
+          ><span class="nav-brand-short">NK</span></a
         >
         <!-- Desktop nav -->
         <div class="nav-desktop items-center space-x-6">
           <a href="../index.html" class="nav-link">Home</a>
-          <a href="about.html" class="nav-link">About</a>
+          <a href="about.html" class="nav-link" aria-current="page">About</a>
           <a href="projects.html" class="nav-link">Projects</a>
           <a href="blog.html" class="nav-link">Blog</a>
           <a href="uses.html" class="nav-link">Uses</a>
@@ -132,7 +153,7 @@
         <div class="nav-mobile items-center ml-4 translate-y-px">
           <div class="flex items-center space-x-6 mobile-primary-links">
             <a href="../index.html" class="nav-link">Home</a>
-            <a href="about.html" class="nav-link">About</a>
+            <a href="about.html" class="nav-link" aria-current="page">About</a>
             <a href="projects.html" class="nav-link">Projects</a>
             <a href="blog.html" class="nav-link">Blog</a>
             <a href="uses.html" class="nav-link">Uses</a>
@@ -142,7 +163,7 @@
               class="more-btn text-white p-1 rounded hover:bg-gray-700"
               onclick="toggleDropdown()"
             >
-              â‹®
+              ⋮
             </button>
             <div
               id="more-dropdown"
@@ -156,6 +177,7 @@
               <a
                 href="about.html"
                 class="mobile-more-link more-about px-3 py-2 text-white hover:bg-gray-700"
+                aria-current="page"
                 >About</a
               >
               <a
@@ -179,10 +201,10 @@
       </nav>
     </header>
 
-    <main class="pt-24 md:pt-24 pt-12 px-4 max-w-4xl mx-auto">
+    <main class="pt-10 md:pt-20 px-4 max-w-4xl mx-auto">
       <section class="about-section mb-16">
         <div class="page-title-wrap">
-          <h1 class="projects-heading text-center text-white mb-8 w-full">
+          <h1 class="projects-heading text-center text-white mb-12 w-full">
             About Me
           </h1>
         </div>
@@ -216,16 +238,10 @@
             </p>
 
             <p>
-              Right now, I'm building technical foundation through hands-on
-              coding. I'm taking Harvard's CS50 course this summer and working
-              on building my own app from scratch. I've learned that diving in
-              head-first is how I learn best. The more I work with AI backends
-              and infrastructure, the more I see how to identify problems and
-              envision solutions from an architectural perspective. It's like
-              how a photographer who shoots long enough starts to see the world
-              through their camera lens before it's even in their hands. I'm
-              learning to see business problems through an AI and technical
-              infrastructure lens.
+              Outside of coursework, I build. I designed a multi-agent,
+              RAG-based OS with routing based on project scope, and built a
+              RAG pipeline for pharmaceutical drug-safety monitoring my first
+              semester.
             </p>
 
             <p>
@@ -243,62 +259,72 @@
 
       <section class="mb-16">
         <h2 class="text-3xl font-bold mb-8">How I Got Here</h2>
-        <div class="space-y-8">
-          <div>
-            <h3 class="text-xl font-semibold mb-2">
-              SignifyMD - Marketing &amp; Digital Communications Intern (Mar
-              2026-Present)
-            </h3>
-            <p class="text-white">
-              This is where I'm applying everything I've learned. I'm building
-              lead generation strategies, working with KOL networks, and
-              learning how marketing really scales in a fast-paced healthcare
-              tech environment. The hands-on exposure to analytics, brand
-              positioning, and high-performing teams is reinforcing what I know
-              works and showing me what comes next.
-            </p>
+        <div class="journey-timeline">
+          <div class="journey-item">
+            <div class="journey-node"></div>
+            <div class="journey-connector"></div>
+            <div class="journey-body">
+              <div class="journey-header">
+                <h3 class="journey-role">
+                  Nordstrom Inc. - Fulfillment Team Member
+                </h3>
+                <span class="journey-dates">Jun 2019-Feb 2021</span>
+              </div>
+              <p class="journey-desc">
+                First job. Learned what consistent execution under pressure
+                actually looks like.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 class="text-xl font-semibold mb-2">
-              Personal Trainer &amp; Member Experience Specialist - VASA Fitness
-              (Sep 2023-Feb 2025)
-            </h3>
-            <p class="text-white">
-              After COVID, I needed to rebuild interpersonal skills and learn
-              how to connect with people across different backgrounds and
-              circumstances. This role gave me that foundation. I earned trust
-              from clients who were skeptical or struggling, learned to show up
-              as someone reliable, and used data-driven engagement to keep
-              members committed when motivation wavered. I learned how to adapt,
-              stay curious, and respond thoughtfully when things didn't go as
-              planned.
-            </p>
+          <div class="journey-item">
+            <div class="journey-node"></div>
+            <div class="journey-connector"></div>
+            <div class="journey-body">
+              <div class="journey-header">
+                <h3 class="journey-role">
+                  Bay Area K9 Association - Resident Handler &amp;
+                  Operations Assistant
+                </h3>
+                <span class="journey-dates">Feb 2021-Jul 2023</span>
+              </div>
+              <p class="journey-desc">
+                Built a 15+ client base and ran scheduling, photography, and
+                facility ops. Pushed me toward a business degree.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 class="text-xl font-semibold mb-2">
-              Resident Handler &amp; Operations Assistant - Bay Area K9
-              Association (Feb 2021-Jul 2023)
-            </h3>
-            <p class="text-white">
-              This was my proving ground for versatility. I built a client base
-              of 15+ recurring clients, managed everything from scheduling to
-              photography to facility operations, and figured out what I was
-              genuinely good at along the way. Being adaptable and prepared
-              beats trying to know everything upfront. This is what pushed me
-              toward a business degree.
-            </p>
+          <div class="journey-item">
+            <div class="journey-node"></div>
+            <div class="journey-connector"></div>
+            <div class="journey-body">
+              <div class="journey-header">
+                <h3 class="journey-role">
+                  VASA Fitness - Personal Trainer &amp; Member Experience
+                  Specialist
+                </h3>
+                <span class="journey-dates">Sep 2023-Feb 2025</span>
+              </div>
+              <p class="journey-desc">
+                Rebuilt client trust through data-driven engagement across
+                27+ concurrent accounts.
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 class="text-xl font-semibold mb-2">
-              Fulfillment Team Member - Nordstrom Inc. (Jun 2019-Feb 2021)
-            </h3>
-            <p class="text-white">
-              My first real job taught me what professional collaboration looks
-              like. I learned how to optimize workflows, deliver consistent
-              results under pressure, and add value beyond what I was directly
-              asked to do. That foundation in work ethic and continuous learning
-              shaped everything that came after.
-            </p>
+          <div class="journey-item journey-current">
+            <div class="journey-node"></div>
+            <div class="journey-connector"></div>
+            <div class="journey-body">
+              <div class="journey-header">
+                <h3 class="journey-role">
+                  SignifyMD - Marketing &amp; Digital Communications Intern
+                </h3>
+                <span class="journey-dates">Mar 2026-Present</span>
+              </div>
+              <p class="journey-desc">
+                Built a lead research pipeline for ASCO 2026: 600+ leads,
+                280+ conversions (47%), across KOL and sponsor partners.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -353,7 +379,7 @@
                   optimization. Growing up with an engineer father, I was always
                   encouraged to explore how things work. Whether it was
                   tinkering with PCs, competing in VEX robotics, or hardwiring
-                  cameras, tech became my playground. Now, Iâ€™m excited to
+                  cameras, tech became my playground. Now, I'm excited to
                   channel that same curiosity into a professional tech marketing
                   path, where I can combine strategy, creativity, and a lifelong
                   affinity for making things work better.
@@ -381,14 +407,14 @@
                   for my business administration degree, I learned to leverage
                   wide variety of tools and techniques in order to derive and
                   present conclusions professionally and effectively. Moreover,
-                  a reason Iâ€™m especially excited about my Masterâ€™s program is
+                  a reason I'm especially excited about my Master's program is
                   taking courses such as Marketing Research, where I get
                   hands-on experience with qualitative and quantitative methods
                   to gather and interpret data. On the AI side, I love
                   experimenting. For example, I explore which tools fit best
                   into my workflow; Perplexity for research, Gemini for visual
                   representations, and even building this site by integrating
-                  Cline as a wrapper in my IDE while coding with OpenAIâ€™s Codex
+                  Cline as a wrapper in my IDE while coding with OpenAI's Codex
                   5.2. Each step refines how I achieve results and as I alluded
                   to in the question above, I enjoy finding and swapping pieces
                   to bolster my ability to execute an idea to the highest
@@ -413,11 +439,11 @@
               <div class="faq-answer-content">
                 <p>
                   I pride myself on knowing when to step up and when to step
-                  back. I work best with teams that trust each otherâ€™s
+                  back. I work best with teams that trust each other's
                   strengths. Sometimes I lead, whether as a project lead or
                   owning a specific task, and other times I focus on supporting
                   the team behind the scenes. The key is recognizing what the
-                  team needs, adapting, and maximizing everyoneâ€™s strengths so
+                  team needs, adapting, and maximizing everyone's strengths so
                   we create the best outcomes together.
                 </p>
               </div>

@@ -23,14 +23,16 @@
     font-style: normal;
 }
 
+html {
+    /* Always reserve the scrollbar's track, whether or not a page's content
+       is tall enough to need it, so centered content doesn't shift left/right
+       from page to page as the scrollbar appears/disappears. */
+    scrollbar-gutter: stable;
+}
+
 body {
     font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background-color: #2A2A2A;
-}
-
-/* Blog page: offset content to match scrollbar spacing on other pages */
-.blog-page {
-    padding-right: 12px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -74,18 +76,72 @@ code {
 }
 
 .nav-link {
+    position: relative;
+    z-index: 0;
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    transition: background-color 0.2s;
+    transition: color 0.2s;
 }
 
 .floating-nav .nav-link {
     transform: translateY(1px);
 }
 
-.nav-link:hover, .nav-link.active {
-    background-color: #454545;
+.nav-link:hover {
+    color: #e9d5ff;
+}
+
+.nav-link[aria-current="page"] {
+    color: var(--accent-purple);
+    font-weight: 600;
+}
+
+/* Active-tab pill fill — a separate layer (not the link itself) so it can
+   be hidden independently while the JS "flying ghost" pill (below) animates
+   over it during a page navigation. */
+.nav-link[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 0.5rem;
+    background-color: rgba(192, 132, 252, 0.16);
+    z-index: -1;
+    transition: background-color 0.2s;
+}
+
+.nav-link[aria-current="page"]:hover::after {
+    background-color: rgba(192, 132, 252, 0.24);
+}
+
+/* Glowing lamp indicator over the active tab */
+.nav-link[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    top: -0.65rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1.5rem;
+    height: 0.2rem;
+    border-radius: 999px;
+    background: var(--accent-purple);
+    box-shadow:
+        0 0 8px 2px rgba(192, 132, 252, 0.65),
+        0 0 22px 8px rgba(192, 132, 252, 0.35);
+}
+
+/* Hidden briefly while nav-transition.js flies a ghost pill over this link.
+   Set as a class on <html> (by an inline guard script at the very top of
+   <head>, before any paint) rather than on the link itself, so the real
+   pill can never flash into view before JS has a chance to hide it. */
+html.nav-pill-pending .nav-link[aria-current="page"]::after,
+html.nav-pill-pending .nav-link[aria-current="page"]::before {
+    opacity: 0;
+}
+
+.mobile-more-link[aria-current="page"] {
+    color: var(--accent-purple);
+    font-weight: 600;
 }
 
 .btn-dark-purple {
@@ -97,8 +153,24 @@ code {
     transition: background-color 0.2s;
 }
 
+/* Full-width strip pinned behind the floating nav so scrolling content
+   never collides with it — solid page background up top, fading out
+   toward transparent (same idea as the carousel edge fade) rather than
+   blurring content, which just left text half-legible under the nav. */
+.nav-scroll-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8rem;
+    z-index: 5;
+    pointer-events: none;
+    background: linear-gradient(to bottom, #2a2a2a 0px, #2a2a2a 108px, rgba(42, 42, 42, 0) 128px);
+}
+
 .floating-nav {
-    background-color: #323232;
+    background-color: #1f1f1f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1rem;
     padding: 0.75rem 1.5rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -115,6 +187,20 @@ code {
 
 .nav-brand {
     white-space: nowrap;
+}
+
+.nav-brand-short {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    .nav-brand-full {
+        display: none;
+    }
+
+    .nav-brand-short {
+        display: inline;
+    }
 }
 
 .floating-nav.shrunk {
@@ -258,18 +344,64 @@ code {
 }
 
 /* Carousel */
+/* Breaks out of the page's max-w-4xl text column (~864px) so cards have
+   more room and less of a side card needs to be clipped/faded in the
+   first place. Purely a layout width change - nothing else on the page
+   references this container's width. */
 .carousel-wrapper {
     display: flex;
     align-items: center;
     gap: 12px;
+    width: min(1120px, calc(100vw - 2rem));
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .carousel-track-outer {
+    position: relative;
     flex: 1;
     min-width: 0;
-    /* Gentle edge fade - transitions over 12% of the track width on each side */
-    mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+}
+
+/* Gentle edge fade - solid overlays instead of mask-image, since a mask
+   on this container stops applying correctly to cards mid-hover (their
+   transform/opacity transition promotes them to a layer the mask can't
+   clip), which showed up as a hard-edged cutoff instead of a fade.
+   Kept narrow so it never reaches the focused center card. */
+.carousel-track-outer::before,
+.carousel-track-outer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 12%;
+    max-width: 110px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Eased, multi-stop fade (not a straight linear ramp) so the transition
+   reads as gradual rather than a perceptible edge where the card's own
+   background/shadow contrast is still strong. */
+.carousel-track-outer::before {
+    left: 0;
+    background: linear-gradient(to right,
+        #2a2a2a 0%,
+        rgba(42, 42, 42, 0.95) 30%,
+        rgba(42, 42, 42, 0.65) 60%,
+        rgba(42, 42, 42, 0.25) 85%,
+        rgba(42, 42, 42, 0) 100%);
+}
+
+.carousel-track-outer::after {
+    right: 0;
+    background: linear-gradient(to left,
+        #2a2a2a 0%,
+        rgba(42, 42, 42, 0.95) 30%,
+        rgba(42, 42, 42, 0.65) 60%,
+        rgba(42, 42, 42, 0.25) 85%,
+        rgba(42, 42, 42, 0) 100%);
 }
 
 .carousel-track {
@@ -969,6 +1101,92 @@ code {
 
 .phase-upcoming .phase-desc {
     color: rgba(209, 213, 219, 0.35);
+}
+
+/* Journey timeline (About page — career history) */
+.journey-timeline {
+    display: flex;
+    flex-direction: column;
+}
+
+.journey-item {
+    display: grid;
+    grid-template-columns: 28px 1px 1fr;
+    gap: 0 14px;
+    position: relative;
+}
+
+.journey-item:last-child .journey-connector {
+    display: none;
+}
+
+.journey-node {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(192, 132, 252, 0.12);
+    border: 2px solid #c084fc;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    margin-top: 2px;
+}
+
+.journey-item.journey-current .journey-node {
+    background: #c084fc;
+}
+
+.journey-item.journey-current .journey-node::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 2px solid rgba(192, 132, 252, 0.4);
+    animation: phase-pulse 1.8s ease-in-out infinite;
+}
+
+.journey-connector {
+    width: 2px;
+    margin: 0 auto;
+    grid-column: 2;
+    align-self: stretch;
+    background: rgba(192, 132, 252, 0.25);
+}
+
+.journey-body {
+    padding-bottom: 2.25rem;
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.journey-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+    margin-bottom: 6px;
+    margin-top: 2px;
+}
+
+.journey-role {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #e5e5e5;
+}
+
+.journey-dates {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.45);
+    white-space: nowrap;
+}
+
+.journey-desc {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgba(209, 213, 219, 0.75);
 }
 
 /* Modal backdrop */
@@ -2595,7 +2813,7 @@ code {
     }
 }
 
-@media (max-width: 380px) {
+@media (max-width: 280px) {
     .mobile-primary-links a:nth-child(1) {
         display: none;
     }
@@ -2645,9 +2863,9 @@ code {
         background-color: rgba(255, 255, 255, 0.08);
     }
 
-    /* Dropdown menu background - match navbar dark gray */
+    /* Dropdown menu background - match navbar charcoal */
     .more-dropdown {
-        background-color: #323232 !important; /* Same as navbar */
+        background-color: #1f1f1f !important; /* Same as navbar */
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
