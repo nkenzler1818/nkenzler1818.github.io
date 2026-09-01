@@ -66,6 +66,28 @@ code {
     font-family: 'JetBrains Mono', monospace;
 }
 
+/* Keyboard focus, sitewide.
+
+   Without this, links fall back to the browser default ring, which Chrome
+   draws in near-black. On a #2A2A2A page and a #1F1F1F nav that is close to
+   invisible, so a keyboard user cannot tell where they are. Scoped to
+   :focus-visible so it never shows on mouse clicks, and it uses the one
+   accent already locked for the site. Components that define their own
+   focus ring (project cards, the About page controls) already match this. */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--accent-purple);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* The nav pill clips tightly, so the ring sits inside rather than outside. */
+.floating-nav a:focus-visible,
+.more-dropdown a:focus-visible {
+    outline-offset: 2px;
+}
+
 .backdrop-blur-sm {
     backdrop-filter: blur(4px);
 }

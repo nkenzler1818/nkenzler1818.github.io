@@ -195,12 +195,79 @@ masked the container instead. Same intent, actually pre-paint.
   is no longer referenced by any page, since it belonged to the old About layout. I
   left it rather than delete CSS you did not ask me to touch. Safe to remove.
 
-## Not done
+---
+
+## Second QA pass (05:30, closing the gaps above)
+
+Everything in this section was done after the build report was first written.
+
+### Reduced motion, now proven rather than inferred
+
+Last night I verified this structurally, by reading the CSS and JS. This pass ran
+it for real with the browser emulating `prefers-reduced-motion: reduce`:
+
+- `ab-armed` never appears on `<html>`
+- ScrollSmoother not created, **0 ScrollTriggers, 0 pins**
+- **zero shutter overlap across all 10 plates**, measured geometrically
+- zero elements below full opacity, zero images parked mid-scale
+- document height drops to 8648px from 9815px, exactly the pin's contribution
+
+The page is complete, static, correctly laid out, and nothing is hidden.
+
+### 320px, which had not been tested
+
+Clean. No horizontal overflow (`scrollWidth === clientWidth === 305`), no text
+below 11px, nav at 72px, both CTAs on one line. The only element extending past
+the viewport is the intentional `grad-stage` crop, clipped by its plate.
+
+### End-state verification at 320, 375 and 1440
+
+Rather than trusting animation timing, every timeline was forced to completion and
+the result measured. At all three widths: **nothing left hidden, zero shutter
+overlap on any of the 10 plates.**
+
+### One real fix: focus rings were invisible sitewide
+
+Tabbing through the page, the nav and footer links fell back to Chrome's default
+focus ring, which it draws in near-black (`rgb(16,16,16)`). Against `#2A2A2A` and
+`#1F1F1F` that is effectively invisible, so a keyboard user could not tell where
+they were. That is a **WCAG 2.4.7 failure**, it predates this rebuild, and it
+affected all six pages.
+
+Fixed with one additive block in `css/style.css`: `a`, `button`, and `[tabindex]`
+get a 2px `--accent-purple` outline on `:focus-visible` only, so it never appears
+on mouse clicks. Verified on About, Home, and Projects. Components that already
+had their own ring were already using the same accent, so nothing changed for them.
+
+### Keyboard and semantics
+
+- Tab order is logical: nav, then page controls, then footer. **No trap**, focus
+  cycles back to the start.
+- Heading outline is correct: one H1, then H2 per section, with the three build
+  cards as H3 nested under section 5's H2. No skipped levels.
+- One each of `main`, `nav`, `header`, `footer`. `lang="en"`.
+- **Zero images missing alt, zero empty alt.** Nine figcaptions.
+
+### A testing note worth keeping
+
+The headless browser runs `requestAnimationFrame` at **2fps**. GSAP is
+frame-driven, so tweens appear to crawl and can look stalled. I briefly mistook
+that for a bug in the hero reveal. It is not: forcing timelines to their end state
+shows correct results everywhere. **Animation timing cannot be judged in this
+environment, only end states can.** The same applies to full-page screenshots,
+where lazy-loaded images below the fold render as empty boxes even though they
+load correctly when actually scrolled to.
+
+## Still not done
 
 - **Lighthouse.** The page adds roughly 120KB gzipped of deferred GSAP to a site
   that previously shipped almost no JS. LCP and CLS are structurally sound (hero is
   `fetchpriority="high"`, every image has explicit dimensions and `aspect-ratio`),
-  but the number is unmeasured.
-- **Cross-browser.** Verified in Chromium only. No Safari available on this machine.
-- **Screen reader.** Semantics and alt text are in place and the heading outline is
-  correct, but no assistive-technology pass was run.
+  but the number is unmeasured. The 2fps headless environment makes a local run
+  meaningless anyway; this wants a real browser.
+- **Cross-browser.** Chromium only. No Safari available on this machine.
+- **Screen reader.** Semantics, alt text, heading order, and landmarks are all
+  verified correct, but no actual assistive-technology pass was run.
+- **`.project-pane` focus on the Projects page** did not pick up a visible ring in
+  one probe. It has its own `:focus-visible` rule already and is outside this
+  page's scope, but it is worth a look sometime.
