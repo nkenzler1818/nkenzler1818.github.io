@@ -39,6 +39,10 @@ now reads "over three hundred notes," and the alt text was corrected to match.
 what the sensor was doing" had no source behind it. The backed fact is camera rigs
 he built. Rewritten to that.
 
+**3b. "Months apart" sharpened to "three months apart."** The two vault screenshots
+are dated 2026-05-26 and 2026-08-31, which is 97 days. The specific number is the
+stronger line and it is sourced from the filenames.
+
 **4. Verified and kept:** 17,313 records and 373 drugs (both confirmed in
 `projects/pharmacovigilance-rag/MEMORY.md:57`), 600 leads and 280 registrations,
 27 VASA accounts, all degrees and dates. **NVIDIA NIM stays in the Olympus card**:
@@ -494,9 +498,9 @@ a metric-deck flavor the page does not want.*
 > The unglamorous one.
 
 **Body:**
-> Same vault, months apart. It is a knowledge base I keep for myself: every
-> project, every decision, everything I got wrong and what fixed it. Over three
-> hundred notes now, and the links between them are the part that matters.
+> Same vault, three months apart. It is a knowledge base I keep for myself:
+> every project, every decision, everything I got wrong and what fixed it. Over
+> three hundred notes now, and the links between them are the part that matters.
 >
 > No client asked for it and it will never be a portfolio piece. It is the thing
 > I would point at if you asked whether I stay with something after the novelty

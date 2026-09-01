@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About rebuild - style tile</title>
+    <meta name="theme-color" content="#2A2A2A" />
+    <link rel="stylesheet" href="../../css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===================================================================
+         ABOUT REBUILD, STYLE TILE (step 6)
+         Living HTML instead of Figma. Every token below is the real token
+         the builder will paste into css/style.css. This file links the real
+         stylesheet, so anything that renders here renders on the site.
+         =================================================================== */
+
+      :root {
+        /* --- surface ------------------------------------------------ */
+        --ab-page:        #2A2A2A;
+        --ab-plate:       #1F1F1F;
+        --ab-hair:        rgba(255, 255, 255, 0.10);
+        --ab-hair-lit:    rgba(255, 255, 255, 0.16);
+
+        /* --- ink (three steps, no fourth) --------------------------- */
+        --ab-ink-1:       #F5F5F5;
+        --ab-ink-2:       rgba(245, 245, 245, 0.82);
+        --ab-ink-3:       rgba(245, 245, 245, 0.55);
+
+        /* --- accent (rationed, see the accent law panel) ------------ */
+        --ab-accent:      #c084fc;
+        --ab-accent-btn:  #7c46af;
+        --ab-accent-rule: rgba(192, 132, 252, 0.45);
+
+        /* --- type scale --------------------------------------------- */
+        --ab-t-display:   clamp(2.50rem, 1.55rem + 3.80vw, 3.75rem);  /* 40 to 60, section 1 only */
+        --ab-t-turn:      clamp(2.00rem, 1.45rem + 2.20vw, 3.25rem);  /* 32 to 52, section 8 only */
+        --ab-t-h2:        clamp(1.75rem, 1.25rem + 2.00vw, 2.50rem);  /* 28 to 40, sections 2,3,5,6,7,9,10 */
+        --ab-t-lede:      clamp(1.125rem, 1.02rem + 0.42vw, 1.3125rem); /* 18 to 21 */
+        --ab-t-body:      1.0625rem;   /* 17 */
+        --ab-t-card:      1rem;        /* 16 */
+        --ab-t-meta:      0.8125rem;   /* 13 */
+        --ab-t-cap:       0.75rem;     /* 12 */
+
+        /* --- rhythm -------------------------------------------------- */
+        --ab-sect:        clamp(5rem, 3rem + 6vw, 9rem);   /* 80 to 144 */
+        --ab-col:         864px;
+        --ab-wide:        min(1120px, 100vw - 2rem);
+        --ab-narrow:      620px;
+        --ab-mid:         700px;
+
+        /* --- shape (one number, inherited from .project-pane) -------- */
+        --ab-r:           0.5rem;   /* 8px  plates, cards, buttons */
+        --ab-r-inner:     4px;      /* screenshot inside a screen plate */
+
+        --ab-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      /* ---------- tile chrome (not part of the design system) -------- */
+      .tile {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem 8rem;
+        color: var(--ab-ink-2);
+        font-size: var(--ab-t-body);
+        line-height: 1.72;
+      }
+      .tile-head {
+        border-bottom: 1px solid var(--ab-hair);
+        padding-bottom: 2rem;
+        margin-bottom: 3.5rem;
+      }
+      .tile-kicker {
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ab-ink-3);
+        margin: 0 0 0.9rem;
+      }
+      .tile h1.tile-title {
+        font-size: clamp(2rem, 1.4rem + 2.4vw, 2.75rem);
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+        font-weight: 600;
+        color: var(--ab-ink-1);
+        margin: 0 0 1rem;
+        text-wrap: balance;
+      }
+      .tile-dials {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 2rem;
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-meta);
+        color: var(--ab-ink-3);
+      }
+      .tile-dials b { color: var(--ab-ink-1); font-weight: 500; }
+
+      .panel { margin-bottom: 4.5rem; }
+      .tile h2.panel-h {
+        font-size: 1.0625rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        color: var(--ab-ink-1);
+        margin: 0 0 0.35rem;
+        padding-bottom: 0.85rem;
+        border-bottom: 1px solid var(--ab-hair);
+      }
+      .panel-note {
+        font-size: var(--ab-t-meta);
+        color: var(--ab-ink-3);
+        max-width: 68ch;
+        margin: 1rem 0 2rem;
+        line-height: 1.65;
+      }
+      .panel-note code,
+      .tile code {
+        font-family: var(--ab-mono);
+        font-size: 0.9em;
+        color: var(--ab-ink-2);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+        padding: 0.1em 0.35em;
+      }
+
+      /* ================= 1. PALETTE ================= */
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+        gap: 1rem;
+      }
+      .sw {
+        border: 1px solid var(--ab-hair);
+        border-radius: var(--ab-r);
+        overflow: hidden;
+      }
+      .sw-chip { height: 84px; display: block; }
+      .sw-meta {
+        padding: 0.75rem 0.85rem 0.85rem;
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        line-height: 1.7;
+        color: var(--ab-ink-3);
+      }
+      .sw-meta b { display: block; color: var(--ab-ink-1); font-weight: 500; letter-spacing: 0.02em; }
+      .sw-ratio { color: var(--ab-ink-3); }
+      .sw-ratio.fail { color: #f0a3a3; }
+
+      /* ================= 2. TYPE ================= */
+      .spec { border-top: 1px solid var(--ab-hair); padding: 1.75rem 0; }
+      .spec:last-child { border-bottom: 1px solid var(--ab-hair); }
+      .spec-tag {
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        color: var(--ab-ink-3);
+        letter-spacing: 0.02em;
+        margin-bottom: 1rem;
+      }
+      .ab-display {
+        font-size: var(--ab-t-display);
+        line-height: 1.08;
+        letter-spacing: -0.028em;
+        font-weight: 600;
+        color: var(--ab-ink-1);
+        max-width: 700px;
+        margin: 0;
+        text-wrap: balance;
+      }
+      .ab-turn {
+        font-size: var(--ab-t-turn);
+        line-height: 1.10;
+        letter-spacing: -0.024em;
+        font-weight: 600;
+        color: var(--ab-ink-1);
+        max-width: 22ch;
+        margin: 0 auto;
+        text-align: center;
+        text-wrap: balance;
+      }
+      .tile h3.ab-h2 {
+        font-size: var(--ab-t-h2);
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+        font-weight: 600;
+        color: var(--ab-ink-1);
+        max-width: 20ch;
+        margin: 0;
+        text-wrap: balance;
+      }
+      .ab-lede {
+        font-size: var(--ab-t-lede);
+        line-height: 1.55;
+        letter-spacing: -0.005em;
+        font-weight: 400;
+        color: var(--ab-ink-2);
+        max-width: 46ch;
+        margin: 0;
+      }
+      .ab-body {
+        font-size: var(--ab-t-body);
+        line-height: 1.72;
+        color: var(--ab-ink-2);
+        max-width: 66ch;
+        margin: 0;
+      }
+      .ab-body + .ab-body { margin-top: 1.25rem; }
+      .ab-num {
+        font-family: var(--ab-mono);
+        font-weight: 500;
+        color: var(--ab-accent);
+        font-variant-numeric: tabular-nums;
+      }
+      .ab-meta {
+        font-size: var(--ab-t-meta);
+        line-height: 1.65;
+        color: var(--ab-ink-3);
+        margin: 0;
+      }
+      .ab-cap {
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        line-height: 1.5;
+        letter-spacing: 0.015em;
+        color: var(--ab-ink-3);
+        max-width: 60ch;
+        margin: 0.875rem 0 0;
+      }
+
+      /* ================= 3. THE PLATE SYSTEM ================= */
+      .plate {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--ab-r);
+        background: var(--ab-plate);
+        border: 1px solid var(--ab-hair);
+        isolation: isolate;
+        box-sizing: border-box;
+      }
+      .plate > img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* --- photo class: bleeds to the plate edge ---
+         Layer 1  filter          low-key tonal envelope, every photo lands in
+                                  the same brightness band as the page.
+         Layer 2  ::before        temperature lock, cool slate in soft-light.
+         Layer 3  ::after         22% of the page's own colour, flat, on every
+                                  image, plus the bottom ground weld. */
+      .plate--photo > img {
+        filter: saturate(0.62) contrast(1.12) brightness(0.86);
+      }
+      .plate--photo::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background: #39405A;
+        mix-blend-mode: soft-light;
+        opacity: 0.50;
+      }
+      .plate--photo::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background:
+          linear-gradient(to top, rgba(42, 42, 42, 0.62) 0%, rgba(42, 42, 42, 0) 40%),
+          linear-gradient(to bottom, rgba(31, 31, 31, 0.34) 0%, rgba(31, 31, 31, 0) 22%),
+          rgba(42, 42, 42, 0.22);
+      }
+
+      /* --- screen class: 8px charcoal bezel, screenshot never touches the
+             plate edge. this is the structural answer to the light asset. --- */
+      .plate--screen { padding: 8px; }
+      .plate--screen > img {
+        border-radius: var(--ab-r-inner);
+        filter: brightness(0.88) saturate(0.82) contrast(1.03);
+      }
+      .plate--screen--light > img {
+        filter: brightness(0.80) saturate(0.72) contrast(1.04);
+      }
+      .plate--screen--light::after {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        z-index: 2;
+        border-radius: var(--ab-r-inner);
+        pointer-events: none;
+        background: rgba(31, 31, 31, 0.16);
+      }
+
+      /* --- the aperture. two charcoal shutters, pure translateY. --- */
+      .ap {
+        position: absolute;
+        left: -1px;
+        right: -1px;
+        z-index: 3;
+        background: var(--ab-plate);
+        pointer-events: none;
+        transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .ap-t { top: -1px;    height: calc(50% + 1px); transform: translateY(-101%); }
+      .ap-b { bottom: -1px; height: calc(50% + 1px); transform: translateY(101%); }
+      /* CLOSED is the armed state only. Default (above) is OPEN, so a failed
+         script can never leave an image covered. */
+      .is-closed .ap-t,
+      .is-closed .ap-b { transform: translateY(0); }
+      @media (prefers-reduced-motion: reduce) {
+        .ap { transition: none; }
+        .is-closed .ap-t { transform: translateY(-101%); }
+        .is-closed .ap-b { transform: translateY(101%); }
+      }
+
+      /* aspect helpers used by the tile */
+      .ar-34  { aspect-ratio: 3 / 4; }
+      .ar-45  { aspect-ratio: 4 / 5; }
+      .ar-169 { aspect-ratio: 16 / 9; }
+      .ar-219 { aspect-ratio: 21 / 9; }
+      .ar-11  { aspect-ratio: 1 / 1; }
+
+      .treat-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+      .treat-lab {
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        letter-spacing: 0.02em;
+        color: var(--ab-ink-3);
+        margin: 0 0 0.7rem;
+      }
+      .raw {
+        border-radius: var(--ab-r);
+        overflow: hidden;
+        border: 1px dashed rgba(255, 255, 255, 0.14);
+        display: block;
+      }
+      .raw img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .treat-cap {
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        color: var(--ab-ink-3);
+        margin: 0.7rem 0 0;
+        line-height: 1.5;
+      }
+
+      /* ================= 4. ACCENT LAW ================= */
+      .law {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 3rem;
+      }
+      .law ul { list-style: none; margin: 0; padding: 0; }
+      .law li {
+        padding: 0.7rem 0;
+        border-bottom: 1px solid var(--ab-hair);
+        font-size: var(--ab-t-meta);
+        line-height: 1.6;
+        color: var(--ab-ink-2);
+      }
+      .law li:first-child { border-top: 1px solid var(--ab-hair); }
+      .law-h {
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--ab-ink-3);
+        margin: 0 0 1rem;
+      }
+      .ab-link {
+        color: var(--ab-ink-1);
+        text-decoration: underline;
+        text-decoration-color: var(--ab-accent-rule);
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1px;
+        transition: color 0.18s ease, text-decoration-color 0.18s ease;
+      }
+      .ab-link:hover { color: var(--ab-accent); text-decoration-color: var(--ab-accent); }
+      .ab-link:focus-visible {
+        outline: 2px solid var(--ab-accent);
+        outline-offset: 3px;
+        border-radius: 2px;
+      }
+
+      /* ================= 5. BUTTONS ================= */
+      .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1.75rem; }
+      .ab-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        background: var(--ab-accent-btn);
+        color: #fff;
+        font-size: var(--ab-t-body);
+        font-weight: 600;
+        line-height: 1;
+        padding: 0.9rem 1.5rem;
+        border-radius: var(--ab-r);
+        white-space: nowrap;
+        text-decoration: none;
+        transition: background-color 0.18s ease, transform 0.18s ease;
+        touch-action: manipulation;
+      }
+      .ab-btn:hover { background: #8d51c6; }
+      .ab-btn:active { transform: translateY(1px); }
+      .ab-btn:focus-visible { outline: 2px solid var(--ab-accent); outline-offset: 3px; }
+      .ab-btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: var(--ab-ink-2);
+        font-size: var(--ab-t-body);
+        text-decoration: none;
+        border-bottom: 1px solid var(--ab-hair);
+        padding-bottom: 2px;
+        transition: color 0.18s ease, border-color 0.18s ease;
+      }
+      .ab-btn-ghost:hover { color: var(--ab-ink-1); border-color: var(--ab-accent-rule); }
+      .ab-btn-ghost:focus-visible { outline: 2px solid var(--ab-accent); outline-offset: 3px; }
+
+      /* ================= 6. RECORD (colophon) ================= */
+      .rec-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 3rem;
+      }
+      .rec-grid > div + div {
+        border-left: 1px solid var(--ab-hair);
+        padding-left: 3rem;
+      }
+      .rec-item { margin-bottom: 1.35rem; }
+      .rec-title { font-size: var(--ab-t-card); font-weight: 500; color: var(--ab-ink-1); margin: 0; line-height: 1.4; }
+      .rec-sub {
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        color: var(--ab-ink-3);
+        margin: 0.25rem 0 0;
+        line-height: 1.55;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ================= 7. RHYTHM RULER ================= */
+      .ruler { display: grid; gap: 0.5rem; }
+      .ruler-row {
+        display: grid;
+        grid-template-columns: 118px 1fr;
+        align-items: center;
+        gap: 1rem;
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        color: var(--ab-ink-3);
+      }
+      .ruler-bar { height: 10px; background: rgba(192, 132, 252, 0.20); border-radius: 2px; }
+
+      .demo-btn {
+        font-family: var(--ab-mono);
+        font-size: var(--ab-t-cap);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ab-ink-2);
+        background: transparent;
+        border: 1px solid var(--ab-hair);
+        border-radius: var(--ab-r);
+        padding: 0.6rem 1.1rem;
+        cursor: pointer;
+        transition: border-color 0.18s ease, color 0.18s ease;
+        touch-action: manipulation;
+      }
+      .demo-btn:hover { color: var(--ab-ink-1); border-color: var(--ab-hair-lit); }
+      .demo-btn:focus-visible { outline: 2px solid var(--ab-accent); outline-offset: 3px; }
+
+      .sig-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 3rem;
+        align-items: center;
+      }
+
+      @media (max-width: 820px) {
+        .tile { padding: 2rem 1rem 5rem; }
+        .law, .rec-grid, .sig-grid { grid-template-columns: 1fr; gap: 2rem; }
+        .rec-grid > div + div { border-left: 0; padding-left: 0; padding-top: 2rem; border-top: 1px solid var(--ab-hair); }
+        .ruler-row { grid-template-columns: 96px 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tile">
+      <header class="tile-head">
+        <p class="tile-kicker">About rebuild / step 6 / style tile</p>
+        <h1 class="tile-title">One frame, one gesture, three inks.</h1>
+        <div class="tile-dials">
+          <span>DESIGN_VARIANCE <b>7</b></span>
+          <span>MOTION_INTENSITY <b>7</b></span>
+          <span>VISUAL_DENSITY <b>3</b></span>
+          <span>THEME <b>dark, locked</b></span>
+          <span>EYEBROWS <b>0</b></span>
+        </div>
+      </header>
+
+      <!-- ============ PALETTE ============ -->
+      <section class="panel">
+        <h2 class="panel-h">Palette</h2>
+        <p class="panel-note">
+          Locked. Nothing is added. The three ink steps are the whole text
+          system: there is deliberately no fourth, dimmer step, because
+          <code>rgba(245,245,245,0.38)</code> lands at 3.2:1 on
+          <code>#2A2A2A</code> and fails AA. Contrast ratios below are measured
+          against the page ground.
+        </p>
+        <div class="swatches">
+          <div class="sw">
+            <span class="sw-chip" style="background:#2A2A2A;border-bottom:1px solid var(--ab-hair)"></span>
+            <div class="sw-meta"><b>#2A2A2A</b>page ground<br /><span class="sw-ratio">base</span></div>
+          </div>
+          <div class="sw">
+            <span class="sw-chip" style="background:#1F1F1F"></span>
+            <div class="sw-meta"><b>#1F1F1F</b>plate, shutter, nav<br /><span class="sw-ratio">1.28:1 vs ground</span></div>
+          </div>
+          <div class="sw">
+            <span class="sw-chip" style="background:#F5F5F5"></span>
+            <div class="sw-meta"><b>ink-1 #F5F5F5</b>display, headings<br /><span class="sw-ratio">13.0:1 AAA</span></div>
+          </div>
+          <div class="sw">
+            <span class="sw-chip" style="background:rgba(245,245,245,0.82)"></span>
+            <div class="sw-meta"><b>ink-2 82%</b>body copy<br /><span class="sw-ratio">9.3:1 AAA</span></div>
+          </div>
+          <div class="sw">
+            <span class="sw-chip" style="background:rgba(245,245,245,0.55)"></span>
+            <div class="sw-meta"><b>ink-3 55%</b>captions, meta<br /><span class="sw-ratio">4.9:1 AA</span></div>
+          </div>
+          <div class="sw">
+            <span class="sw-chip" style="background:#c084fc"></span>
+            <div class="sw-meta"><b>#c084fc</b>accent, rationed<br /><span class="sw-ratio">5.4:1 AA</span></div>
+          </div>
+          <div class="sw">
+            <span class="sw-chip" style="background:#7c46af"></span>
+            <div class="sw-meta"><b>#7c46af</b>primary button<br /><span class="sw-ratio">6.3:1 vs white</span></div>
+          </div>
+          <div class="sw">
+            <span class="sw-chip" style="background:rgba(255,255,255,0.10);border:1px solid var(--ab-hair)"></span>
+            <div class="sw-meta"><b>hairline 10%</b>1px, every rule<br /><span class="sw-ratio">non-text</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ THE ACCENT LAW ============ -->
+      <section class="panel">
+        <h2 class="panel-h">Where the accent is allowed</h2>
+        <p class="panel-note">
+          Sitewide, <code>style.css</code> paints every heading
+          <code>#c084fc</code>. On this page that is switched off: headings go
+          ink-1. The accent survives in four places and is banned everywhere
+          else, which is what lets the one prose moment in section 4 actually
+          register.
+        </p>
+        <div class="law">
+          <div>
+            <p class="law-h">Allowed, all four</p>
+            <ul>
+              <li>The primary button fill, <code>#7c46af</code>, white label.</li>
+              <li>Inline text links: ink-1 with a 45% accent underline, full accent on hover and focus.</li>
+              <li>The two SignifyMD figures in section 4, set in JetBrains Mono. The page's only non-link accent.</li>
+              <li>The nav pill and footer headings, which belong to the shell and are not mine to change.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="law-h">Forbidden</p>
+            <ul>
+              <li>Section headings, display type, body copy.</li>
+              <li>Plate borders, hairlines, captions, dividers.</li>
+              <li>Hover glows, outer glows, any gradient.</li>
+              <li>Any other numeral on the page, including dates in the record.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TYPE ============ -->
+      <section class="panel">
+        <h2 class="panel-h">Type</h2>
+        <p class="panel-note">
+          Plus Jakarta Sans for everything structural, JetBrains Mono for
+          captions, dates, and the one figure. Weight tops out at
+          <b>600</b>: only 400, 500 and 600 have <code>@font-face</code> rules,
+          so the current <code>h1-h6 { font-weight: 700 }</code> and
+          <code>.projects-heading { font-weight: 800 }</code> are rendering as
+          synthesised faux bold. Specimens use the real copy.
+        </p>
+
+        <div class="spec">
+          <p class="spec-tag">display / 40-60px / 600 / 1.08 / -0.028em / 700px measure / section 1 only</p>
+          <p class="ab-display">I learn how things work by taking them apart.</p>
+        </div>
+
+        <div class="spec">
+          <p class="spec-tag">turn / 32-52px / 600 / 1.10 / -0.024em / 22ch / section 8 only, the page's second largest type</p>
+          <p class="ab-turn">Where I actually am.</p>
+        </div>
+
+        <div class="spec">
+          <p class="spec-tag">h2 / 28-40px / 600 / 1.12 / -0.02em / 20ch / everywhere else</p>
+          <h3 class="ab-h2">The first time both halves showed up in one job.</h3>
+        </div>
+
+        <div class="spec">
+          <p class="spec-tag">lede / 18-21px / 400 / 1.55 / 46ch</p>
+          <p class="ab-lede">
+            Marketing grad student at Arizona. It used to be robotics kits and
+            PCs. Now it is retrieval pipelines and agent systems.
+          </p>
+        </div>
+
+        <div class="spec">
+          <p class="spec-tag">body / 17px / 400 / 1.72 / 66ch &nbsp;&nbsp; plus the one accent moment</p>
+          <p class="ab-body">
+            That list produced <span class="ab-num">600</span> verified leads and
+            converted <span class="ab-num">280</span> of them into event
+            registrations. Before that, the building and the marketing were two
+            separate interests. Here they were the same job.
+          </p>
+        </div>
+
+        <div class="spec">
+          <p class="spec-tag">caption / mono 12px / 400 / 1.5 / +0.015em / ink-3 / 60ch</p>
+          <p class="ab-cap">
+            ROG Crosshair X870E, still in the tray. Manual open on the iPad,
+            build video running on the laptop. I had not done this before.
+          </p>
+        </div>
+
+        <div class="spec">
+          <p class="spec-tag">record / title 16px 500 + mono 12px meta / tabular</p>
+          <div class="rec-item">
+            <p class="rec-title">M.S. Marketing, focus on analytics and AI</p>
+            <p class="rec-sub">University of Arizona, Eller College of Management. Expected December 2026. Dean's List.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ THE PLATE SYSTEM ============ -->
+      <section class="panel">
+        <h2 class="panel-h">Imagery: the plate system</h2>
+        <p class="panel-note">
+          Eleven assets from five light sources. Warm kitchen tungsten, blue
+          RGB, red and teal gels, a dark IDE, and one light-themed web app.
+          They are unified structurally, not cosmetically. Every asset sits in
+          the same plate: <code>#1F1F1F</code>, 8px radius (the same radius
+          <code>.project-pane</code> already uses), 1px hairline. The plate then
+          splits into two classes.
+        </p>
+
+        <p class="treat-lab">Photo class. The two worst offenders: warm kitchen tungsten, and a hot red gel.</p>
+        <div class="treat-row">
+          <div>
+            <span class="raw ar-34" style="display:block"><img src="../../images/about/pc-motherboard-sm.webp" alt="Motherboard photograph, untreated" width="800" height="1067" loading="lazy" /></span>
+            <p class="treat-cap">raw</p>
+          </div>
+          <div>
+            <div class="plate plate--photo ar-34"><img src="../../images/about/pc-motherboard-sm.webp" alt="Motherboard photograph with the page imagery treatment applied" width="800" height="1067" loading="lazy" /></div>
+            <p class="treat-cap">treated</p>
+          </div>
+          <div>
+            <span class="raw ar-45" style="display:block"><img src="../../images/about/k9-studio-sm.webp" alt="Studio dog portrait, untreated" width="800" height="640" loading="lazy" /></span>
+            <p class="treat-cap">raw</p>
+          </div>
+          <div>
+            <div class="plate plate--photo ar-45"><img src="../../images/about/k9-studio-sm.webp" alt="Studio dog portrait with the page imagery treatment applied" width="800" height="640" loading="lazy" /></div>
+            <p class="treat-cap">treated</p>
+          </div>
+        </div>
+
+        <p class="treat-lab">Screen class. The light asset is the hardest one on the page.</p>
+        <div class="treat-row">
+          <div>
+            <span class="raw ar-169" style="display:block"><img src="../../images/about/rag-app-sm.webp" alt="Light themed RAG app screenshot, untreated" width="800" height="450" loading="lazy" /></span>
+            <p class="treat-cap">rag-app, raw</p>
+          </div>
+          <div>
+            <div class="plate plate--screen plate--screen--light ar-169"><img src="../../images/about/rag-app-sm.webp" alt="The same RAG app screenshot inside a charcoal bezel with the light knock-down applied" width="800" height="450" loading="lazy" /></div>
+            <p class="treat-cap">rag-app, bezel plus knock-down</p>
+          </div>
+          <div>
+            <div class="plate plate--screen ar-169"><img src="../../images/about/olympus-dashboard-sm.webp" alt="Project Olympus dashboard inside a charcoal bezel" width="800" height="400" loading="lazy" /></div>
+            <p class="treat-cap">olympus-dashboard, treated</p>
+          </div>
+          <div>
+            <div class="plate plate--screen ar-169"><img src="../../images/about/vault-now-sm.webp" alt="Obsidian graph view inside a charcoal bezel" width="800" height="573" loading="lazy" /></div>
+            <p class="treat-cap">vault-now, treated</p>
+          </div>
+        </div>
+
+        <p class="panel-note" style="margin-top:0">
+          <b>Photo class, three layers.</b>
+          <code>filter: saturate(.62) contrast(1.12) brightness(.86)</code> puts
+          every photograph in the same low brightness band as the page. A
+          <code>#39405A</code> soft-light wash at 50% is the temperature lock: it
+          pulls warm kitchen tungsten down and cool RGB up until they meet. Then
+          a flat <code>rgba(42,42,42,.22)</code> veil, so every image on the page
+          literally contains 22% of the page's own colour, plus a bottom gradient
+          that welds the image into the ground so nothing ends on a hard bright
+          line. Fade, never blur.
+        </p>
+        <p class="panel-note">
+          <b>Screen class.</b> 8px charcoal bezel and
+          <code>brightness(.88) saturate(.82) contrast(1.03)</code>. The bezel is
+          the structural fix: a screenshot never touches the plate edge, so a
+          light rectangle always has charcoal around it. The one light asset
+          takes <code>brightness(.80) saturate(.72)</code> plus a flat 16%
+          <code>#1F1F1F</code> veil, dropping its paper white from
+          <code>#FFF</code> to roughly <code>#B0B0B0</code>. It reads as a lit
+          window rather than a hole. Because that knock-down costs real
+          legibility on the page's only screenshot of the capstone, wire the
+          plate into the existing <code>.image-lightbox-overlay</code> so the
+          untouched original is one click away.
+        </p>
+      </section>
+
+      <!-- ============ THE SIGNATURE ============ -->
+      <section class="panel">
+        <h2 class="panel-h">The signature: the aperture</h2>
+        <div class="sig-grid">
+          <div>
+            <p class="panel-note" style="margin-top:0">
+              Every plate on the page begins as a closed charcoal panel and
+              <b>opens</b>. Two shutters, the same <code>#1F1F1F</code> as the
+              plate, meet at the centre line and slide to the edges under scroll
+              scrub while the image behind eases from
+              <code>scale(1.05)</code> to <code>scale(1)</code>. Nothing but
+              <code>translateY</code> and <code>scale</code> moves.
+            </p>
+            <p class="panel-note">
+              It is the page's thesis performed ten times: a panel comes off and
+              you see inside. It also sets the pace, because an image is not
+              readable until you have scrolled it open, which is the controlled
+              cinematic scroll without any scroll-jack. Section 6 is the one
+              variation: the two vault plates open in opposite directions, so the
+              comparison assembles as a matched pair.
+            </p>
+            <button class="demo-btn" id="replay" type="button">Replay the aperture</button>
+          </div>
+          <div>
+            <div class="plate plate--photo ar-34 is-closed" id="sig">
+              <img src="../../images/about/pc-finished-sm.webp" alt="A finished custom PC in a HYTE Y70 case, revealed by the aperture" width="800" height="1067" loading="lazy" />
+              <span class="ap ap-t"></span>
+              <span class="ap ap-b"></span>
+            </div>
+            <p class="ab-cap">Same machine, done. HYTE Y70, RTX 5080 Astral, radiator mounted on the side.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ RHYTHM ============ -->
+      <section class="panel">
+        <h2 class="panel-h">Rhythm</h2>
+        <p class="panel-note">
+          8px base. Section padding is the pace control: 144px at desktop is what
+          gives each section room to land before the next one arrives.
+        </p>
+        <div class="ruler">
+          <div class="ruler-row"><span>section 80-144</span><span class="ruler-bar" style="width:144px"></span></div>
+          <div class="ruler-row"><span>text to plate 40</span><span class="ruler-bar" style="width:40px"></span></div>
+          <div class="ruler-row"><span>display to lede 28</span><span class="ruler-bar" style="width:28px"></span></div>
+          <div class="ruler-row"><span>h2 to body 20</span><span class="ruler-bar" style="width:20px"></span></div>
+          <div class="ruler-row"><span>paragraph gap 20</span><span class="ruler-bar" style="width:20px"></span></div>
+          <div class="ruler-row"><span>plate to caption 14</span><span class="ruler-bar" style="width:14px"></span></div>
+        </div>
+        <p class="panel-note">
+          Widths: text column <code>864px</code>, wide breakout
+          <code>min(1120px, 100vw - 2rem)</code>, section 4
+          <code>620px</code>, section 8 <code>700px</code>.
+        </p>
+      </section>
+
+      <!-- ============ ACTIONS ============ -->
+      <section class="panel">
+        <h2 class="panel-h">Actions and links</h2>
+        <p class="panel-note">
+          One button on the page. Everything else is a link, so there is no
+          ambiguity about which action is the action. Labels are three words or
+          fewer and cannot wrap.
+        </p>
+        <div class="cta-row">
+          <a class="ab-btn" href="#">See the work</a>
+          <a class="ab-btn-ghost" href="#">Read the resume</a>
+          <a class="ab-link" href="#">Email me</a>
+        </div>
+      </section>
+
+      <!-- ============ RECORD ============ -->
+      <section class="panel">
+        <h2 class="panel-h">The record, as a colophon</h2>
+        <p class="panel-note">
+          No boxes, no cards, no dot leaders. Two columns split by one hairline.
+          This section confirms, it does not argue, so it carries the least
+          visual weight of anything on the page.
+        </p>
+        <div class="rec-grid">
+          <div>
+            <div class="rec-item">
+              <p class="rec-title">M.S. Marketing, focus on analytics and AI</p>
+              <p class="rec-sub">University of Arizona, Eller College of Management. Expected December 2026. Dean's List.</p>
+            </div>
+            <div class="rec-item">
+              <p class="rec-title">B.S. Business Administration</p>
+              <p class="rec-sub">University of Arizona, 2025. Dean's List. Phi Theta Kappa tuition scholarship.</p>
+            </div>
+            <div class="rec-item">
+              <p class="rec-title">A.A. Economics, A.A. Economics for Transfer, A.A. Liberal Arts and Sciences</p>
+              <p class="rec-sub">Santa Barbara City College, 2023. Phi Theta Kappa. President's Honor Roll.</p>
+            </div>
+          </div>
+          <div>
+            <div class="rec-item">
+              <p class="rec-title">Marketing and Digital Communications Intern</p>
+              <p class="rec-sub">SignifyMD. 2026 to present.</p>
+            </div>
+            <div class="rec-item">
+              <p class="rec-title">Personal Trainer and Member Experience Specialist</p>
+              <p class="rec-sub">VASA Fitness. 2023 to 2025.</p>
+            </div>
+            <div class="rec-item">
+              <p class="rec-title">Resident Handler and Operations Assistant</p>
+              <p class="rec-sub">Bay Area K9 Association. 2021 to 2023.</p>
+            </div>
+            <div class="rec-item" style="margin-top:2rem">
+              <div class="plate plate--photo ar-219"><img src="../../images/about/grad-stage-sm.webp" alt="Crossing the stage at the Eller College of Management graduation ceremony" width="800" height="373" loading="lazy" /></div>
+              <p class="ab-cap">Eller, 2025.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // Tile only. The real page drives the same transform with a
+      // ScrollTrigger scrub instead of a CSS transition.
+      (function () {
+        var sig = document.getElementById("sig");
+        var btn = document.getElementById("replay");
+        if (!sig || !btn) return;
+        btn.addEventListener("click", function () {
+          sig.classList.add("is-closed");
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              sig.classList.remove("is-closed");
+            });
+          });
+        });
+        setTimeout(function () { sig.classList.remove("is-closed"); }, 700);
+      })();
+    </script>
+  </body>
+</html>
