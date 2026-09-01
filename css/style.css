@@ -7,6 +7,7 @@
     src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Regular.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -14,6 +15,7 @@
     src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Medium.ttf") format("truetype");
     font-weight: 500;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -21,6 +23,7 @@
     src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf") format("truetype");
     font-weight: 600;
     font-style: normal;
+    font-display: swap;
 }
 
 /* Headings ask for 700 and .projects-heading asks for 800, but no face above
@@ -31,6 +34,7 @@
     src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Bold.ttf") format("truetype");
     font-weight: 700;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -38,9 +42,14 @@
     src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-ExtraBold.ttf") format("truetype");
     font-weight: 800;
     font-style: normal;
+    font-display: swap;
 }
 
 html {
+    /* The whole site is dark. Without this the browser still paints
+       scrollbars and native controls light. */
+    color-scheme: dark;
+
     /* Always reserve the scrollbar's track, whether or not a page's content
        is tall enough to need it, so centered content doesn't shift left/right
        from page to page as the scrollbar appears/disappears. */

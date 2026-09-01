@@ -248,6 +248,39 @@ had their own ring were already using the same accent, so nothing changed for th
 - One each of `main`, `nav`, `header`, `footer`. `lang="en"`.
 - **Zero images missing alt, zero empty alt.** Nine figcaptions.
 
+### Web Interface Guidelines review (the Vercel checklist)
+
+Ran the `web-design-guidelines` skill against `pages/about.html`, `css/style.css`,
+and `js/about-motion.js`, with the current rules fetched fresh. **Four real
+findings, all fixed. All four were pre-existing sitewide gaps, not rebuild bugs.**
+
+1. **No `font-display` on any `@font-face`.** All five Plus Jakarta Sans faces
+   omitted it, so Chrome blocked text rendering for up to 3 seconds while the font
+   loaded. Added `font-display: swap` to all five. This one is worth knowing about:
+   it was hurting every page, and it compounds with the About page's motion layer,
+   which waits on fonts before it starts.
+2. **No `color-scheme: dark` on `<html>`.** The site is dark everywhere, but
+   without this the browser still paints scrollbars and native controls light.
+   Added.
+3. **No `<meta name="theme-color">`.** Mobile browser chrome did not match the
+   page. Added `#2A2A2A` to all six pages.
+4. **No `preconnect` to `cdnjs.cloudflare.com`,** which serves the four GSAP files.
+   Added to About, the only page that loads them.
+
+Checked and already passing: no `transition: all`, no literal `...`, no straight
+quotes, `touch-action: manipulation` present, `text-wrap` used on headings,
+`font-variant-numeric: tabular-nums` where numbers align, `overscroll-behavior` on
+the lightbox, every image has explicit `width`/`height` plus `loading="lazy"` below
+the fold and `fetchpriority="high"` on the hero.
+
+Not applicable: no forms on the page, no anchor links to headings (so no
+`scroll-margin-top` needed), no large lists to virtualize, no dates or numbers
+needing `Intl`.
+
+One I did not act on: **no `env(safe-area-inset-*)`** on the full-bleed sections.
+Low risk, since every wide element still sits inside a padded max-width container,
+but worth revisiting if the page ever goes truly edge to edge.
+
 ### A testing note worth keeping
 
 The headless browser runs `requestAnimationFrame` at **2fps**. GSAP is
