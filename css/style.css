@@ -170,7 +170,8 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 
 .floating-nav {
     background-color: #1f1f1f;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* No hairline border here. The grey outline read as a seam against the
+       page background; the pill separates on its own with the shadow. */
     border-radius: 1rem;
     padding: 0.75rem 1.5rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
