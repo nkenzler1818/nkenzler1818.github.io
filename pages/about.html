@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
@@ -20,11 +20,26 @@
         } catch (err) {}
       })();
     </script>
+    <script>
+      // Arm the aperture before first paint. Never paint-then-hide.
+      // Closes image shutters and masks the section 1 heading, nothing else.
+      // The 2000ms timeout is a hard backstop: a blocked or slow CDN cannot
+      // leave anything permanently invisible.
+      (function () {
+        try {
+          if (window.matchMedia &&
+              window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          var d = document.documentElement;
+          d.classList.add("ab-armed");
+          setTimeout(function () { d.classList.remove("ab-armed"); }, 2000);
+        } catch (e) {}
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About - Nathanael Kenzler</title>
     <meta
       name="description"
-      content="Learn more about Nathanael Kenzler, M.S. in Marketing Candidate focused on AI-driven marketing strategy."
+      content="I am Nathanael Kenzler, a marketing grad student at Arizona. I learn how technical systems work by building them, then explain them to the people who have to act on them."
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css" />
@@ -35,6 +50,11 @@
       rel="stylesheet"
     />
     <script src="../js/nav-transition.js" defer></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollSmoother.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js"></script>
+    <script defer src="../js/about-motion.js"></script>
     <script>
       window.addEventListener("scroll", function () {
         const nav = document.querySelector("nav");
@@ -62,58 +82,6 @@
         dropdown.classList.toggle("hidden");
       }
 
-      function fitPageTitle() {
-        const heading = document.querySelector(".projects-heading");
-        if (!heading) return;
-
-        const container = heading.parentElement;
-        const baseSize = 72;
-        const minSize = 48;
-        const buffer = 24;
-        const available =
-          (container?.clientWidth || heading.parentElement.clientWidth) -
-          buffer;
-
-        heading.classList.add("auto-fit");
-        heading.style.setProperty("--heading-size", `${baseSize}px`);
-
-        if (heading.scrollWidth <= available) {
-          return;
-        }
-
-        const scale = Math.max(
-          minSize / baseSize,
-          available / heading.scrollWidth,
-        );
-        const nextSize = Math.max(
-          minSize,
-          Math.min(baseSize, baseSize * scale),
-        );
-        heading.style.setProperty("--heading-size", `${nextSize}px`);
-      }
-
-      function toggleFaq(button) {
-        const item = button.closest(".faq-item");
-        const answer = item.querySelector(".faq-answer");
-        const isExpanded = button.getAttribute("aria-expanded") === "true";
-
-        button.setAttribute("aria-expanded", String(!isExpanded));
-        item.classList.toggle("open", !isExpanded);
-
-        if (!isExpanded) {
-          answer.style.maxHeight = `${answer.scrollHeight}px`;
-        } else {
-          answer.style.maxHeight = "0px";
-        }
-      }
-
-      function setupFaq() {
-        const questions = document.querySelectorAll(".faq-question");
-        questions.forEach((question) => {
-          question.addEventListener("click", () => toggleFaq(question));
-        });
-      }
-
       // Close dropdown when clicking outside
       document.addEventListener("click", function (event) {
         const dropdown = document.getElementById("more-dropdown");
@@ -125,13 +93,9 @@
           dropdown.classList.add("hidden");
         }
       });
-
-      window.addEventListener("resize", fitPageTitle);
-      window.addEventListener("DOMContentLoaded", fitPageTitle);
-      window.addEventListener("DOMContentLoaded", setupFaq);
     </script>
   </head>
-  <body class="text-white font-sans about-page">
+  <body class="text-white font-sans about-page about-v2">
     <div class="nav-scroll-blur" aria-hidden="true"></div>
     <header class="sticky top-6 z-10">
       <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
@@ -201,318 +165,633 @@
       </nav>
     </header>
 
-    <main class="pt-10 md:pt-20 px-4 max-w-4xl mx-auto">
-      <section class="about-section mb-16">
-        <div class="page-title-wrap">
-          <h1 class="projects-heading text-center text-white mb-12 w-full">
-            About Me
-          </h1>
-        </div>
-        <div class="text-lg leading-relaxed space-y-6 relative">
-          <div class="about-text-wrap">
-            <h2 class="text-3xl font-bold mb-8">Who I Am</h2>
-            <img
-              src="../Project Files/Old main photo.png"
-              alt="Nathanael Kenzler"
-              class="about-profile-image h-auto object-cover rounded-lg"
-              style="margin-top: 0px"
-            />
-            <p>
-              I'm a first-generation graduate student in Marketing, and I
-              approach this field as a bridge builder. My work sits at the
-              intersection of strategic thinking, technical depth, and clear
-              communication. These three things together drive better decisions
-              in high-performing teams.
-            </p>
-
-            <p>
-              My background spans operations, client-facing roles, and hands-on
-              marketing support. What I've learned across each: how to take
-              complex information, identify what actually matters, and translate
-              that into clear narratives people can act on. I've built client
-              relationships, managed multiple workstreams under pressure, and
-              contributed to brand and go-to-market decisions. But the skill
-              underneath all of it is critical thinking. The ability to evaluate
-              information without bias and form conclusions that move a team
-              forward.
-            </p>
-
-            <p>
-              Outside of coursework, I build. I designed a multi-agent,
-              RAG-based OS with routing based on project scope, and built a
-              RAG pipeline for pharmaceutical drug-safety monitoring my first
-              semester.
-            </p>
-
-            <p>
-              What draws me to marketing is the fusion of human insight and
-              technical skill it demands. I love taking ideas that are difficult
-              to grasp and turning them into insights that teams can actually
-              use. I do this not just with creative thinking, but with the
-              technical literacy and composure that high-level marketing
-              requires. That combination of clarity, impact, and technical
-              foundation is what excites me about building a career here.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section class="mb-16">
-        <h2 class="text-3xl font-bold mb-8">How I Got Here</h2>
-        <div class="journey-timeline">
-          <div class="journey-item">
-            <div class="journey-node"></div>
-            <div class="journey-connector"></div>
-            <div class="journey-body">
-              <div class="journey-header">
-                <h3 class="journey-role">
-                  Nordstrom Inc. - Fulfillment Team Member
-                </h3>
-                <span class="journey-dates">Jun 2019-Feb 2021</span>
+    <!-- ScrollSmoother wraps main and the footer only. The fixed nav and the
+         nav fade strip stay outside so they keep behaving as fixed UI. -->
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main class="ab-main">
+          <!-- 1. Open. Asymmetric split. -->
+          <section class="ab-sect s1 ab-wide">
+            <div class="s1-grid">
+              <div>
+                <h1 class="ab-display ab-split-hero">
+                  I learn how things work by taking them apart.
+                </h1>
+                <p class="ab-lede">
+                  Marketing grad student at Arizona. It used to be robotics kits
+                  and PCs. Now it is retrieval pipelines and agent systems. The
+                  work I get paid for is the part right after: explaining the
+                  thing to the people who have to act on it.
+                </p>
               </div>
-              <p class="journey-desc">
-                First job. Learned what consistent execution under pressure
-                actually looks like.
+              <figure class="ab-fig">
+                <div class="ab-plate ab-plate--photo">
+                  <img
+                    src="../images/about/pc-motherboard.webp"
+                    srcset="
+                      ../images/about/pc-motherboard-sm.webp  800w,
+                      ../images/about/pc-motherboard.webp    1100w
+                    "
+                    sizes="(max-width: 820px) calc(100vw - 2rem), 364px"
+                    width="1100"
+                    height="1467"
+                    fetchpriority="high"
+                    decoding="async"
+                    alt="An ROG Crosshair X870E motherboard sitting in its packaging tray on a wooden kitchen table, with the printed manual open on an iPad and a build video playing on a MacBook beside it."
+                  />
+                  <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                  <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
+                </div>
+                <figcaption class="ab-cap">
+                  ROG Crosshair X870E, still in the tray. Manual open on the
+                  iPad, build video running on the laptop. I had not done this
+                  before.
+                </figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <!-- 2. The habit. Type block over a wide image. -->
+          <section class="ab-sect s2">
+            <div class="ab-col">
+              <h2 class="ab-h2">Same habit, better parts.</h2>
+              <p class="ab-body">
+                VEX robotics in high school. My first PC in pieces on a table.
+                Camera rigs I built because the shot I wanted did not have a
+                mount for it. My dad is an engineer and never once told me to
+                stop opening things.
+              </p>
+              <p class="ab-body">
+                None of it was a career plan. It was how I liked spending a
+                Saturday. The habit is what carried over: get the thing in front
+                of me, find out how it works, then find out what it is good for.
               </p>
             </div>
-          </div>
-          <div class="journey-item">
-            <div class="journey-node"></div>
-            <div class="journey-connector"></div>
-            <div class="journey-body">
-              <div class="journey-header">
-                <h3 class="journey-role">
-                  Bay Area K9 Association - Resident Handler &amp;
-                  Operations Assistant
-                </h3>
-                <span class="journey-dates">Feb 2021-Jul 2023</span>
+            <!-- The hardware moment. The plate is a fixed aspect box and the
+                 image fills it at 100 percent, so a 3D viewer element could
+                 replace this img later with no layout change. Not added now. -->
+            <figure class="ab-fig ab-wide s2-fig">
+              <div class="ab-plate ab-plate--photo">
+                <img
+                  src="../images/about/pc-finished.webp"
+                  srcset="
+                    ../images/about/pc-finished-sm.webp  800w,
+                    ../images/about/pc-finished.webp    1100w
+                  "
+                  sizes="(max-width: 1200px) calc(100vw - 2rem), 1120px"
+                  width="1100"
+                  height="1467"
+                  loading="lazy"
+                  decoding="async"
+                  alt="A finished custom PC in a HYTE Y70 case with RGB lighting, an RTX 5080 Astral graphics card, and a side mounted radiator."
+                />
+                <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
               </div>
-              <p class="journey-desc">
-                Built a 15+ client base and ran scheduling, photography, and
-                facility ops. Pushed me toward a business degree.
-              </p>
-            </div>
-          </div>
-          <div class="journey-item">
-            <div class="journey-node"></div>
-            <div class="journey-connector"></div>
-            <div class="journey-body">
-              <div class="journey-header">
-                <h3 class="journey-role">
-                  VASA Fitness - Personal Trainer &amp; Member Experience
-                  Specialist
-                </h3>
-                <span class="journey-dates">Sep 2023-Feb 2025</span>
-              </div>
-              <p class="journey-desc">
-                Rebuilt client trust through data-driven engagement across
-                27+ concurrent accounts.
-              </p>
-            </div>
-          </div>
-          <div class="journey-item journey-current">
-            <div class="journey-node"></div>
-            <div class="journey-connector"></div>
-            <div class="journey-body">
-              <div class="journey-header">
-                <h3 class="journey-role">
-                  SignifyMD - Marketing &amp; Digital Communications Intern
-                </h3>
-                <span class="journey-dates">Mar 2026-Present</span>
-              </div>
-              <p class="journey-desc">
-                Built a lead research pipeline for ASCO 2026: 600+ leads,
-                280+ conversions (47%), across KOL and sponsor partners.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+              <figcaption class="ab-cap">
+                Same machine, done. HYTE Y70, RTX 5080 Astral, radiator mounted
+                on the side.
+              </figcaption>
+            </figure>
+          </section>
 
-      <section class="mb-16">
-        <h2 class="text-3xl font-bold mb-8">Education</h2>
-        <div class="space-y-4">
-          <div>
-            <h3 class="text-xl font-semibold">MS Marketing</h3>
-            <p class="text-white">
-              University of Arizona, Eller College of Management (Expected Dec
-              2026)
-            </p>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold">BS Business Administration</h3>
-            <p class="text-white">University of Arizona (May 2025)</p>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold">
-              Associate Degrees in Economics and Liberal Arts &amp; Sciences
-            </h3>
-            <p class="text-white">Santa Barbara City College (May 2023)</p>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold">High School Diploma</h3>
-            <p class="text-white">Bellarmine College Preparatory (May 2021)</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="faq-section mb-16">
-        <h2 class="text-3xl font-bold mb-8">FAQs</h2>
-        <div class="faq-list space-y-4">
-          <div class="faq-item">
-            <button
-              class="faq-question"
-              type="button"
-              aria-expanded="false"
-              aria-controls="faq-answer-1"
-            >
-              <span class="faq-question-text"
-                >How did my personal journey lead me to digital and tech
-                marketing?</span
-              >
-              <span class="faq-icon" aria-hidden="true">&#x25B8;</span>
-            </button>
-            <div class="faq-answer" id="faq-answer-1">
-              <div class="faq-answer-content">
-                <p>
-                  I have always been drawn to tech as a tool for creativity and
-                  optimization. Growing up with an engineer father, I was always
-                  encouraged to explore how things work. Whether it was
-                  tinkering with PCs, competing in VEX robotics, or hardwiring
-                  cameras, tech became my playground. Now, I'm excited to
-                  channel that same curiosity into a professional tech marketing
-                  path, where I can combine strategy, creativity, and a lifelong
-                  affinity for making things work better.
+          <!-- 3. The other half. Image to the edge, text holds the column. -->
+          <section class="ab-sect s3 ab-wide">
+            <div class="s3-grid">
+              <figure class="ab-fig s3-fig">
+                <div class="ab-plate ab-plate--photo">
+                  <img
+                    src="../images/about/k9-studio.webp"
+                    srcset="
+                      ../images/about/k9-studio-sm.webp  800w,
+                      ../images/about/k9-studio.webp    1600w
+                    "
+                    sizes="(max-width: 820px) calc(100vw - 2rem), 429px"
+                    width="1600"
+                    height="1280"
+                    loading="lazy"
+                    decoding="async"
+                    alt="A studio portrait of a black working dog lying on a white PVC platform, lit with red and teal gels against a dark backdrop."
+                  />
+                  <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                  <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
+                </div>
+                <figcaption class="ab-cap">
+                  Bay Area K9. Red and teal gels, and a dog who held the
+                  position long enough.
+                </figcaption>
+              </figure>
+              <div>
+                <h2 class="ab-h2">Then somebody has to understand it.</h2>
+                <p class="ab-body">
+                  Every job I have had was a people job first.
+                </p>
+                <p class="ab-body">
+                  At Bay Area K9 I was the resident handler and ran the
+                  operations around it: scheduling, client communications, the
+                  facility, and how we showed up at industry expos. I gave input
+                  on positioning and made the content while the business was
+                  still deciding what it was. I also shot the photography, which
+                  is where most of the work on my projects page comes from.
+                </p>
+                <p class="ab-body">
+                  At VASA I managed 27 client accounts at peak and wrote every
+                  progress report myself. That job taught me the thing I use
+                  most, which is that a chart nobody understands is worth
+                  nothing. I rewrote performance data into narratives people
+                  could follow, then proposed digitizing the documentation.
+                  Leadership bought tablets for every trainer and rolled it out
+                  club wide.
                 </p>
               </div>
             </div>
-          </div>
-          <div class="faq-item">
-            <button
-              class="faq-question"
-              type="button"
-              aria-expanded="false"
-              aria-controls="faq-answer-2"
-            >
-              <span class="faq-question-text"
-                >How do analytics and AI fit into my marketing approach?</span
-              >
-              <span class="faq-icon" aria-hidden="true">&#x25B8;</span>
-            </button>
-            <div class="faq-answer" id="faq-answer-2">
-              <div class="faq-answer-content">
-                <p>
-                  Analytics give me a strong foundation, turning data into
-                  clear, strategic decisions. In my time I spent as a candidate
-                  for my business administration degree, I learned to leverage
-                  wide variety of tools and techniques in order to derive and
-                  present conclusions professionally and effectively. Moreover,
-                  a reason I'm especially excited about my Master's program is
-                  taking courses such as Marketing Research, where I get
-                  hands-on experience with qualitative and quantitative methods
-                  to gather and interpret data. On the AI side, I love
-                  experimenting. For example, I explore which tools fit best
-                  into my workflow; Perplexity for research, Gemini for visual
-                  representations, and even building this site by integrating
-                  Cline as a wrapper in my IDE while coding with OpenAI's Codex
-                  5.2. Each step refines how I achieve results and as I alluded
-                  to in the question above, I enjoy finding and swapping pieces
-                  to bolster my ability to execute an idea to the highest
-                  degree!
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button
-              class="faq-question"
-              type="button"
-              aria-expanded="false"
-              aria-controls="faq-answer-3"
-            >
-              <span class="faq-question-text"
-                >What kind of teams do I work best with?</span
-              >
-              <span class="faq-icon" aria-hidden="true">&#x25B8;</span>
-            </button>
-            <div class="faq-answer" id="faq-answer-3">
-              <div class="faq-answer-content">
-                <p>
-                  I pride myself on knowing when to step up and when to step
-                  back. I work best with teams that trust each other's
-                  strengths. Sometimes I lead, whether as a project lead or
-                  owning a specific task, and other times I focus on supporting
-                  the team behind the scenes. The key is recognizing what the
-                  team needs, adapting, and maximizing everyone's strengths so
-                  we create the best outcomes together.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+          </section>
 
-    <footer class="footer-bg py-12">
-      <div class="max-w-4xl mx-auto px-4">
-        <hr class="footer-divider" />
+          <!-- 4. Where it met. Narrow type, breath point one. -->
+          <section class="ab-sect s4 ab-narrow">
+            <h2 class="ab-h2">
+              The first time both halves showed up in one job.
+            </h2>
+            <p class="ab-body">
+              I joined SignifyMD in March 2026 as their marketing and digital
+              communications intern. They represent oncology physicians, and my
+              main account is a pair of them with a real audience.
+            </p>
+            <p class="ab-body">
+              Two things happened at once. On the marketing side I worked on
+              brand presence, wrote and reviewed site content, and ran usability
+              and SEO testing that fed the relaunch of both the corporate site
+              and the physician site. On the other side, ASCO was coming and the
+              outreach list did not exist, so I built one. A scraper plus
+              targeted research, to find and qualify oncology professionals
+              worth contacting.
+            </p>
+            <p class="ab-body">
+              That list produced <span class="ab-num">600</span> verified leads
+              and converted <span class="ab-num">280</span> of them into event
+              registrations. Before that, the building and the marketing were
+              two separate interests. Here they were the same job.
+            </p>
+          </section>
+
+          <!-- 5. The builds. Lead artifact plus pair. -->
+          <section class="ab-sect s5">
+            <div class="ab-col">
+              <h2 class="ab-h2">Things I built to find out if I could.</h2>
+              <p class="ab-lede">
+                One of these was assigned. I do not think you learn where AI
+                helps by reading about it.
+              </p>
+            </div>
+
+            <figure class="ab-fig ab-wide s5-lead">
+              <!-- The knock-down on this light asset costs real legibility, so
+                   the plate opens the untreated original in the existing
+                   lightbox. -->
+              <button
+                type="button"
+                class="ab-plate ab-plate--screen ab-plate--screen-light"
+                data-lightbox-src="../images/about/rag-app.webp"
+                data-lightbox-caption="The Gradio interface of the pharmacovigilance RAG app."
+                aria-label="The Gradio interface of the pharmacovigilance RAG app, showing a query box, a sidebar listing the drugs covered, and a routed answer. Open the full size version."
+              >
+                <img
+                  src="../images/about/rag-app.webp"
+                  srcset="
+                    ../images/about/rag-app-sm.webp  800w,
+                    ../images/about/rag-app.webp    1280w
+                  "
+                  sizes="(max-width: 1200px) calc(100vw - 2rem), 1120px"
+                  width="1280"
+                  height="737"
+                  loading="lazy"
+                  decoding="async"
+                  alt="The Gradio interface of the pharmacovigilance RAG app, showing a query box, a sidebar listing the drugs covered, and a routed answer."
+                />
+                <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
+              </button>
+              <figcaption>
+                <h3 class="ab-build-title">Agentic Pharmacovigilance RAG</h3>
+                <span class="ab-build-meta">Graduate capstone, May 2026</span>
+                <span class="ab-build-body">
+                  A retrieval system over FDA adverse event data that routes a
+                  question to one of four strategies depending on what the
+                  question actually is. 17,313 records, 373 drugs, LangChain and
+                  ChromaDB underneath, guardrails on the input and the output, a
+                  Gradio front end. Group project, and I was the marketing
+                  student on a team of MIS majors. I built the interface. The
+                  reason I can describe the rest of it is that I made myself
+                  follow how it worked.
+                </span>
+              </figcaption>
+            </figure>
+
+            <div class="ab-col s5-pair">
+              <figure class="ab-fig s5-pair-a">
+                <div class="ab-plate ab-plate--screen">
+                  <img
+                    src="../images/about/olympus-dashboard.webp"
+                    srcset="
+                      ../images/about/olympus-dashboard-sm.webp  800w,
+                      ../images/about/olympus-dashboard.webp    1600w
+                    "
+                    sizes="(max-width: 820px) calc(100vw - 2rem), 418px"
+                    width="1600"
+                    height="793"
+                    loading="lazy"
+                    decoding="async"
+                    alt="The Project Olympus dashboard in dark UI, showing agent status cards and a task board."
+                  />
+                  <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                  <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
+                </div>
+                <figcaption>
+                  <h3 class="ab-build-title">Project Olympus</h3>
+                  <span class="ab-build-meta">Personal, ongoing</span>
+                  <span class="ab-build-body">
+                    Ten agents with defined jobs, running on NVIDIA NIM
+                    inference, with a Supabase vector store, a React dashboard,
+                    and a two-way sync into my notes. It plans and it proposes,
+                    and it does not get to act until I approve. Most of what I
+                    know about where these systems break, I learned here.
+                  </span>
+                </figcaption>
+              </figure>
+              <figure class="ab-fig s5-pair-b">
+                <div class="ab-plate ab-plate--screen">
+                  <img
+                    src="../images/about/craft-vscode.webp"
+                    srcset="
+                      ../images/about/craft-vscode-sm.webp  800w,
+                      ../images/about/craft-vscode.webp    1301w
+                    "
+                    sizes="(max-width: 820px) calc(100vw - 2rem), 418px"
+                    width="1301"
+                    height="1229"
+                    loading="lazy"
+                    decoding="async"
+                    alt="VS Code open on this site's stylesheet, with the CSS for the about page visible."
+                  />
+                  <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                  <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
+                </div>
+                <figcaption>
+                  <h3 class="ab-build-title">nathanaelkenzler.org</h3>
+                  <span class="ab-build-meta">Personal, ongoing</span>
+                  <span class="ab-build-body">
+                    Static HTML, one stylesheet, no build step, no framework. I
+                    write the CSS by hand with an assistant open next to me. The
+                    page you are on is the current draft.
+                  </span>
+                </figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <!-- 6. The unglamorous one. The page's only pin. -->
+          <section class="ab-sect s6 ab-col">
+            <div class="s6-stage">
+              <h2 class="ab-h2">The unglamorous one.</h2>
+              <div class="s6-pair">
+                <figure class="ab-fig s6-a">
+                  <div class="ab-plate ab-plate--screen">
+                    <img
+                      src="../images/about/vault-early.webp"
+                      srcset="
+                        ../images/about/vault-early-sm.webp  800w,
+                        ../images/about/vault-early.webp    1006w
+                      "
+                      sizes="(max-width: 820px) calc(100vw - 2rem), 420px"
+                      width="1006"
+                      height="1111"
+                      loading="lazy"
+                      decoding="async"
+                      alt="An Obsidian graph view showing a small scattering of loosely connected notes."
+                    />
+                    <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                    <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
+                    <span class="ab-ap-full" aria-hidden="true"></span>
+                  </div>
+                  <figcaption class="ab-cap s6-cap">Early on.</figcaption>
+                </figure>
+                <figure class="ab-fig s6-b">
+                  <div class="ab-plate ab-plate--screen">
+                    <img
+                      src="../images/about/vault-now.webp"
+                      srcset="
+                        ../images/about/vault-now-sm.webp  800w,
+                        ../images/about/vault-now.webp    1471w
+                      "
+                      sizes="(max-width: 820px) calc(100vw - 2rem), 420px"
+                      width="1471"
+                      height="1081"
+                      loading="lazy"
+                      decoding="async"
+                      alt="The same Obsidian graph view months later, now a dense sphere of several hundred heavily linked notes."
+                    />
+                    <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                    <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
+                    <span class="ab-ap-full" aria-hidden="true"></span>
+                  </div>
+                  <figcaption class="ab-cap s6-cap">Today.</figcaption>
+                </figure>
+              </div>
+            </div>
+            <div class="s6-body">
+              <p class="ab-body">
+                Same vault, three months apart. It is a knowledge base I keep
+                for myself: every project, every decision, everything I got
+                wrong and what fixed it. Over three hundred notes now, and the
+                links between them are the part that matters.
+              </p>
+              <p class="ab-body">
+                No client asked for it and it will never be a portfolio piece.
+                It is the thing I would point at if you asked whether I stay
+                with something after the novelty wears off.
+              </p>
+            </div>
+          </section>
+
+          <!-- 7. Including this one. Full bleed wide image over type. -->
+          <section class="ab-sect s7">
+            <figure class="ab-fig ab-wide">
+              <div class="ab-plate ab-plate--photo">
+                <img
+                  src="../images/about/desk-setup.webp"
+                  srcset="
+                    ../images/about/desk-setup-sm.webp  800w,
+                    ../images/about/desk-setup.webp    1600w
+                  "
+                  sizes="(max-width: 1200px) calc(100vw - 2rem), 1120px"
+                  width="1600"
+                  height="826"
+                  loading="lazy"
+                  decoding="async"
+                  alt="A desk with a lit custom PC beside three monitors, VS Code open on this site's code on one screen and the live site loaded in two browsers on another."
+                />
+                <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
+              </div>
+            </figure>
+            <div class="ab-col s7-text">
+              <h2 class="ab-h2">Including this one.</h2>
+              <p class="ab-body">
+                That is this page, open in the editor and in two browsers at
+                once, at whatever hour I decided the spacing was wrong. If you
+                want to know whether I can build a digital thing worth looking
+                at, this is the work sample.
+              </p>
+            </div>
+          </section>
+
+          <!-- 8. Where I actually am. Breath point two. -->
+          <section class="ab-sect s8 ab-mid">
+            <h2 class="ab-turn">Where I actually am.</h2>
+            <p class="s8-body">
+              I am not going to tell you I market technical products. I am a
+              graduate student who spent the last year building these systems
+              himself, so that when I sit in a room with people who build them
+              for a living, I can follow the conversation and be useful in it.
+            </p>
+            <p class="s8-body">
+              What I can tell you is what I do when I do not know something,
+              which is take it apart. That has worked on a motherboard, a client
+              roster, an adverse event database, and a conference campaign. I
+              expect it keeps working.
+            </p>
+            <p class="s8-body">I graduate in December 2026.</p>
+          </section>
+
+          <!-- 9. The record. Colophon. -->
+          <section class="ab-sect s9 ab-col">
+            <h2 class="ab-h2">The record.</h2>
+            <div class="s9-grid">
+              <div>
+                <p class="ab-rec-label">Education</p>
+                <div class="ab-rec-item">
+                  <p class="ab-rec-title">
+                    M.S. Marketing, focus on analytics and AI
+                  </p>
+                  <p class="ab-rec-sub">
+                    University of Arizona, Eller College of Management. Expected
+                    December 2026. Dean's List.
+                  </p>
+                </div>
+                <div class="ab-rec-item">
+                  <p class="ab-rec-title">B.S. Business Administration</p>
+                  <p class="ab-rec-sub">
+                    University of Arizona, 2025. Dean's List. Phi Theta Kappa
+                    tuition scholarship.
+                  </p>
+                </div>
+                <div class="ab-rec-item">
+                  <p class="ab-rec-title">
+                    A.A. Economics, A.A. Economics for Transfer, A.A. Liberal
+                    Arts and Sciences
+                  </p>
+                  <p class="ab-rec-sub">
+                    Santa Barbara City College, 2023. Phi Theta Kappa.
+                    President's Honor Roll.
+                  </p>
+                </div>
+                <div class="ab-rec-item">
+                  <p class="ab-rec-title">Bellarmine College Preparatory</p>
+                  <p class="ab-rec-sub">Santa Clara, 2021.</p>
+                </div>
+              </div>
+              <div>
+                <p class="ab-rec-label">Work</p>
+                <div class="ab-rec-item">
+                  <p class="ab-rec-title">
+                    Marketing and Digital Communications Intern
+                  </p>
+                  <p class="ab-rec-sub">SignifyMD. 2026 to present.</p>
+                </div>
+                <div class="ab-rec-item">
+                  <p class="ab-rec-title">
+                    Personal Trainer and Member Experience Specialist
+                  </p>
+                  <p class="ab-rec-sub">VASA Fitness. 2023 to 2025.</p>
+                </div>
+                <div class="ab-rec-item">
+                  <p class="ab-rec-title">
+                    Resident Handler and Operations Assistant
+                  </p>
+                  <p class="ab-rec-sub">
+                    Bay Area K9 Association. 2021 to 2023.
+                  </p>
+                </div>
+                <figure class="ab-fig s9-fig">
+                  <div class="ab-plate ab-plate--photo">
+                    <img
+                      src="../images/about/grad-stage.webp"
+                      srcset="
+                        ../images/about/grad-stage-sm.webp  800w,
+                        ../images/about/grad-stage.webp    1600w
+                      "
+                      sizes="(max-width: 820px) calc(100vw - 2rem), 360px"
+                      width="1600"
+                      height="739"
+                      loading="lazy"
+                      decoding="async"
+                      alt="Crossing the stage at the University of Arizona Eller College of Management graduation ceremony."
+                    />
+                    <span class="ab-ap ab-ap-t" aria-hidden="true"></span>
+                    <span class="ab-ap ab-ap-b" aria-hidden="true"></span>
+                  </div>
+                  <figcaption class="ab-cap">Eller, 2025.</figcaption>
+                </figure>
+              </div>
+            </div>
+            <p class="s9-close">First in my family to do any of this.</p>
+          </section>
+
+          <!-- 10. Close. Centred, one action. -->
+          <section class="ab-sect s10 ab-col">
+            <h2 class="ab-h2">If any of that is useful.</h2>
+            <p class="ab-body">
+              The projects page has the work itself, with the parts that did not
+              go well left in. The resume is one page. My email is at the bottom
+              and I answer it.
+            </p>
+            <div class="ab-cta-row">
+              <a class="ab-btn" href="projects.html">See the work</a>
+              <a
+                class="ab-btn-ghost"
+                href="../assets/docs/Kenzler_CV2026.pdf"
+                >Read the resume <span aria-hidden="true">&rarr;</span></a
+              >
+            </div>
+          </section>
+        </main>
+
+        <footer class="footer-bg py-12">
+          <div class="max-w-4xl mx-auto px-4">
+            <hr class="footer-divider" />
+          </div>
+          <div class="footer-inner">
+            <div class="footer-section identity-section">
+              <h3>Nathanael Kenzler</h3>
+              <p class="footer-description">
+                <span>Marketing student at Arizona.</span>
+                <span>I take technical things apart,</span>
+                <span>then explain them to people.</span>
+              </p>
+              <div class="social-icons">
+                <a href="https://github.com/nkenzler1818" title="GitHub"
+                  ><img
+                    src="../Project Files/Link Icons/icons8-github-24.png"
+                    alt="GitHub"
+                    width="22"
+                    height="22"
+                /></a>
+                <a
+                  href="https://www.linkedin.com/in/nathanaelkenzler/"
+                  title="LinkedIn"
+                  ><img
+                    src="../Project Files/Link Icons/icons8-linkedin-30.png"
+                    alt="LinkedIn"
+                    width="22"
+                    height="22"
+                /></a>
+                <a href="mailto:nkenzler@arizona.edu" title="Email"
+                  ><img
+                    src="../Project Files/Link Icons/icons8-email-48.png"
+                    alt="Email"
+                    width="22"
+                    height="22"
+                /></a>
+              </div>
+            </div>
+            <div class="footer-section">
+              <h4>Navigate</h4>
+              <a href="../index.html">Home</a>
+              <a href="about.html">About</a>
+              <a href="projects.html">Projects</a>
+              <a href="blog.html">Blog</a>
+              <a href="uses.html">Uses</a>
+            </div>
+            <div class="footer-section">
+              <h4>Misc</h4>
+              <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
+              <a href="../rss.xml">RSS Feed</a>
+              <a
+                href="#"
+                onclick="
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  return false;
+                "
+                >Scroll to Top</a
+              >
+            </div>
+          </div>
+        </footer>
       </div>
-      <div class="footer-inner">
-        <div class="footer-section identity-section">
-          <h3>Nathanael Kenzler</h3>
-          <p class="footer-description">
-            <span>Marketing student at Arizona.</span>
-            <span>I take technical things apart,</span>
-            <span>then explain them to people.</span>
-          </p>
-          <div class="social-icons">
-            <a href="https://github.com/nkenzler1818" title="GitHub"
-              ><img
-                src="../Project Files/Link Icons/icons8-github-24.png"
-                alt="GitHub"
-                width="22"
-                height="22"
-            /></a>
-            <a
-              href="https://www.linkedin.com/in/nathanaelkenzler/"
-              title="LinkedIn"
-              ><img
-                src="../Project Files/Link Icons/icons8-linkedin-30.png"
-                alt="LinkedIn"
-                width="22"
-                height="22"
-            /></a>
-            <a href="mailto:nkenzler@arizona.edu" title="Email"
-              ><img
-                src="../Project Files/Link Icons/icons8-email-48.png"
-                alt="Email"
-                width="22"
-                height="22"
-            /></a>
-          </div>
-        </div>
-        <div class="footer-section">
-          <h4>Navigate</h4>
-          <a href="../index.html">Home</a>
-          <a href="about.html">About</a>
-          <a href="projects.html">Projects</a>
-          <a href="blog.html">Blog</a>
-          <a href="uses.html">Uses</a>
-        </div>
-        <div class="footer-section">
-          <h4>Misc</h4>
-          <a href="mailto:nkenzler@arizona.edu">Get in Touch</a>
-          <a href="../rss.xml">RSS Feed</a>
-          <a
-            href="#"
-            onclick="
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-              return false;
-            "
-            >Scroll to Top</a
-          >
-        </div>
-      </div>
-    </footer>
+    </div>
+
+    <script>
+      // Reuses the existing .image-lightbox-overlay component so the
+      // untreated capstone screenshot is one click away.
+      document.addEventListener("DOMContentLoaded", function () {
+        var triggers = document.querySelectorAll("[data-lightbox-src]");
+        if (!triggers.length) return;
+
+        var overlay = null;
+        var opener = null;
+
+        function build() {
+          overlay = document.createElement("div");
+          overlay.className = "image-lightbox-overlay";
+          overlay.innerHTML =
+            '<div class="image-lightbox-content">' +
+            "<img alt=\"\">" +
+            '<p class="image-lightbox-caption"></p>' +
+            '<button class="image-lightbox-close-btn" type="button" aria-label="Close image view">' +
+            '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+            '<path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
+            "</svg></button></div>";
+          document.body.appendChild(overlay);
+
+          overlay
+            .querySelector(".image-lightbox-close-btn")
+            .addEventListener("click", close);
+          overlay.addEventListener("click", function (e) {
+            if (e.target === overlay) close();
+          });
+        }
+
+        function open(trigger) {
+          if (!overlay) build();
+          var img = overlay.querySelector("img");
+          var cap = overlay.querySelector(".image-lightbox-caption");
+          img.src = trigger.getAttribute("data-lightbox-src");
+          img.alt = trigger.querySelector("img").alt;
+          cap.textContent = trigger.getAttribute("data-lightbox-caption") || "";
+          opener = trigger;
+          overlay.classList.add("active");
+          overlay.querySelector(".image-lightbox-close-btn").focus();
+        }
+
+        function close() {
+          if (!overlay) return;
+          overlay.classList.remove("active");
+          if (opener) opener.focus();
+          opener = null;
+        }
+
+        triggers.forEach(function (t) {
+          t.addEventListener("click", function () {
+            open(t);
+          });
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && overlay && overlay.classList.contains("active")) {
+            close();
+          }
+        });
+      });
+    </script>
   </body>
 </html>
