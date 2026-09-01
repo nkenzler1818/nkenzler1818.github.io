@@ -6,14 +6,14 @@
  * View Transitions API: cross-document view transitions proved unstable in
  * testing (a stalled/blank transition frame, and in some cases a fully
  * stuck compositor), which is not an acceptable risk for a live site. This
- * approach can only ever fail "quiet" — if anything here throws, storage is
+ * approach can only ever fail "quiet": if anything here throws, storage is
  * unavailable, or the browser doesn't support something, the nav simply
  * renders correctly with no animation, exactly as it did before this file
  * existed.
  *
  * The "nav-pill-pending" class this file toggles on <html> is actually set
  * (when applicable) by a tiny inline guard script at the very top of <head>,
- * before this file even loads — see the inline <script> right before the
+ * before this file even loads. See the inline <script> right before the
  * Tailwind CDN script tag on every page. That's what keeps the real pill
  * from ever flashing into view before this file gets a chance to hide it;
  * every exit path here just needs to make sure the class comes back off.
@@ -23,7 +23,7 @@
     var MAX_AGE_MS = 4000;
     var FLY_MS = 350;
     var SETTLE_FRAMES = 3; // consecutive matching frames required to trust a measurement
-    var SETTLE_MAX_FRAMES = 90; // ~1.5s at 60fps — give up and skip the animation past this
+    var SETTLE_MAX_FRAMES = 90; // ~1.5s at 60fps, give up, skip the animation past this
     var PENDING_CLASS = "nav-pill-pending";
 
     function isDesktopNav() {
@@ -55,14 +55,14 @@
                     JSON.stringify({ x: rect.left, y: rect.top, w: rect.width, h: rect.height, t: Date.now() }),
                 );
             } catch (err) {
-                /* storage unavailable, or anything else — just skip the animation */
+                /* storage unavailable, or anything else, so skip the animation */
             }
         },
         true,
     );
 
     // The nav's layout depends on Tailwind's CDN script injecting utility CSS
-    // (flex, spacing, max-width, ...) at runtime, plus the custom webfont —
+    // (flex, spacing, max-width, ...) at runtime, plus the custom webfont,
     // both load asynchronously, so the destination pill's position can still
     // be moving well after this script starts running, especially on a slow
     // connection. Rather than trust any single "ready" event, poll the real
@@ -143,7 +143,7 @@
         glow.style.boxShadow = "0 0 8px 2px rgba(192, 132, 252, 0.65), 0 0 22px 8px rgba(192, 132, 252, 0.35)";
         ghost.appendChild(glow);
 
-        // <html> still carries the pending class here — the ghost appears in
+        // <html> still carries the pending class here, so the ghost appears in
         // the same frame the real pill is still hidden, so there's no gap.
         document.body.appendChild(ghost);
 
@@ -199,7 +199,7 @@
             return;
         }
 
-        // Idempotent — makes sure it's hidden even if the inline guard at the
+        // Idempotent. Makes sure it's hidden even if the inline guard at the
         // top of <head> didn't fire for some reason (e.g. viewport resized
         // between click and load).
         document.documentElement.classList.add(PENDING_CLASS);

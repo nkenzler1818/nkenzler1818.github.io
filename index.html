@@ -777,7 +777,7 @@
             var closeBtn = document.getElementById('resume-pdf-close');
             if (!btn || !overlay) return;
 
-            // iOS Safari cannot render PDFs in iframes — open natively instead
+            // iOS Safari cannot render PDFs in iframes, so open natively instead
             function isIOS() {
                 return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
                        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
