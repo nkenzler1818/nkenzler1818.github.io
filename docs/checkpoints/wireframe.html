@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About rebuild - greybox wireframe</title>
+    <style>
+      /* GREYBOX ONLY. No brand color, no real type, no imagery.
+         This file exists to test flow, hierarchy, and layout-family variety
+         before any visual treatment can hide a weak skeleton. It is a
+         throwaway review artifact and never ships. */
+      :root {
+        --ink: #111;
+        --box: #d6d6d6;
+        --box-2: #c2c2c2;
+        --rule: #b0b0b0;
+        --label: #6b6b6b;
+        --col: 864px;
+        --wide: min(1120px, 100vw - 2rem);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #f2f2f2;
+        color: var(--ink);
+        font: 14px/1.5 system-ui, sans-serif;
+        padding-bottom: 6rem;
+      }
+      .meta {
+        background: #e4e4e4;
+        border-bottom: 1px solid var(--rule);
+        padding: 1rem 1.5rem;
+        font-size: 12px;
+      }
+      .meta b { display: block; margin-bottom: .35rem; font-size: 13px; }
+      .col { width: var(--col); max-width: calc(100% - 2rem); margin: 0 auto; }
+      .wide { width: var(--wide); margin: 0 auto; }
+
+      section { padding: 5.5rem 0; border-bottom: 1px dashed var(--rule); }
+      .tag {
+        font-size: 11px;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: var(--label);
+        margin-bottom: 1.25rem;
+      }
+      .tag em { font-style: normal; color: #8a8a8a; }
+
+      /* Greybox primitives. h = headline mass, t = body mass, i = image slot. */
+      .h { background: var(--box-2); height: 46px; margin-bottom: 12px; }
+      .h.big { height: 72px; }
+      .h.sm { height: 26px; }
+      .t { background: var(--box); height: 13px; margin-bottom: 9px; }
+      .i {
+        background: repeating-linear-gradient(45deg, #cfcfcf 0 10px, #c6c6c6 10px 20px);
+        border: 1px solid var(--rule);
+        display: grid;
+        place-items: center;
+        color: #777;
+        font-size: 12px;
+      }
+      .w60 { width: 60%; } .w75 { width: 75%; } .w85 { width: 85%; }
+      .w40 { width: 40%; } .w30 { width: 30%; }
+      .stack > * + * { margin-top: 0; }
+
+      /* 1. asymmetric split: type left, tall portrait right */
+      .s1 { display: grid; grid-template-columns: 1.15fr .85fr; gap: 3rem; align-items: center; }
+      .s1 .i { aspect-ratio: 3/4; }
+
+      /* 2. type block, then one wide image below it */
+      .s2 .i { aspect-ratio: 16/10; margin-top: 2.5rem; }
+
+      /* 3. image breaks to the left edge, text holds the column */
+      .s3 { display: grid; grid-template-columns: .8fr 1.2fr; gap: 3rem; align-items: start; }
+      .s3 .i { aspect-ratio: 4/5; }
+
+      /* 4. pure type, narrow measure. breath point one. */
+      .s4 { width: 620px; max-width: calc(100% - 2rem); margin: 0 auto; }
+
+      /* 5. artifact set with rhythm: one lead artifact, then two smaller side
+         by side. Three items, three cells, no empty cell, and it avoids the
+         three-identical-stacked-images pattern the first pass produced. */
+      .artifact { padding: 1.75rem 0 0; }
+      .artifact .i { aspect-ratio: 16/9; margin-bottom: 1.1rem; }
+      .artifact-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; }
+      .artifact-pair .i { aspect-ratio: 4/3; }
+
+      /* 6. side by side comparison. the page's one two-image moment. */
+      .s6 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      .s6 .i { aspect-ratio: 1/1; }
+
+      /* 7. full bleed wide image, caption under */
+      .s7 .i { aspect-ratio: 21/9; }
+
+      /* 8. pure type, large, centered. breath point two. */
+      .s8 { width: 700px; max-width: calc(100% - 2rem); margin: 0 auto; text-align: center; }
+      .s8 .h { margin-inline: auto; }
+      .s8 .t { margin-inline: auto; }
+
+      /* 9. colophon: compressed two-column typographic record */
+      .s9 { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+      .rec { display: flex; gap: .75rem; align-items: baseline; margin-bottom: .85rem; }
+      .rec .t { flex: 1; margin: 0; }
+      .rec .d { width: 62px; height: 11px; background: var(--box-2); flex: none; }
+
+      /* 10. centered close */
+      .s10 { text-align: center; }
+      .s10 .h { margin-inline: auto; }
+      .btn { display: inline-block; width: 148px; height: 42px; background: var(--box-2); margin: 1.5rem .5rem 0; }
+      .btn.ghost { width: 110px; height: 16px; background: var(--box); }
+
+      @media (max-width: 820px) {
+        section { padding: 3.5rem 0; }
+        .s1, .s3, .s6, .s9, .artifact-pair { grid-template-columns: 1fr; gap: 1.75rem; }
+        .s1 .i { aspect-ratio: 4/3; }
+        .s3 .i { aspect-ratio: 4/3; order: -1; }
+        .s6 .i { aspect-ratio: 4/3; }
+        .h.big { height: 52px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="meta">
+      <b>About rebuild, greybox wireframe (step 5)</b>
+      Flow and hierarchy only. Ten sections, ten distinct layout families, zero repeats.
+      Zigzag cap respected: no two consecutive sections use the image-plus-text split.
+      Zero eyebrows planned (budget would allow 3). Sections 4 and 8 are type-only breath
+      points at the one-third and three-quarter marks. Section 6 is the only two-image
+      moment on the page, which is what makes it read as the signature rather than a pattern.
+    </div>
+
+    <section>
+      <div class="col s1">
+        <div>
+          <div class="tag">1. Open <em>/ asymmetric split</em></div>
+          <div class="h big"></div>
+          <div class="h big w75"></div>
+          <div style="height:1.5rem"></div>
+          <div class="t"></div><div class="t"></div><div class="t w85"></div>
+        </div>
+        <div class="i">pc-motherboard</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="col s2">
+        <div class="tag">2. The habit <em>/ type block, then wide image</em></div>
+        <div class="h w60"></div>
+        <div style="height:1rem"></div>
+        <div class="t"></div><div class="t"></div><div class="t"></div><div class="t w75"></div>
+        <div class="i">pc-finished</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wide s3">
+        <div class="i">k9-studio</div>
+        <div>
+          <div class="tag">3. The other half <em>/ image to the edge, text holds column</em></div>
+          <div class="h w75"></div>
+          <div style="height:1rem"></div>
+          <div class="t"></div><div class="t"></div><div class="t"></div>
+          <div class="t"></div><div class="t"></div><div class="t w60"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="s4">
+        <div class="tag">4. Where it met <em>/ pure type, narrow. breath point.</em></div>
+        <div class="h w85"></div>
+        <div style="height:1rem"></div>
+        <div class="t"></div><div class="t"></div><div class="t"></div><div class="t w75"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="col">
+        <div class="tag">5. The builds <em>/ lead artifact + pair. 3 items, 3 cells, rhythm.</em></div>
+        <div class="h w60"></div>
+        <div style="height:.5rem"></div>
+        <div class="t w75"></div>
+        <div style="height:1.5rem"></div>
+        <div class="artifact"><div class="i">rag-app (lead)</div><div class="h sm w40"></div><div class="t"></div><div class="t w85"></div></div>
+        <div style="height:2.25rem"></div>
+        <div class="artifact-pair">
+          <div><div class="i">olympus-dashboard</div><div class="h sm w60"></div><div class="t"></div><div class="t w85"></div></div>
+          <div><div class="i">craft-vscode</div><div class="h sm w60"></div><div class="t"></div><div class="t w85"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="col">
+        <div class="tag">6. The unglamorous one <em>/ side by side comparison. signature moment.</em></div>
+        <div class="h w60"></div>
+        <div style="height:1.75rem"></div>
+        <div class="s6">
+          <div class="i">vault-early</div>
+          <div class="i">vault-now</div>
+        </div>
+        <div style="height:1.25rem"></div>
+        <div class="t w75"></div><div class="t w60"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wide s7">
+        <div class="tag">7. Including this one <em>/ full bleed wide image</em></div>
+        <div class="i">desk-setup</div>
+        <div style="height:1.25rem"></div>
+        <div class="col" style="width:100%">
+          <div class="h sm w40"></div>
+          <div class="t"></div><div class="t w75"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="s8">
+        <div class="tag">8. Where I actually am <em>/ pure type, large, centered. breath point.</em></div>
+        <div class="h big w85"></div>
+        <div style="height:1.25rem"></div>
+        <div class="t"></div><div class="t"></div><div class="t w75"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="col">
+        <div class="tag">9. The record <em>/ colophon, compressed typographic lines</em></div>
+        <div class="h sm w30"></div>
+        <div style="height:1.5rem"></div>
+        <div class="s9">
+          <div>
+            <div class="rec"><div class="d"></div><div class="t"></div></div>
+            <div class="rec"><div class="d"></div><div class="t"></div></div>
+            <div class="rec"><div class="d"></div><div class="t"></div></div>
+            <div class="rec"><div class="d"></div><div class="t"></div></div>
+          </div>
+          <div>
+            <div class="rec"><div class="d"></div><div class="t"></div></div>
+            <div class="rec"><div class="d"></div><div class="t"></div></div>
+            <div class="rec"><div class="d"></div><div class="t"></div></div>
+            <div style="height:1rem"></div>
+            <div class="i" style="aspect-ratio:16/9">grad-stage (small, optional)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="border-bottom:none">
+      <div class="col s10">
+        <div class="tag">10. Close <em>/ centered, one primary action</em></div>
+        <div class="h w60"></div>
+        <div style="height:1rem"></div>
+        <div class="t w75" style="margin-inline:auto"></div>
+        <div class="t w60" style="margin-inline:auto"></div>
+        <div>
+          <span class="btn"></span>
+          <span class="btn ghost"></span>
+          <span class="btn ghost"></span>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
