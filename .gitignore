@@ -1,3 +1,21 @@
 ._*
 .DS_Store
 .claude/
+
+# ---------------------------------------------------------------------------
+# Private / internal. Not part of the published site. Never push to a public repo.
+# The site is public; the strategy, positioning work, and agent tooling are not.
+# ---------------------------------------------------------------------------
+
+# Local agent + editor tooling
+.claude/settings.local.json
+CLAUDE.md
+
+# Career-strategy and positioning docs (names targets, internal framing, skill gaps)
+NVIDIA-*
+portfolio-audit-prompt.md
+
+# Redesign process docs (briefs, working notes, checkpoints - deleted before merge)
+docs/CREATIVE-BRIEF.md
+docs/archive/
+docs/checkpoints/
