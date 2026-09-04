@@ -15,7 +15,11 @@ CLAUDE.md
 NVIDIA-*
 portfolio-audit-prompt.md
 
-# Redesign process docs (briefs, working notes, checkpoints - deleted before merge)
-docs/CREATIVE-BRIEF.md
-docs/archive/
-docs/checkpoints/
+# Internal docs (briefs, working notes, checkpoints, rebuild notes). Not site
+# content, not referenced by any page.
+docs/
+
+# Screenshots of private systems (the Obsidian vault, the Olympus dashboard).
+# Kept on disk for the next rebuild; never publish as-is. See docs/about-rebuild-notes.md
+images/about/vault-*
+images/about/olympus-dashboard*
