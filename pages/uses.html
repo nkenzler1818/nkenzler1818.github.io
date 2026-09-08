@@ -26,8 +26,6 @@
     <meta name="description" content="Tools and technologies Nathanael Kenzler uses for marketing, analytics, and development.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css">
-    <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -90,86 +88,6 @@
             }
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const certificationCards = document.querySelectorAll('.certification-card');
-            let activeModal = null;
-            let modalBackdrop = null;
-
-            if (!certificationCards.length) return;
-
-            function openModal(modal) {
-                if (activeModal) return;
-                activeModal = modal;
-
-                modalBackdrop = document.createElement('div');
-                modalBackdrop.className = 'modal-backdrop';
-                document.body.appendChild(modalBackdrop);
-
-                if (window.innerWidth <= 768 && (modal.id === 'certification-modal-google' || modal.id === 'certification-modal-tableau')) {
-                    const scrollInner = modal.querySelector('.blog-scroll-inner');
-                    if (scrollInner && !scrollInner.dataset.simplebarInitialized) {
-                        new SimpleBar(scrollInner, { autoHide: false });
-                        scrollInner.dataset.simplebarInitialized = 'true';
-                    }
-                }
-
-                modal.classList.remove('hidden');
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeModal() {
-                if (!activeModal) return;
-
-                if (modalBackdrop) {
-                    modalBackdrop.remove();
-                    modalBackdrop = null;
-                }
-
-                activeModal.classList.remove('active');
-                activeModal.classList.add('hidden');
-                activeModal = null;
-                document.body.style.overflow = '';
-            }
-
-            certificationCards.forEach(function(card) {
-                const modalId = card.getAttribute('aria-controls');
-                const modal = modalId ? document.getElementById(modalId) : null;
-                const closeBtn = modal?.querySelector('.blog-close-btn');
-
-                if (!modal || !closeBtn) return;
-
-                card.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    openModal(modal);
-                });
-
-                card.addEventListener('keydown', function(event) {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        openModal(modal);
-                    }
-                });
-
-                closeBtn.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    closeModal();
-                });
-
-                modal.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                });
-            });
-
-            document.addEventListener('click', function(event) {
-                if (event.target.classList.contains('modal-backdrop') && activeModal) {
-                    closeModal();
-                }
-            });
-        });
-
         window.addEventListener('resize', fitPageTitle);
         window.addEventListener('DOMContentLoaded', fitPageTitle);
     </script>
@@ -185,7 +103,7 @@
                 <a href="about.html" class="nav-link">About</a>
                 <a href="projects.html" class="nav-link">Projects</a>
                 <a href="blog.html" class="nav-link">Blog</a>
-                <a href="uses.html" class="nav-link" aria-current="page">Uses</a>
+                <a href="uses.html" class="nav-link nav-link-wip" aria-current="page" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A Blender-built PC model breaking down the tech stack I use, part by part.</span></span></a>
             </div>
             <!-- Mobile nav -->
             <div class="nav-mobile items-center ml-4 translate-y-px">
@@ -194,7 +112,7 @@
                     <a href="about.html" class="nav-link">About</a>
                     <a href="projects.html" class="nav-link">Projects</a>
                     <a href="blog.html" class="nav-link">Blog</a>
-                    <a href="uses.html" class="nav-link" aria-current="page">Uses</a>
+                    <a href="uses.html" class="nav-link nav-link-wip" aria-current="page" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A Blender-built PC model breaking down the tech stack I use, part by part.</span></span></a>
                 </div>
                 <div class="relative ml-1 mobile-more-trigger">
                     <button class="more-btn text-white p-1 rounded hover:bg-gray-700" onclick="toggleDropdown()">⋮</button>
@@ -213,60 +131,18 @@
     <main class="pt-10 md:pt-20 px-4 max-w-4xl mx-auto">
         <section class="mb-16">
             <h1 class="projects-heading text-center text-white mb-12">Uses and Skills</h1>
-            <div class="space-y-12">
-                <div>
-                    <h2 class="text-2xl font-semibold mb-6">Software</h2>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">VS Code</h3>
-                            <p class="text-white">Primary code editor for development and writing.</p>
-                        </div>
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">Tableau</h3>
-                            <p class="text-white">Data visualization and business intelligence tool.</p>
-                        </div>
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">Microsoft Suite</h3>
-                            <p class="text-white">Productivity, analysis, and presentation tools.</p>
-                        </div>
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">Adobe Creative Suite</h3>
-                            <p class="text-white">Design and content creation tools.</p>
-                        </div>
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">MySQL</h3>
-                            <p class="text-white">Relational database management for structured data and SQL workflows.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h2 class="text-2xl font-semibold mb-6">Learning Focus</h2>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">SQL</h3>
-                            <p class="text-white">Database querying and data analysis.</p>
-                        </div>
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">Analytics</h3>
-                            <p class="text-white">Building strong analytical foundations for data-driven decisions.</p>
-                        </div>
-                        <div class="project-pane p-6 rounded-lg">
-                            <h3 class="text-xl font-medium mb-2">AI-Enabled Workflows</h3>
-                            <p class="text-white">Exploring how AI can improve marketing and operational processes.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h2 class="text-2xl font-semibold mb-6">Certifications</h2>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div class="project-pane p-6 rounded-lg certification-card" role="button" tabindex="0" aria-haspopup="dialog" aria-controls="certification-modal">
-                            <h3 class="text-xl font-medium mb-2"><span class="font-bold">CITI Certification</span></h3>
-                            <p class="text-white">Coming Soon.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="uses-soon">
+                <span class="uses-soon-tag">Under construction</span>
+                <h2 class="uses-soon-head">This page is being rebuilt.</h2>
+                <p class="uses-soon-body">
+                    Uses is getting a proper home: a model of my actual PC, built in
+                    Blender and broken down part by part into the tools and tech I run
+                    day to day. It goes up once that model is done.
+                </p>
+                <p class="uses-soon-meta">
+                    Check back soon. In the meantime, the
+                    <a href="projects.html">projects</a> cover most of what I build with.
+                </p>
             </div>
         </section>
     </main>
@@ -305,29 +181,6 @@
             </div>
         </div>
     </footer>
-
-    <div class="blog-focus-overlay blog-modal hidden" id="certification-modal" role="dialog" aria-modal="true" aria-labelledby="certification-modal-title">
-        <div class="blog-focus-content">
-            <button class="blog-close-btn" aria-label="Close certification details">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-            </button>
-            <div class="blog-scroll-inner">
-                <div class="blog-focus-header">
-                    <h2 class="text-3xl font-bold mb-3 accent-purple text-left" id="certification-modal-title">CITI Certification</h2>
-                    <p class="text-accent-muted text-lg text-left mb-4">Coming Soon.</p>
-                </div>
-                <div class="blog-focus-main">
-                    <div class="blog-focus-article">
-                        <p class="text-white leading-relaxed">
-                            CITI certification focuses on research ethics and compliance. I’ll be completing it soon as part of my coursework.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
 </body>
 </html>

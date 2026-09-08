@@ -192,6 +192,152 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     font-weight: 600;
 }
 
+/* --------------------------------------------------------------------------
+   "Uses" nav link, under construction. The real page content is parked on the
+   uses-page-wip branch until the Blender tech-stack model is ready. The link
+   stays in the nav with a hazard-tape marker wound around the word and a
+   hover / focus tooltip. Desktop only for now; the mobile nav is a later pass.
+   -------------------------------------------------------------------------- */
+.nav-link-wip {
+    position: relative;
+}
+
+@media (min-width: 921px) {
+    /* Strip passing BEHIND the word. Sits in .nav-link's own stacking
+       context (it already sets z-index: 0), so -1 stays above the pill. */
+    .nav-link-wip .nav-wip-deco {
+        position: absolute;
+        z-index: -1;
+        left: 1px;
+        right: 3px;
+        top: 50%;
+        height: 10px;
+        margin-top: -8px;
+        pointer-events: none;
+        background:
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.42)),
+            repeating-linear-gradient(-54deg, #f4c21c 0 6px, #18140a 6px 12px);
+        background-blend-mode: overlay, normal;
+        transform: rotate(-6deg);
+        border-radius: 1px;
+        opacity: 0.9;
+    }
+
+    /* Strip passing in FRONT of the word: the two together read as wound
+       around the letters rather than laid flat on top. */
+    .nav-link-wip .nav-wip-deco::before {
+        content: "";
+        position: absolute;
+        z-index: 3;
+        left: -4px;
+        right: -13px;
+        top: 50%;
+        height: 12px;
+        margin-top: -3px;
+        background:
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.36) 0%, rgba(255, 255, 255, 0.05) 44%, rgba(0, 0, 0, 0.46) 100%),
+            repeating-linear-gradient(-54deg, #f6c81f 0 6px, #17130a 6px 12px);
+        background-blend-mode: overlay, normal;
+        transform: rotate(-13deg) skewX(-4deg);
+        border-radius: 2px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.55);
+    }
+
+    /* The loose end past the "s". The only piece that moves. */
+    .nav-link-wip .nav-wip-deco::after {
+        content: "";
+        position: absolute;
+        z-index: 3;
+        left: calc(100% - 6px);
+        top: 50%;
+        width: 17px;
+        height: 12px;
+        margin-top: -3px;
+        background:
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.32), rgba(0, 0, 0, 0.5)),
+            repeating-linear-gradient(-54deg, #f6c81f 0 6px, #17130a 6px 12px);
+        background-blend-mode: overlay, normal;
+        border-radius: 0 2px 4px 0;
+        transform-origin: left center;
+        transform: rotate(-16deg);
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        animation: nav-wip-sway 3.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes nav-wip-sway {
+        from { transform: rotate(-20deg); }
+        to   { transform: rotate(-3deg); }
+    }
+
+    .nav-wip-tip {
+        position: absolute;
+        z-index: 30;
+        top: calc(100% + 12px);
+        left: 50%;
+        width: max-content;
+        max-width: 232px;
+        transform: translateX(-50%) translateY(-4px);
+        padding: 0.5rem 0.7rem;
+        border-radius: 8px;
+        background: #1f1f1f;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+        color: var(--accent-purple);
+        font-size: 0.64rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.16s ease, transform 0.16s ease;
+    }
+
+    .nav-wip-tip span {
+        display: block;
+        margin-top: 4px;
+        color: #d4d4d4;
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        text-transform: none;
+        line-height: 1.45;
+    }
+
+    .nav-wip-tip::before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border: 5px solid transparent;
+        border-bottom-color: #1f1f1f;
+    }
+
+    .nav-link-wip:hover .nav-wip-tip,
+    .nav-link-wip:focus-visible .nav-wip-tip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-link-wip .nav-wip-deco::after {
+        animation: none;
+    }
+}
+
+/* Below the desktop breakpoint the marker is hidden (mobile nav is a separate
+   pass). The link still works and the parked page still says it is coming. */
+@media (max-width: 920px) {
+    .nav-link-wip .nav-wip-deco,
+    .nav-link-wip .nav-wip-tip {
+        display: none;
+    }
+}
+
 .btn-dark-purple {
     background-color: #7c46af;
     color: white;
@@ -3822,4 +3968,61 @@ html.ab-armed .ab-wheel:focus-within .ab-wheel-ring {
     .ab-skills {
         max-width: none;
     }
+}
+
+/* --------------------------------------------------------------------------
+   Uses page, parked. The real content lives on the uses-page-wip branch
+   until the Blender tech-stack model is ready. Same card language as the
+   rest of the site: charcoal panel, hairline, site shadow.
+   -------------------------------------------------------------------------- */
+.uses-soon {
+    max-width: 40rem;
+    margin: 0 auto;
+    background-color: #1f1f1f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    padding: clamp(1.75rem, 5vw, 2.75rem);
+    text-align: center;
+}
+
+.uses-soon-tag {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 5px;
+    background: rgba(192, 132, 252, 0.14);
+    color: var(--accent-purple);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.uses-soon-head {
+    margin: 1rem 0 0.75rem;
+    color: #f5f5f5;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.uses-soon-body {
+    margin: 0 auto;
+    max-width: 34rem;
+    color: #d4d4d4;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.uses-soon-meta {
+    margin: 1.25rem 0 0;
+    color: #8f8f8f;
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.uses-soon-meta a {
+    color: var(--accent-purple);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
