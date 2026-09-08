@@ -459,10 +459,17 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    /* vertical padding gives shadow + hover-lift room;
-       horizontal padding allows first/last card to snap to center */
-    padding: 4px 0 6px;
+    /* overflow-x:auto forces overflow-y to compute to auto, so without real
+       room here the focused card's hover lift (translateY -4px + scale 1.04)
+       and its 0 8px 30px shadow get clipped to a hard flat edge. Chrome on
+       Windows clips this harder than Safari on macOS, which is why the older
+       carousel-width fix looked resolved on Mac but was still broken here.
+       Negative margins pull the row's layout footprint back to roughly what
+       the old 4px/6px padding gave; the counter below compensates too.
+       horizontal padding lets the first/last card snap to centre. */
+    padding: 22px 0 40px;
     padding-inline: calc(50% - 140px);
+    margin: -14px 0 -30px;
     cursor: grab;
     user-select: none;
 }
@@ -537,7 +544,9 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     font-size: 0.72rem;
     line-height: 1;
     color: rgba(255, 255, 255, 0.35);
-    margin-top: 2px;
+    /* Pulled up under the track's new bottom padding (see .carousel-track)
+       so it still sits just beneath the cards. */
+    margin-top: -26px;
     margin-bottom: -14px;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.08em;
