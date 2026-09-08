@@ -2681,131 +2681,9 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 }
 
 
-.about-profile-image {
-    width: min(35%, clamp(130px, 24vw, 260px));
-    max-width: 100%;
-    height: auto;
-    float: right;
-    margin-left: clamp(10px, 2vw, 20px);
-    margin-bottom: 16px;
-    margin-top: 0;
-    clear: right;
-    object-fit: cover;
-}
-
-.about-section .about-profile-image {
-    margin-top: 0;
-}
-
-.about-text-wrap {
-    display: flow-root;
-    max-width: 100%;
-}
-
-.about-page .about-text-wrap p {
-    margin-bottom: 0.75rem;
-}
-
-.about-page .about-text-wrap p:last-child {
-    margin-bottom: 0;
-}
-
 .about-section {
     max-width: 100%;
     min-width: 0;
-}
-
-.faq-section {
-    max-width: 100%;
-}
-
-.faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.faq-item {
-    background: #1F1F1F;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(192, 132, 252, 0.15);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.faq-item:hover {
-    border-color: rgba(192, 132, 252, 0.35);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.32);
-}
-
-.faq-question {
-    width: 100%;
-    background: none;
-    border: none;
-    color: #f5f5f5;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    text-align: left;
-    padding: 1.25rem 1.5rem;
-    font-size: 1.05rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.faq-question:focus-visible {
-    outline: 2px solid rgba(192, 132, 252, 0.4);
-    outline-offset: -2px;
-}
-
-.faq-question-text {
-    flex: 1;
-}
-
-.faq-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(192, 132, 252, 0.7);
-    font-size: 1rem;
-    transition: transform 0.25s ease, color 0.2s ease;
-}
-
-.faq-question:hover .faq-icon {
-    color: #c084fc;
-}
-
-.faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease;
-}
-
-.faq-answer-content {
-    padding: 0 1.5rem 1.25rem;
-    color: #d4d4d4;
-    line-height: 1.7;
-    font-size: 0.98rem;
-}
-
-.faq-item.open .faq-icon {
-    transform: rotate(90deg);
-}
-
-@media (max-width: 640px) {
-    .faq-question {
-        padding: 1rem 1.25rem;
-        font-size: 1rem;
-    }
-
-    .faq-answer-content {
-        padding: 0 1.25rem 1rem;
-    }
 }
 
 @media (max-width: 740px) {
@@ -2852,16 +2730,6 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     }
 }
 
-@media (max-width: 340px) {
-    .about-profile-image {
-        float: none;
-        display: block;
-        max-width: 100%;
-        width: min(180px, 74vw);
-        margin: 0 auto 16px auto;
-    }
-}
-
 @media (max-width: 280px) {
     .mobile-primary-links a:nth-child(1) {
         display: none;
@@ -2869,14 +2737,6 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 
     .more-home {
         display: block;
-    }
-}
-
-@media (max-width: 320px) {
-    .about-profile-image {
-        width: min(200px, 80vw);
-        margin-left: auto;
-        margin-right: auto;
     }
 }
 
@@ -3100,5 +2960,857 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     .icon-btn img {
         width: 20px;
         height: 20px;
+    }
+}
+
+/* ==========================================================================
+   About page v3 - pinned/scrubbed scrollytelling
+   --------------------------------------------------------------------------
+   Reduced motion is an ARCHITECTURE here, not an override block.
+   The default state below IS the finished page: everything visible, the
+   timeline vertical, no transforms. Every hidden / docked / horizontal state
+   lives under html.ab-armed, which a pre-paint guard in about.html only sets
+   when prefers-reduced-motion is not "reduce". js/about-motion.js removes the
+   class on its way out, and a timeout backstop removes it if GSAP never
+   arrives. So there is no reachable state where content is hidden.
+
+   Docking is CSS position:sticky throughout. GSAP scrubs transforms only and
+   creates zero pins, which is why nothing here can fight over pin spacing.
+   ========================================================================== */
+
+.about-v3 {
+    /* .nav-scroll-blur is fixed, 128px tall and z-index 5, painting solid
+       #2A2A2A down to 108px. Cards are z-index 1, so anything docking above
+       128px docks underneath that band. This is the floor, not a taste call. */
+    --ab-stack-top: 140px;
+    --ab-step: 24px;
+    --ab-surface: #1F1F1F;
+    --ab-hair: rgba(255, 255, 255, 0.1);
+    --ab-dim: #8f8f8f;
+    max-width: none;
+    padding: 0 1rem;
+}
+
+/* --- scene shell ---------------------------------------------------------- */
+
+/* Every scene is one sticky card, and all three are siblings inside the single
+   tall .ab-scenes container. That shared containing block is the whole trick:
+   a sticky element stays docked until its CONTAINER scrolls past, so scene 1
+   holds its position while 2 and 3 rise over it. Give each scene its own
+   wrapper instead and every card leaves with its own section, which is a deck
+   that never stacks. */
+.ab-scenes {
+    position: relative;
+    /* flow-root, not block: the last scene's dwell margin is a bottom margin
+       on the final child, and without a BFC it collapses straight out of this
+       container. The container then gains no height, the last card gets zero
+       sticky range, and it scrolls away instead of docking. */
+    display: flow-root;
+}
+
+.ab-scene {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Same column every other page uses: main is max-w-4xl (896px) on
+       index, projects, uses and blog. The card edge lands where their
+       content edge lands, which is the whole point. */
+    width: 100%;
+    max-width: 896px;
+    margin-inline: auto;
+    background: var(--ab-surface);
+    border-top: 1px solid var(--ab-hair);
+    border-radius: 20px 20px 0 0;
+    transform-origin: center top;
+    padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1.25rem, 3.5vw, 2.5rem)
+             clamp(3rem, 6vw, 4rem);
+}
+
+/* Empty, and the only job is to give the horizontal scrub its scroll
+   distance while the journey card is docked and nothing covers it yet. */
+.ab-journey-scroll {
+    display: none;
+}
+
+/* Dwell between scenes, as a sibling rather than a margin on the scene.
+   A sticky box's own bottom margin is SUBTRACTED from its sticky range, so
+   margin-based dwell buys time for the next scene while quietly stealing it
+   from the one it is set on. On the last scene that cancels out exactly and
+   the card never docks at all. A spacer sibling has no such side effect. */
+.ab-gap {
+    display: none;
+}
+
+/* The card constrains the column now, so this just fills it. */
+.ab-scene-inner {
+    width: 100%;
+}
+
+/* Scrim used for the receding-card dim. A scrubbed opacity on a solid
+   overlay is far cheaper than filter: brightness() on a full-height card. */
+.ab-scene-scrim {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    border-radius: inherit;
+    background: #2A2A2A;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* The exposed top edge of a receded card. Inert until the card is dimmed,
+   so it can never swallow clicks meant for the live scene. */
+.ab-scene-edge {
+    position: absolute;
+    z-index: 4;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--ab-step);
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 clamp(1.25rem, 3.5vw, 2.5rem);
+    background: none;
+    border: 0;
+    border-radius: 20px 20px 0 0;
+    color: var(--ab-dim);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ab-scene-edge:hover {
+    color: #e9d5ff;
+}
+
+.ab-scene-edge::before {
+    content: "";
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--accent-purple);
+    opacity: 0.55;
+    flex: none;
+}
+
+/* --- hero ----------------------------------------------------------------- */
+
+.ab-lede + .ab-lede {
+    margin-top: 1rem;
+}
+
+/* How far down each card docks. The 24px step between them is what leaves
+   the previous card's edge showing once the deck stacks. */
+.ab-hero {
+    --ab-top: 140px;
+    justify-content: center;
+}
+
+.ab-journey {
+    --ab-top: 164px;
+}
+
+/* Last scene, so it is never covered and has no reason to hug the top. */
+.ab-detail {
+    --ab-top: 188px;
+    justify-content: center;
+}
+
+.ab-hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+}
+
+.ab-h1 {
+    font-size: clamp(2.5rem, 6.2vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: #f5f5f5;
+    margin: 0 0 1.5rem;
+}
+
+/* Reveal wipe: a solid plate the same colour as the card sits over the line
+   and retracts to the right. The type underneath never changes opacity, so
+   there is no flash-of-invisible-text if the animation never runs. */
+.ab-line {
+    position: relative;
+    display: inline-block;
+}
+
+.ab-line::after {
+    content: "";
+    position: absolute;
+    inset: -0.08em -0.12em;
+    background: var(--ab-surface);
+    transform: scaleX(0);
+    transform-origin: right center;
+    pointer-events: none;
+}
+
+.ab-lede {
+    font-size: clamp(1.02rem, 1.5vw, 1.18rem);
+    line-height: 1.65;
+    color: #d4d4d4;
+    max-width: 46ch;
+    margin: 0;
+}
+
+.ab-hero-figure {
+    margin: 0;
+    justify-self: end;
+    width: min(100%, 380px);
+}
+
+.ab-portrait {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 1px solid var(--ab-hair);
+}
+
+/* --- journey (horizontal timeline) ---------------------------------------- */
+
+.ab-journey .ab-scene-inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.ab-journey-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+.ab-h2 {
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--accent-purple);
+    margin: 0;
+}
+
+/* The stage is the positioning context the rail and the track share. Its
+   midline IS the rail, which is the only way the node dots can stay welded
+   to the line while the track scrubs underneath it. */
+.ab-journey-stage {
+    position: static;
+}
+
+/* Hidden by default: the vertical fallback timeline has no centre rail. */
+.ab-journey-rail {
+    display: none;
+}
+
+.ab-track {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.ab-stop {
+    position: relative;
+    border-top: 1px solid var(--ab-hair);
+    padding-top: 1.15rem;
+}
+
+/* Sits on the rail. Shared by both sides; only the edge it anchors to
+   changes, so the two armed rules below just flip top for bottom. */
+.ab-stop-node {
+    display: none;
+    position: absolute;
+    left: 0;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--ab-surface);
+    border: 2px solid var(--accent-purple);
+}
+
+/* Drawn inside the stop's rail-facing padding, joining card to line. */
+.ab-stop-node::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 1px;
+    height: 22px;
+    margin-left: -0.5px;
+    background: var(--ab-hair);
+}
+
+.ab-stop-year {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--accent-purple);
+    letter-spacing: 0.06em;
+}
+
+.ab-stop-label {
+    font-size: clamp(1.1rem, 1.9vw, 1.4rem);
+    font-weight: 700;
+    color: #f5f5f5;
+    margin: 0.35rem 0 0.5rem;
+}
+
+.ab-stop-line {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: #d4d4d4;
+    margin: 0 0 1rem;
+    max-width: 42ch;
+}
+
+.ab-skills {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    max-width: 300px;
+}
+
+.ab-skill {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.3rem 0.75rem;
+    align-items: center;
+    font-size: 0.74rem;
+    color: var(--ab-dim);
+    letter-spacing: 0.03em;
+}
+
+/* Thin rail rather than a filled dashboard track, so this reads as
+   accumulation over time and not as a scorecard. */
+.ab-skill-rail {
+    grid-column: 1 / -1;
+    height: 2px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+
+.ab-skill-fill {
+    display: block;
+    height: 100%;
+    width: var(--ab-skill, 60%);
+    border-radius: inherit;
+    background: var(--accent-purple);
+    transform-origin: left center;
+}
+
+/* --- detail (education / honors / projects wheel) ------------------------- */
+
+/* Two columns, not three. Inside an 896px card a third column leaves the
+   carousel about 250px, which is too small to read a project card in. */
+.ab-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.95fr;
+    gap: clamp(1.75rem, 4vw, 3rem);
+    align-items: start;
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.ab-detail-lists {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+.ab-col-title {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ab-dim);
+    margin: 0 0 1.25rem;
+}
+
+.ab-list {
+    display: grid;
+    gap: 1.15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ab-list-title {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #f5f5f5;
+    margin: 0;
+}
+
+.ab-list-meta {
+    font-size: 0.85rem;
+    color: var(--ab-dim);
+    margin: 0.2rem 0 0;
+}
+
+/* A cylinder turning about the HORIZONTAL axis, seen from outside the seam,
+   so items rise toward the viewer and fall away behind. The only motion in
+   this scene, and the page's CTA. */
+.ab-wheel {
+    position: relative;
+    width: 100%;
+}
+
+.ab-wheel-ring {
+    display: grid;
+    gap: 0.6rem;
+}
+
+/* Six faces 60deg apart on the drum. translateZ pushes each one out to the
+   radius after the rotation, which is what makes it a cylinder rather than a
+   fan of flat cards. */
+.ab-wheel-slot {
+    position: relative;
+}
+
+.ab-wheel-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    background: #262626;
+    border: 1px solid var(--ab-hair);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.ab-wheel-item:hover {
+    border-color: rgba(192, 132, 252, 0.5);
+    background: #2b2b2b;
+}
+
+.ab-wheel-title {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #f5f5f5;
+    line-height: 1.3;
+}
+
+.ab-wheel-meta {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    color: var(--ab-dim);
+    line-height: 1.35;
+}
+
+.ab-wheel-cta {
+    display: block;
+    margin: 0.5rem auto 0;
+    width: fit-content;
+    padding: 0.6rem 1.15rem;
+    border-radius: 999px;
+    background: var(--accent-purple);
+    color: #1F1F1F;
+    font-weight: 700;
+    font-size: 0.88rem;
+    transition: background-color 0.2s ease;
+}
+
+.ab-wheel-cta:hover {
+    background: #d8b4fe;
+}
+
+/* --- personal ------------------------------------------------------------- */
+
+.ab-uses-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: var(--accent-purple);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.ab-placeholder {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.05rem 0.4rem;
+    border-radius: 4px;
+    background: rgba(192, 132, 252, 0.14);
+    color: var(--accent-purple);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+/* ==========================================================================
+   ARMED STATE. Everything below runs only when motion is allowed.
+   Removing html.ab-armed returns the page to the finished static document
+   defined above.
+   ========================================================================== */
+
+html.ab-armed .ab-scene {
+    position: sticky;
+    top: var(--ab-top, var(--ab-stack-top));
+    min-height: calc(100svh - var(--ab-top, var(--ab-stack-top)));
+    will-change: transform;
+}
+
+html.ab-armed .ab-journey-scroll {
+    display: block;
+    height: 150svh;
+}
+
+/* Dwell. A sticky card fills the viewport, so flow space after it is
+   scrolled through while the card is still docked and still covering the
+   screen. Without it the next scene starts rising the moment the current one
+   docks and no scene gets a solo moment. The trailing gap is what gives the
+   last scene any sticky range at all. */
+html.ab-armed .ab-gap {
+    display: block;
+    height: 55svh;
+}
+
+html.ab-armed .ab-scene-edge {
+    display: flex;
+}
+
+html.ab-armed .ab-scene-edge[disabled] {
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* Hero entrance. Pure CSS on load, so it still plays if cdnjs is blocked. */
+html.ab-armed .ab-line::after {
+    animation: ab-wipe 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+    transform: scaleX(1);
+}
+
+html.ab-armed .ab-lede {
+    animation: ab-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.55s both;
+}
+
+/* Two distinct beats: the photo settles into place, then develops from
+   grayscale to colour like a print coming up. */
+html.ab-armed .ab-portrait {
+    animation:
+        ab-settle 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.95s both,
+        ab-develop 2.4s ease-out 1.6s both;
+}
+
+@keyframes ab-wipe {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+@keyframes ab-rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes ab-settle {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes ab-develop {
+    from { filter: grayscale(1) contrast(1.06); }
+    to   { filter: grayscale(0) contrast(1); }
+}
+
+/* Horizontal timeline. The tall .ab-journey gives the scrub its scroll
+   distance; the card inside stays docked via sticky, so GSAP needs no pin. */
+html.ab-armed .ab-journey {
+    overflow: hidden;
+}
+
+html.ab-armed .ab-journey-stage::before,
+html.ab-armed .ab-journey-stage::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    width: clamp(48px, 9vw, 130px);
+    pointer-events: none;
+}
+
+html.ab-armed .ab-journey-stage::before {
+    left: 0;
+    background: linear-gradient(
+        to right,
+        var(--ab-surface) 22%,
+        rgba(31, 31, 31, 0)
+    );
+}
+
+html.ab-armed .ab-journey-stage::after {
+    right: 0;
+    background: linear-gradient(
+        to left,
+        var(--ab-surface) 22%,
+        rgba(31, 31, 31, 0)
+    );
+}
+
+html.ab-armed .ab-track {
+    gap: clamp(2rem, 5vw, 4rem);
+}
+
+/* The rail is stuck at the vertical centre and does not move. The track
+   translates underneath it, so the stops travel past a fixed line. Both live
+   in .ab-journey-stage, whose midline is the rail, which is what keeps every
+   node dot welded to the line at any scrub position. */
+html.ab-armed .ab-journey-stage {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+}
+
+html.ab-armed .ab-journey-rail {
+    display: block;
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    margin-top: -1px;
+    background: var(--ab-hair);
+}
+
+/* Grey ahead of you, purple behind. This is the page progress the top-left
+   bar used to carry, folded into the line itself. */
+html.ab-armed .ab-journey-rail-fill {
+    display: block;
+    height: 100%;
+    background: var(--accent-purple);
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+html.ab-armed .ab-track {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: max-content;
+    will-change: transform;
+}
+
+html.ab-armed .ab-stop {
+    width: min(52vw, 380px);
+    flex: none;
+    /* Exactly half the stage, so the stop's rail-facing edge IS the rail. */
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    border-top: 0;
+    padding-top: 0;
+}
+
+/* Odd stops hang above the line, even below, so the row alternates. */
+html.ab-armed .ab-stop:nth-child(odd) {
+    align-self: flex-start;
+    justify-content: flex-end;
+    padding-bottom: 24px;
+}
+
+html.ab-armed .ab-stop:nth-child(even) {
+    align-self: flex-end;
+    justify-content: flex-start;
+    padding-top: 24px;
+}
+
+html.ab-armed .ab-stop-node {
+    display: block;
+}
+
+html.ab-armed .ab-stop:nth-child(odd) .ab-stop-node {
+    bottom: -5px;
+}
+
+html.ab-armed .ab-stop:nth-child(odd) .ab-stop-node::before {
+    bottom: 100%;
+}
+
+html.ab-armed .ab-stop:nth-child(even) .ab-stop-node {
+    top: -5px;
+}
+
+html.ab-armed .ab-stop:nth-child(even) .ab-stop-node::before {
+    top: 100%;
+}
+
+/* Rails span the stop rather than a narrow 300px column, so each stop reads
+   as one block instead of a caption with a stub under it. */
+html.ab-armed .ab-skills {
+    max-width: none;
+}
+
+html.ab-armed .ab-skill-fill {
+    transform: scaleX(0);
+}
+
+html.ab-armed .ab-wheel {
+    height: 340px;
+    perspective: 1000px;
+    perspective-origin: 50% 50%;
+}
+
+html.ab-armed .ab-wheel-ring {
+    display: block;
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    animation: ab-drum 44s linear infinite;
+}
+
+/* Six faces 60deg apart on the drum. translateZ pushes each out to the radius
+   AFTER the rotation, which is what makes this a cylinder rather than a fan
+   of flat cards. backface-visibility hides the half facing away. */
+html.ab-armed .ab-wheel-slot {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 104px;
+    margin-top: -52px;
+    transform: rotateX(var(--ab-angle, 0deg)) translateZ(104px);
+    backface-visibility: hidden;
+}
+
+html.ab-armed .ab-wheel:hover .ab-wheel-ring,
+html.ab-armed .ab-wheel:focus-within .ab-wheel-ring {
+    animation-play-state: paused;
+}
+
+@keyframes ab-drum {
+    to { transform: rotateX(-360deg); }
+}
+
+/* --- responsive ----------------------------------------------------------- */
+
+@media (max-width: 900px) {
+    .ab-hero-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ab-hero-figure {
+        justify-self: start;
+        width: min(100%, 300px);
+        order: -1;
+    }
+
+    .ab-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Single column: the drum gets less height so the lists above it are
+       still reachable without a long scroll inside the card. */
+    html.ab-armed .ab-wheel {
+        height: 280px;
+    }
+}
+
+/* Below this width the horizontal scrub and the card stack both cost more
+   than they give, so the page runs as the static document on purpose. */
+@media (max-width: 720px) {
+    html.ab-armed .ab-scene {
+        position: relative;
+        top: auto;
+        min-height: 0;
+    }
+
+    html.ab-armed .ab-scene-edge {
+        display: none;
+    }
+
+    /* Nothing is sticky down here, so the runway and the dwell gaps are just
+       dead space between sections. */
+    html.ab-armed .ab-journey-scroll,
+    html.ab-armed .ab-gap {
+        display: none;
+    }
+
+    html.ab-armed .ab-journey-stage {
+        position: static;
+        overflow: visible;
+    }
+
+    html.ab-armed .ab-journey-rail {
+        display: none;
+    }
+
+    html.ab-armed .ab-track {
+        position: static;
+        display: grid;
+        grid-auto-flow: row;
+        width: auto;
+        transform: none !important;
+    }
+
+    html.ab-armed .ab-stop {
+        width: auto;
+        height: auto;
+        display: block;
+        border-top: 1px solid var(--ab-hair);
+    }
+
+    /* Matched specificity on purpose: the alternation rules are written with
+       :nth-child, so a plain .ab-stop reset here loses to them and the stops
+       keep their half-height and alignment in the vertical layout. */
+    html.ab-armed .ab-stop:nth-child(odd),
+    html.ab-armed .ab-stop:nth-child(even) {
+        align-self: auto;
+        justify-content: normal;
+        padding-top: 1.15rem;
+        padding-bottom: 0;
+    }
+
+    html.ab-armed .ab-stop-node {
+        display: none;
+    }
+
+    html.ab-armed .ab-wheel {
+        height: auto;
+        perspective: none;
+    }
+
+    html.ab-armed .ab-wheel-ring {
+        display: grid;
+        position: static;
+        transform-style: flat;
+        animation: none;
+    }
+
+    html.ab-armed .ab-wheel-slot {
+        position: relative;
+        top: auto;
+        height: auto;
+        margin-top: 0;
+        transform: none;
+    }
+
+    html.ab-armed .ab-skill-fill {
+        transform: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .ab-scene {
+        border-radius: 14px 14px 0 0;
+    }
+
+    .ab-skills {
+        max-width: none;
     }
 }

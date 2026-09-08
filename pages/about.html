@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
@@ -19,8 +19,35 @@
           }, 4000);
         } catch (err) {}
       })();
+
+      // About page motion guard. Also pre-paint, and deliberately the ONLY
+      // thing that turns motion on.
+      //
+      // The stylesheet's default state is the finished page: every scene
+      // visible, the timeline vertical, nothing transformed. Docked, hidden
+      // and horizontal states live exclusively under html.ab-armed. So the
+      // early return below is the whole reduced-motion implementation, and
+      // there is no reachable state where content is hidden.
+      //
+      // The timeout is the second backstop: if js/about-motion.js never
+      // reports ready (blocked cdnjs, script error, slow network), the class
+      // comes off and the page is a complete static document instead of a
+      // broken half-animated one.
+      (function () {
+        try {
+          var doc = document.documentElement;
+          if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          doc.classList.add("ab-armed");
+          setTimeout(function () {
+            if (!doc.classList.contains("ab-ready")) {
+              doc.classList.remove("ab-armed");
+            }
+          }, 2000);
+        } catch (err) {}
+      })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2A2A2A" />
     <title>About - Nathanael Kenzler</title>
     <meta
       name="description"
@@ -30,11 +57,15 @@
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <script src="../js/nav-transition.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
+    <script src="../js/about-motion.js" defer></script>
     <script>
       window.addEventListener("scroll", function () {
         const nav = document.querySelector("nav");
@@ -62,58 +93,6 @@
         dropdown.classList.toggle("hidden");
       }
 
-      function fitPageTitle() {
-        const heading = document.querySelector(".projects-heading");
-        if (!heading) return;
-
-        const container = heading.parentElement;
-        const baseSize = 72;
-        const minSize = 48;
-        const buffer = 24;
-        const available =
-          (container?.clientWidth || heading.parentElement.clientWidth) -
-          buffer;
-
-        heading.classList.add("auto-fit");
-        heading.style.setProperty("--heading-size", `${baseSize}px`);
-
-        if (heading.scrollWidth <= available) {
-          return;
-        }
-
-        const scale = Math.max(
-          minSize / baseSize,
-          available / heading.scrollWidth,
-        );
-        const nextSize = Math.max(
-          minSize,
-          Math.min(baseSize, baseSize * scale),
-        );
-        heading.style.setProperty("--heading-size", `${nextSize}px`);
-      }
-
-      function toggleFaq(button) {
-        const item = button.closest(".faq-item");
-        const answer = item.querySelector(".faq-answer");
-        const isExpanded = button.getAttribute("aria-expanded") === "true";
-
-        button.setAttribute("aria-expanded", String(!isExpanded));
-        item.classList.toggle("open", !isExpanded);
-
-        if (!isExpanded) {
-          answer.style.maxHeight = `${answer.scrollHeight}px`;
-        } else {
-          answer.style.maxHeight = "0px";
-        }
-      }
-
-      function setupFaq() {
-        const questions = document.querySelectorAll(".faq-question");
-        questions.forEach((question) => {
-          question.addEventListener("click", () => toggleFaq(question));
-        });
-      }
-
       // Close dropdown when clicking outside
       document.addEventListener("click", function (event) {
         const dropdown = document.getElementById("more-dropdown");
@@ -125,10 +104,6 @@
           dropdown.classList.add("hidden");
         }
       });
-
-      window.addEventListener("resize", fitPageTitle);
-      window.addEventListener("DOMContentLoaded", fitPageTitle);
-      window.addEventListener("DOMContentLoaded", setupFaq);
     </script>
   </head>
   <body class="text-white font-sans about-page">
@@ -163,7 +138,7 @@
               class="more-btn text-white p-1 rounded hover:bg-gray-700"
               onclick="toggleDropdown()"
             >
-              ⋮
+              &#8942;
             </button>
             <div
               id="more-dropdown"
@@ -201,256 +176,364 @@
       </nav>
     </header>
 
-    <main class="pt-10 md:pt-20 px-4 max-w-4xl mx-auto">
-      <section class="about-section mb-16">
-        <div class="page-title-wrap">
-          <h1 class="projects-heading text-center text-white mb-12 w-full">
-            About Me
-          </h1>
-        </div>
-        <div class="text-lg leading-relaxed space-y-6 relative">
-          <div class="about-text-wrap">
-            <h2 class="text-3xl font-bold mb-8">Who I Am</h2>
-            <img
-              src="../Project Files/Old main photo.png"
-              alt="Nathanael Kenzler"
-              class="about-profile-image h-auto object-cover rounded-lg"
-              style="margin-top: 0px"
-            />
-            <p>
-              I'm a first-generation graduate student in Marketing, and I
-              approach this field as a bridge builder. My work sits at the
-              intersection of strategic thinking, technical depth, and clear
-              communication. These three things together drive better decisions
-              in high-performing teams.
-            </p>
+    <!--
+      Three scenes, each one sticky card, all siblings of a single tall
+      .ab-scenes container. The shared container is what lets the deck
+      accumulate: a sticky element stays docked until its CONTAINER scrolls
+      past, so the hero holds position while the later scenes rise over it and
+      leave its top edge showing. The empty .ab-journey-scroll after the
+      journey scene is where the horizontal scrub gets its scroll distance,
+      which is why GSAP needs no pin anywhere on this page.
 
-            <p>
-              My background spans operations, client-facing roles, and hands-on
-              marketing support. What I've learned across each: how to take
-              complex information, identify what actually matters, and translate
-              that into clear narratives people can act on. I've built client
-              relationships, managed multiple workstreams under pressure, and
-              contributed to brand and go-to-market decisions. But the skill
-              underneath all of it is critical thinking. The ability to evaluate
-              information without bias and form conclusions that move a team
-              forward.
-            </p>
-
-            <p>
-              Outside of coursework, I build. I designed a multi-agent,
-              RAG-based OS with routing based on project scope, and built a
-              RAG pipeline for pharmaceutical drug-safety monitoring my first
-              semester.
-            </p>
-
-            <p>
-              What draws me to marketing is the fusion of human insight and
-              technical skill it demands. I love taking ideas that are difficult
-              to grasp and turning them into insights that teams can actually
-              use. I do this not just with creative thinking, but with the
-              technical literacy and composure that high-level marketing
-              requires. That combination of clarity, impact, and technical
-              foundation is what excites me about building a career here.
-            </p>
+      Copy here is PLACEHOLDER, written to the character ceilings in the build
+      plan so the layout is validated at real length. Real copy replaces it.
+    -->
+    <main class="about-v3 ab-scenes">
+      <!-- Scene 1: hero ------------------------------------------------- -->
+      <section
+        class="ab-scene ab-hero"
+        id="scene-hero"
+        aria-labelledby="ab-hero-h"
+      >
+        <button
+          class="ab-scene-edge"
+          type="button"
+          data-ab-jump="scene-hero"
+          disabled
+        >
+          Who I Am
+        </button>
+        <div class="ab-scene-inner">
+          <div class="ab-hero-grid">
+            <div>
+              <h1 class="ab-h1" id="ab-hero-h">
+                <span class="ab-line">I take things apart.</span>
+              </h1>
+              <p class="ab-lede">
+                First gen MS Marketing student at Arizona, focused on
+                analytics and AI. Digital marketing consultant for oncology
+                KOLs.
+              </p>
+              <p class="ab-lede">
+                Headed toward partner marketing, with the technical side
+                built in.
+              </p>
+            </div>
+            <figure class="ab-hero-figure">
+              <img
+                class="ab-portrait"
+                src="../images/about/portrait.webp"
+                srcset="
+                  ../images/about/portrait-sm.webp 360w,
+                  ../images/about/portrait.webp    540w
+                "
+                sizes="(max-width: 900px) 300px, 380px"
+                width="540"
+                height="720"
+                alt="Nathanael Kenzler on the steps of Old Main at the University of Arizona, wearing a graduation gown and a first generation honor stole."
+              />
+            </figure>
           </div>
         </div>
+        <div class="ab-scene-scrim" aria-hidden="true"></div>
       </section>
 
-      <section class="mb-16">
-        <h2 class="text-3xl font-bold mb-8">How I Got Here</h2>
-        <div class="journey-timeline">
-          <div class="journey-item">
-            <div class="journey-node"></div>
-            <div class="journey-connector"></div>
-            <div class="journey-body">
-              <div class="journey-header">
-                <h3 class="journey-role">
-                  Nordstrom Inc. - Fulfillment Team Member
-                </h3>
-                <span class="journey-dates">Jun 2019-Feb 2021</span>
-              </div>
-              <p class="journey-desc">
-                First job. Learned what consistent execution under pressure
-                actually looks like.
-              </p>
-            </div>
-          </div>
-          <div class="journey-item">
-            <div class="journey-node"></div>
-            <div class="journey-connector"></div>
-            <div class="journey-body">
-              <div class="journey-header">
-                <h3 class="journey-role">
-                  Bay Area K9 Association - Resident Handler &amp;
-                  Operations Assistant
-                </h3>
-                <span class="journey-dates">Feb 2021-Jul 2023</span>
-              </div>
-              <p class="journey-desc">
-                Built a 15+ client base and ran scheduling, photography, and
-                facility ops. Pushed me toward a business degree.
-              </p>
-            </div>
-          </div>
-          <div class="journey-item">
-            <div class="journey-node"></div>
-            <div class="journey-connector"></div>
-            <div class="journey-body">
-              <div class="journey-header">
-                <h3 class="journey-role">
-                  VASA Fitness - Personal Trainer &amp; Member Experience
-                  Specialist
-                </h3>
-                <span class="journey-dates">Sep 2023-Feb 2025</span>
-              </div>
-              <p class="journey-desc">
-                Rebuilt client trust through data-driven engagement across
-                27+ concurrent accounts.
-              </p>
-            </div>
-          </div>
-          <div class="journey-item journey-current">
-            <div class="journey-node"></div>
-            <div class="journey-connector"></div>
-            <div class="journey-body">
-              <div class="journey-header">
-                <h3 class="journey-role">
-                  SignifyMD - Marketing &amp; Digital Communications Intern
-                </h3>
-                <span class="journey-dates">Mar 2026-Present</span>
-              </div>
-              <p class="journey-desc">
-                Built a lead research pipeline for ASCO 2026: 600+ leads,
-                280+ conversions (47%), across KOL and sponsor partners.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div class="ab-gap" aria-hidden="true"></div>
 
-      <section class="mb-16">
-        <h2 class="text-3xl font-bold mb-8">Education</h2>
-        <div class="space-y-4">
-          <div>
-            <h3 class="text-xl font-semibold">MS Marketing</h3>
-            <p class="text-white">
-              University of Arizona, Eller College of Management (Expected Dec
-              2026)
-            </p>
+      <!-- Scene 2: horizontal timeline ----------------------------------- -->
+      <section
+        class="ab-scene ab-journey"
+        id="scene-journey"
+        aria-labelledby="ab-journey-h"
+      >
+        <button
+          class="ab-scene-edge"
+          type="button"
+          data-ab-jump="scene-journey"
+          disabled
+        >
+          How I Got Here
+        </button>
+        <div class="ab-scene-inner">
+          <div class="ab-journey-head">
+            <h2 class="ab-h2" id="ab-journey-h">How I Got Here</h2>
           </div>
-          <div>
-            <h3 class="text-xl font-semibold">BS Business Administration</h3>
-            <p class="text-white">University of Arizona (May 2025)</p>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold">
-              Associate Degrees in Economics and Liberal Arts &amp; Sciences
-            </h3>
-            <p class="text-white">Santa Barbara City College (May 2023)</p>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold">High School Diploma</h3>
-            <p class="text-white">Bellarmine College Preparatory (May 2021)</p>
-          </div>
-        </div>
-      </section>
 
-      <section class="faq-section mb-16">
-        <h2 class="text-3xl font-bold mb-8">FAQs</h2>
-        <div class="faq-list space-y-4">
-          <div class="faq-item">
-            <button
-              class="faq-question"
-              type="button"
-              aria-expanded="false"
-              aria-controls="faq-answer-1"
-            >
-              <span class="faq-question-text"
-                >How did my personal journey lead me to digital and tech
-                marketing?</span
-              >
-              <span class="faq-icon" aria-hidden="true">&#x25B8;</span>
-            </button>
-            <div class="faq-answer" id="faq-answer-1">
-              <div class="faq-answer-content">
-                <p>
-                  I have always been drawn to tech as a tool for creativity and
-                  optimization. Growing up with an engineer father, I was always
-                  encouraged to explore how things work. Whether it was
-                  tinkering with PCs, competing in VEX robotics, or hardwiring
-                  cameras, tech became my playground. Now, I'm excited to
-                  channel that same curiosity into a professional tech marketing
-                  path, where I can combine strategy, creativity, and a lifelong
-                  affinity for making things work better.
+          <!--
+            The rail is stuck at the stage's vertical centre and never moves;
+            the track slides underneath it. Both sit in the same stage so the
+            row boundary of the track lands exactly on the rail, which is what
+            keeps each node dot welded to the line while it scrubs.
+          -->
+          <div class="ab-journey-stage">
+            <div class="ab-journey-rail" aria-hidden="true">
+              <span class="ab-journey-rail-fill" data-ab-rail-fill></span>
+            </div>
+
+            <div class="ab-track" data-ab-track>
+              <article class="ab-stop">
+                <span class="ab-stop-node" aria-hidden="true"></span>
+                <span class="ab-stop-year">2019</span>
+                <h3 class="ab-stop-label">The first job</h3>
+                <p class="ab-stop-line">
+                  Nordstrom fulfillment. Learned what consistent execution
+                  under pressure costs.
                 </p>
-              </div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button
-              class="faq-question"
-              type="button"
-              aria-expanded="false"
-              aria-controls="faq-answer-2"
-            >
-              <span class="faq-question-text"
-                >How do analytics and AI fit into my marketing approach?</span
-              >
-              <span class="faq-icon" aria-hidden="true">&#x25B8;</span>
-            </button>
-            <div class="faq-answer" id="faq-answer-2">
-              <div class="faq-answer-content">
-                <p>
-                  Analytics give me a strong foundation, turning data into
-                  clear, strategic decisions. In my time I spent as a candidate
-                  for my business administration degree, I learned to leverage
-                  wide variety of tools and techniques in order to derive and
-                  present conclusions professionally and effectively. Moreover,
-                  a reason I'm especially excited about my Master's program is
-                  taking courses such as Marketing Research, where I get
-                  hands-on experience with qualitative and quantitative methods
-                  to gather and interpret data. On the AI side, I love
-                  experimenting. For example, I explore which tools fit best
-                  into my workflow; Perplexity for research, Gemini for visual
-                  representations, and even building this site by integrating
-                  Cline as a wrapper in my IDE while coding with OpenAI's Codex
-                  5.2. Each step refines how I achieve results and as I alluded
-                  to in the question above, I enjoy finding and swapping pieces
-                  to bolster my ability to execute an idea to the highest
-                  degree!
+                <div class="ab-skills">
+                  <div class="ab-skill">
+                    <span>Execution</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 35%"></i
+                    ></span>
+                  </div>
+                  <div class="ab-skill">
+                    <span>Client work</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 18%"></i
+                    ></span>
+                  </div>
+                  <div class="ab-skill">
+                    <span>Systems</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 10%"></i
+                    ></span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="ab-stop">
+                <span class="ab-stop-node" aria-hidden="true"></span>
+                <span class="ab-stop-year">2021</span>
+                <h3 class="ab-stop-label">Dogs, and a payroll</h3>
+                <p class="ab-stop-line">
+                  Ran a training venture to pay for school. Teaching was the
+                  part that stuck.
                 </p>
-              </div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button
-              class="faq-question"
-              type="button"
-              aria-expanded="false"
-              aria-controls="faq-answer-3"
-            >
-              <span class="faq-question-text"
-                >What kind of teams do I work best with?</span
-              >
-              <span class="faq-icon" aria-hidden="true">&#x25B8;</span>
-            </button>
-            <div class="faq-answer" id="faq-answer-3">
-              <div class="faq-answer-content">
-                <p>
-                  I pride myself on knowing when to step up and when to step
-                  back. I work best with teams that trust each other's
-                  strengths. Sometimes I lead, whether as a project lead or
-                  owning a specific task, and other times I focus on supporting
-                  the team behind the scenes. The key is recognizing what the
-                  team needs, adapting, and maximizing everyone's strengths so
-                  we create the best outcomes together.
+                <div class="ab-skills">
+                  <div class="ab-skill">
+                    <span>Execution</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 55%"></i
+                    ></span>
+                  </div>
+                  <div class="ab-skill">
+                    <span>Client work</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 52%"></i
+                    ></span>
+                  </div>
+                  <div class="ab-skill">
+                    <span>Systems</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 26%"></i
+                    ></span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="ab-stop">
+                <span class="ab-stop-node" aria-hidden="true"></span>
+                <span class="ab-stop-year">2023</span>
+                <h3 class="ab-stop-label">The gym floor</h3>
+                <p class="ab-stop-line">
+                  Personal training. Same lesson, louder: the win is when they
+                  do it without me.
                 </p>
-              </div>
+                <div class="ab-skills">
+                  <div class="ab-skill">
+                    <span>Execution</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 70%"></i
+                    ></span>
+                  </div>
+                  <div class="ab-skill">
+                    <span>Client work</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 74%"></i
+                    ></span>
+                  </div>
+                  <div class="ab-skill">
+                    <span>Systems</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 45%"></i
+                    ></span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="ab-stop">
+                <span class="ab-stop-node" aria-hidden="true"></span>
+                <span class="ab-stop-year">2026</span>
+                <h3 class="ab-stop-label">Where I am now</h3>
+                <p class="ab-stop-line">
+                  Marketing for oncology KOLs. Same teaching instinct, a much
+                  larger room.
+                </p>
+                <div class="ab-skills">
+                  <div class="ab-skill">
+                    <span>Execution</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 86%"></i
+                    ></span>
+                  </div>
+                  <div class="ab-skill">
+                    <span>Client work</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 90%"></i
+                    ></span>
+                  </div>
+                  <div class="ab-skill">
+                    <span>Systems</span>
+                    <span class="ab-skill-rail"
+                      ><i class="ab-skill-fill" style="--ab-skill: 78%"></i
+                    ></span>
+                  </div>
+                </div>
+              </article>
             </div>
           </div>
         </div>
+        <div class="ab-scene-scrim" aria-hidden="true"></div>
       </section>
+
+      <!-- Scroll runway for the horizontal scrub. Empty on purpose: the
+           journey card is docked and uncovered for its whole length. -->
+      <div class="ab-journey-scroll" aria-hidden="true"></div>
+
+      <!-- Scene 3: education / honors / projects wheel -------------------- -->
+      <section
+        class="ab-scene ab-detail"
+        id="scene-detail"
+        aria-labelledby="ab-detail-h"
+      >
+        <div class="ab-scene-inner">
+          <h2 class="ab-h2" id="ab-detail-h">The Details</h2>
+
+          <div class="ab-detail-grid">
+            <div class="ab-detail-lists">
+              <div>
+                <h3 class="ab-col-title">Education</h3>
+                <ul class="ab-list">
+                  <li>
+                    <p class="ab-list-title">MS Marketing</p>
+                    <p class="ab-list-meta">
+                      University of Arizona, Eller. Expected Dec 2026
+                    </p>
+                  </li>
+                  <li>
+                    <p class="ab-list-title">BS Business Administration</p>
+                    <p class="ab-list-meta">University of Arizona, May 2025</p>
+                  </li>
+                  <li>
+                    <p class="ab-list-title">AA Economics, AA Liberal Arts</p>
+                    <p class="ab-list-meta">
+                      Santa Barbara City College, May 2023
+                    </p>
+                  </li>
+                  <li>
+                    <p class="ab-list-title">High School Diploma</p>
+                    <p class="ab-list-meta">
+                      Bellarmine College Preparatory, May 2021
+                    </p>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 class="ab-col-title">
+                  Honors and Certifications
+                  <span class="ab-placeholder">Placeholder</span>
+                </h3>
+                <ul class="ab-list">
+                  <li>
+                    <p class="ab-list-title">Honor title goes here</p>
+                    <p class="ab-list-meta">Awarding body, year</p>
+                  </li>
+                  <li>
+                    <p class="ab-list-title">Certification name here</p>
+                    <p class="ab-list-meta">Issuing organization, year</p>
+                  </li>
+                  <li>
+                    <p class="ab-list-title">Certification name here</p>
+                    <p class="ab-list-meta">Issuing organization, year</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="ab-col-title">Selected Work</h3>
+              <!--
+                A drum turning about the horizontal axis: each face is rotated
+                to its own angle then pushed out to the radius, so items rise
+                toward the viewer and fall away behind. Content is real, taken
+                from pages/projects.html, and every face routes there.
+              -->
+              <div class="ab-wheel">
+                <div class="ab-wheel-ring">
+                  <div class="ab-wheel-slot" style="--ab-angle: 0deg">
+                    <a class="ab-wheel-item" href="projects.html">
+                      <span class="ab-wheel-title"
+                        >Pharmacovigilance RAG Pipeline</span
+                      >
+                      <span class="ab-wheel-meta"
+                        >Agentic RAG system for drug safety monitoring</span
+                      >
+                    </a>
+                  </div>
+                  <div class="ab-wheel-slot" style="--ab-angle: 60deg">
+                    <a class="ab-wheel-item" href="projects.html">
+                      <span class="ab-wheel-title"
+                        >Native x Japan Market Entry</span
+                      >
+                      <span class="ab-wheel-meta"
+                        >International marketing project</span
+                      >
+                    </a>
+                  </div>
+                  <div class="ab-wheel-slot" style="--ab-angle: 120deg">
+                    <a class="ab-wheel-item" href="projects.html">
+                      <span class="ab-wheel-title">AI Trust in Digital Search</span>
+                      <span class="ab-wheel-meta"
+                        >Quantitative research design and hypothesis testing</span
+                      >
+                    </a>
+                  </div>
+                  <div class="ab-wheel-slot" style="--ab-angle: 180deg">
+                    <a class="ab-wheel-item" href="projects.html">
+                      <span class="ab-wheel-title"
+                        >Campaign Efficiency Case Study</span
+                      >
+                      <span class="ab-wheel-meta"
+                        >Data modeling, SQL analysis, visualization</span
+                      >
+                    </a>
+                  </div>
+                  <div class="ab-wheel-slot" style="--ab-angle: 240deg">
+                    <a class="ab-wheel-item" href="projects.html">
+                      <span class="ab-wheel-title">Building My Website</span>
+                      <span class="ab-wheel-meta"
+                        >Design and development iterations</span
+                      >
+                    </a>
+                  </div>
+                  <div class="ab-wheel-slot" style="--ab-angle: 300deg">
+                    <a class="ab-wheel-item" href="projects.html">
+                      <span class="ab-wheel-title">Photography</span>
+                      <span class="ab-wheel-meta">Personal portfolio series</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <a class="ab-wheel-cta" href="projects.html">See the work</a>
+            </div>
+          </div>
+        </div>
+        <div class="ab-scene-scrim" aria-hidden="true"></div>
+      </section>
+
+      <!-- Trailing gap: without it the last scene has no sticky range. -->
+      <div class="ab-gap" aria-hidden="true"></div>
     </main>
 
     <footer class="footer-bg py-12">
@@ -461,9 +544,9 @@
         <div class="footer-section identity-section">
           <h3>Nathanael Kenzler</h3>
           <p class="footer-description">
-            <span>Enterprise-focused business &</span>
-            <span>marketing professional passionate</span>
-            <span>about turning strategy into impact.</span>
+            <span>Marketing student at Arizona.</span>
+            <span>I take technical things apart,</span>
+            <span>then explain them to people.</span>
           </p>
           <div class="social-icons">
             <a href="https://github.com/nkenzler1818" title="GitHub"
