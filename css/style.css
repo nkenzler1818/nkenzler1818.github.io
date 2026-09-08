@@ -3614,7 +3614,7 @@ html.ab-armed .ab-scene {
 }
 
 html.ab-armed .ab-scene.is-focus {
-    transform: scale(1.02);
+    transform: scale(1.03);
     box-shadow:
         0 -12px 34px rgba(0, 0, 0, 0.36),
         0 16px 44px rgba(0, 0, 0, 0.3);
