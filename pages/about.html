@@ -195,6 +195,9 @@
         id="scene-hero"
         aria-labelledby="ab-hero-h"
       >
+        <button class="ab-scene-edge" type="button" data-ab-jump="scene-hero" disabled>
+          Who I Am
+        </button>
         <div class="ab-scene-inner">
           <div class="ab-hero-grid">
             <div>
@@ -238,6 +241,9 @@
         id="scene-journey"
         aria-labelledby="ab-journey-h"
       >
+        <button class="ab-scene-edge" type="button" data-ab-jump="scene-journey" disabled>
+          How I Got Here
+        </button>
         <div class="ab-scene-inner">
           <div class="ab-journey-head">
             <h2 class="ab-h2" id="ab-journey-h">How I Got Here</h2>
@@ -500,6 +506,7 @@
                   </li>
                 </ul>
               </div>
+              <a class="ab-pf-cta" href="projects.html">See all projects</a>
             </div>
           </div>
         </div>
@@ -512,7 +519,7 @@
       <!--
         Wayfinding prompts. Fixed to the viewport (not inside a scene, whose
         scale transform would push them off-screen) and outside the scenes in
-        the DOM. about-motion.js reveals exactly one, ~10s after its scene has
+        the DOM. about-motion.js reveals exactly one, ~5s after its scene has
         held focus: card 1 with a label, card 2 arrow-only, card 3 its own exit
         CTA. Hidden entirely without motion.
       -->

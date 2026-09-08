@@ -3178,12 +3178,10 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     max-width: 896px;
     margin-inline: auto;
     background: var(--ab-surface);
-    /* A faint edge, not the old rgba(255,255,255,0.1) hairline that read as a
-       pale halo around the panel. Separation is the dark shadow below, which
-       is the site's shadow language (nav pill and .project-card both use
-       0 4px 20px rgba(0,0,0,0.3)); the upward bias grounds a rising card
-       against the one it covers in the stack. */
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    /* Hairline on the top edge so a card's 24px peek strip is legible where it
+       shows above the next card in the stack. Kept low so it does not read as
+       a pale halo the way rgba(255,255,255,0.1) did. */
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
     border-radius: 20px 20px 0 0;
     box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.28), 0 2px 14px rgba(0, 0, 0, 0.22);
     transform-origin: center top;
@@ -3232,33 +3230,37 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     top: 0;
     left: 0;
     right: 0;
-    height: var(--ab-step);
+    height: calc(var(--ab-step) + 8px);
     display: none;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.45rem;
     padding: 0 clamp(1.25rem, 3.5vw, 2.5rem);
-    background: none;
+    background: linear-gradient(to bottom, rgba(192, 132, 252, 0.09), rgba(192, 132, 252, 0));
     border: 0;
     border-radius: 20px 20px 0 0;
-    color: var(--ab-dim);
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    color: #cbb8e6;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     text-align: left;
     cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
 }
 
 .ab-scene-edge:hover {
-    color: #e9d5ff;
+    color: #f0e6ff;
+    background: linear-gradient(to bottom, rgba(192, 132, 252, 0.16), rgba(192, 132, 252, 0));
 }
 
+/* Up-pointing chevron: this card is above you, click to go back to it. */
 .ab-scene-edge::before {
     content: "";
-    width: 18px;
-    height: 2px;
-    border-radius: 2px;
-    background: var(--accent-purple);
-    opacity: 0.55;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-top: 0;
+    border-bottom-color: var(--accent-purple);
     flex: none;
 }
 
@@ -3276,21 +3278,21 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .ab-hero {
     --ab-top: 140px;
     justify-content: flex-start;
-    padding-top: clamp(3rem, 12vh, 7.5rem);
+    padding-top: clamp(2.25rem, 8vh, 5rem);
 }
 
 .ab-journey {
     --ab-top: 164px;
 }
 
-/* Last scene, so it is never covered and has no reason to hug the top. Scale
-   it from the bottom edge so the focus pop grows upward and never pushes the
-   card's bottom down into the footer. */
+/* Last scene, never covered. Keeps the shared centre-top origin so the focus
+   pop grows DOWNWARD and never rides up over the peek strips of the hero and
+   journey cards behind it. Its downward overflow lands in the trailing
+   .ab-gap, not the footer. */
 .ab-detail {
     --ab-top: 188px;
     justify-content: flex-start;
-    padding-top: clamp(3rem, 10vh, 6rem);
-    transform-origin: center bottom;
+    padding-top: clamp(1.75rem, 4vh, 2.75rem);
 }
 
 .ab-hero-grid {
@@ -3543,10 +3545,40 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     gap: 0.6rem;
 }
 
+/* The Details scene surface is #1F1F1F, the same as .project-card, so the
+   card would vanish into it. Lift it one step (#292929 + a hairline) so it
+   reads as a card on the dark scene, the way the Project Portfolio cards read
+   against the lighter page. */
 .ab-pf-card {
     display: block;
-    padding: 0.85rem 1rem;
+    padding: 0.8rem 1rem;
     text-decoration: none;
+    background: #292929;
+    border: 1px solid var(--ab-hair);
+}
+
+.ab-pf-card:hover {
+    border-color: rgba(192, 132, 252, 0.45);
+}
+
+.ab-pf-cta {
+    display: block;
+    width: 100%;
+    margin-top: 0.7rem;
+    padding: 0.72rem 1rem;
+    border-radius: 10px;
+    background: var(--accent-purple);
+    color: #1f1f1f;
+    font-weight: 700;
+    font-size: 0.86rem;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.18s ease;
+}
+
+.ab-pf-cta:hover {
+    background: #d8b4fe;
 }
 
 /* <h3> already inherits the sitewide purple heading; just size it down so it
@@ -3619,11 +3651,14 @@ html.ab-armed .ab-scene {
         box-shadow 0.4s ease;
 }
 
+/* The focused card casts a deep shadow UP onto the peek strips of the cards
+   behind it, which is what makes the stack read as layered depth rather than
+   one flat panel. */
 html.ab-armed .ab-scene.is-focus {
     transform: scale(1.065);
     box-shadow:
-        0 -12px 34px rgba(0, 0, 0, 0.36),
-        0 16px 44px rgba(0, 0, 0, 0.3);
+        0 -22px 40px -6px rgba(0, 0, 0, 0.55),
+        0 20px 48px rgba(0, 0, 0, 0.32);
 }
 
 /* Keep the transient overshoot from forcing a horizontal scrollbar on
@@ -3640,7 +3675,7 @@ html.ab-armed .ab-scene-scrim {
 }
 
 html.ab-armed .ab-scene:not(.is-focus) > .ab-scene-scrim {
-    opacity: 0.55;
+    opacity: 0.42;
 }
 
 html.ab-armed .ab-journey-scroll {
@@ -3658,10 +3693,16 @@ html.ab-armed .ab-gap {
     height: 55svh;
 }
 
-/* The top-edge jump-back labels are retired: the only wayfinding affordance
-   now is the bouncing arrow prompt at the bottom of each card (.ab-prompt). */
+/* Jump-back affordance on a receded card's exposed top edge. Inert (invisible,
+   pointer-events:none) until about-motion.js enables it once the card is
+   actually behind the focused one. Sits alongside the bottom arrow prompt. */
 html.ab-armed .ab-scene-edge {
-    display: none;
+    display: flex;
+}
+
+html.ab-armed .ab-scene-edge[disabled] {
+    pointer-events: none;
+    opacity: 0;
 }
 
 /* Hero entrance. Pure CSS on load, so it still plays if cdnjs is blocked. */
@@ -3708,9 +3749,9 @@ html.ab-armed .ab-journey {
     overflow: hidden;
 }
 
-/* Thin, mostly-opaque masks hard against the stage edge, so a partly-scrolled
-   stop is cleanly cut off at the border instead of showing a wide faded ghost
-   across the middle of the card. */
+/* Fully-opaque masks that cover the whole card padding out to the rounded
+   border, so a partly-scrolled stop is hidden completely at the edge with
+   only a short fade lip. */
 html.ab-armed .ab-journey-stage::before,
 html.ab-armed .ab-journey-stage::after {
     content: "";
@@ -3718,7 +3759,7 @@ html.ab-armed .ab-journey-stage::after {
     top: 0;
     bottom: 0;
     z-index: 2;
-    width: clamp(16px, 2.5vw, 34px);
+    width: clamp(100px, 15vw, 180px);
     pointer-events: none;
 }
 
@@ -3727,7 +3768,7 @@ html.ab-armed .ab-journey-stage::before {
     background: linear-gradient(
         to right,
         var(--ab-surface) 0,
-        var(--ab-surface) 62%,
+        var(--ab-surface) 78%,
         rgba(31, 31, 31, 0) 100%
     );
 }
@@ -3737,13 +3778,15 @@ html.ab-armed .ab-journey-stage::after {
     background: linear-gradient(
         to left,
         var(--ab-surface) 0,
-        var(--ab-surface) 62%,
+        var(--ab-surface) 78%,
         rgba(31, 31, 31, 0) 100%
     );
 }
 
+/* Wide gaps so only the centred stop is ever legible; its neighbours sit far
+   past the edge and are covered entirely by the opaque masks. */
 html.ab-armed .ab-track {
-    gap: clamp(2rem, 5vw, 4rem);
+    gap: clamp(7rem, 18vw, 13rem);
 }
 
 /* The rail is stuck at the vertical centre and does not move. The track
@@ -3754,6 +3797,11 @@ html.ab-armed .ab-journey-stage {
     position: relative;
     flex: 1;
     overflow: hidden;
+    /* Pull out to the card's inner border so the track is clipped exactly at
+       the rounded edge, not ~40px in where a half-stop would otherwise show
+       ghosting through the middle of the card. The opaque ::before/::after
+       masks then hide anything right up to that border. */
+    margin-inline: calc(-1 * clamp(1.25rem, 3.5vw, 2.5rem));
 }
 
 html.ab-armed .ab-journey-rail {
@@ -3848,35 +3896,10 @@ html.ab-armed .ab-skill-fill {
    bottom, a new one enters at the top. about-motion.js clones the list for a
    seamless wrap and pauses the belt on hover / focus. */
 html.ab-armed .ab-pf {
-    --ab-pf-slot-h: 92px;
-    --ab-pf-gap: 0.5rem;
+    --ab-pf-slot-h: 94px;
+    --ab-pf-gap: 0.55rem;
     height: calc(3 * var(--ab-pf-slot-h) + 2 * var(--ab-pf-gap));
     overflow: hidden;
-}
-
-/* Thin edge gradients (solid overlays, not mask-image, which breaks on
-   hover-promoted card layers) so an entering / exiting card dissolves at the
-   border instead of a hard line. Both surfaces are #1F1F1F, so this mostly
-   just hides a card's shadow as it clears the frame. */
-html.ab-armed .ab-pf::before,
-html.ab-armed .ab-pf::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 22px;
-    z-index: 2;
-    pointer-events: none;
-}
-
-html.ab-armed .ab-pf::before {
-    top: 0;
-    background: linear-gradient(to bottom, var(--ab-surface), rgba(31, 31, 31, 0));
-}
-
-html.ab-armed .ab-pf::after {
-    bottom: 0;
-    background: linear-gradient(to top, var(--ab-surface), rgba(31, 31, 31, 0));
 }
 
 html.ab-armed .ab-pf-list {
@@ -4074,11 +4097,6 @@ html.ab-armed .ab-prompt.is-visible {
     html.ab-armed .ab-pf {
         height: auto;
         overflow: visible;
-    }
-
-    html.ab-armed .ab-pf::before,
-    html.ab-armed .ab-pf::after {
-        display: none;
     }
 
     html.ab-armed .ab-pf-list {

@@ -3,7 +3,7 @@
  * Scope, deliberately small:
  *   1. the card stack: one scene wears .is-focus and CSS springs it larger;
  *      the rest rest smaller and darken via their scrim. A bouncing arrow
- *      prompt appears ~10s after a scene has held focus.
+ *      prompt appears ~5s after a scene has held focus.
  *   2. the horizontal timeline: vertical scroll scrubs the track sideways,
  *      fills the centre rail behind you, and stages the skill bars.
  *   3. Selected Work: a three-slot vertical conveyor of Project Portfolio
@@ -59,16 +59,20 @@
   function measureFlowTops() {
     var scenes = document.querySelectorAll(".ab-scene");
     var prev = [];
+    var docks = [];
+    // Read the sticky dock offset BEFORE neutralising position: once it is
+    // static, getComputedStyle(scene).top returns "auto".
     Array.prototype.forEach.call(scenes, function (scene, i) {
+      var d = parseFloat(getComputedStyle(scene).top);
+      docks[i] = isNaN(d) ? 0 : d;
       prev[i] = scene.style.position;
       scene.style.position = "static";
     });
-    Array.prototype.forEach.call(scenes, function (scene) {
+    Array.prototype.forEach.call(scenes, function (scene, i) {
       if (!scene.id) return;
-      var dock = parseFloat(getComputedStyle(scene).top);
       flowTops[scene.id] = {
         top: scene.getBoundingClientRect().top + window.pageYOffset,
-        dock: isNaN(dock) ? 0 : dock
+        dock: docks[i]
       };
     });
     Array.prototype.forEach.call(scenes, function (scene, i) {
@@ -86,8 +90,8 @@
     window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   }
 
-  // The bottom prompts jump to the next scene. Wired once, outside matchMedia,
-  // since the prompt elements are static DOM (card 3 is a plain link).
+  // The bottom prompts jump to the next scene; the top-edge labels jump back to
+  // a receded card. Wired once, outside matchMedia, since both are static DOM.
   var prompts = Array.prototype.slice.call(
     document.querySelectorAll(".ab-prompt")
   );
@@ -99,6 +103,15 @@
       });
     }
   );
+
+  var edges = Array.prototype.slice.call(
+    document.querySelectorAll(".ab-scene-edge")
+  );
+  edges.forEach(function (edge) {
+    edge.addEventListener("click", function () {
+      scrollToScene(edge.getAttribute("data-ab-jump"));
+    });
+  });
 
   var mm = gsap.matchMedia();
 
@@ -127,34 +140,51 @@
           return x.getAttribute("data-ab-for") === sceneId;
         })[0];
         if (!p) return;
-        // Only after the scene has genuinely held focus for ~10s.
+        // Only after the scene has genuinely held focus for ~5s.
         promptTimer = setTimeout(function () {
           p.classList.add("is-visible");
-        }, 10000);
+        }, 5000);
       }
 
-      // One scene wears .is-focus at a time; CSS springs it larger and lightens
-      // it back to the standard surface. Focus steps forward as each later
-      // scene rises through the viewport and steps back on scroll-up.
+      // One scene wears .is-focus at a time; CSS springs it larger and
+      // lightens it back to the standard surface, and the receded ones darken
+      // and show their jump-back label.
+      var focusIdx = -1;
       function setFocus(idx) {
+        if (idx === focusIdx) return;
+        focusIdx = idx;
         scenes.forEach(function (scene, j) {
           scene.classList.toggle("is-focus", j === idx);
+          var e = scene.querySelector(".ab-scene-edge");
+          // A receded scene (above the focused one) offers a jump-back.
+          if (e) e.disabled = j >= idx;
         });
         var focused = scenes[idx];
         if (focused) showPromptFor(focused.id);
       }
-      setFocus(0);
 
-      scenes.forEach(function (scene, i) {
-        if (i === 0) return; // the hero holds focus until scene 1 arrives
-        ScrollTrigger.create({
-          trigger: scene,
-          start: "top 38%",
-          refreshPriority: i,
-          onEnter: function () { setFocus(i); },
-          onLeaveBack: function () { setFocus(i - 1); }
-        });
-      });
+      // Focus follows the absolute scroll position against each scene's
+      // measured flow top. A plain rAF-throttled scroll listener, not a
+      // per-scene ScrollTrigger: sticky elements confuse ScrollTrigger's
+      // start calc, and this also stays correct after a jump-scroll.
+      function pickFocus() {
+        var mark = window.pageYOffset + window.innerHeight * 0.42;
+        var idx = 0;
+        for (var i = 0; i < scenes.length; i++) {
+          var ft = flowTops[scenes[i].id];
+          if (ft && mark >= ft.top) idx = i;
+        }
+        setFocus(idx);
+      }
+      var focusRaf = false;
+      function onFocusScroll() {
+        if (focusRaf) return;
+        focusRaf = true;
+        requestAnimationFrame(function () { focusRaf = false; pickFocus(); });
+      }
+      window.addEventListener("scroll", onFocusScroll, { passive: true });
+      ScrollTrigger.addEventListener("refresh", pickFocus);
+      pickFocus();
 
       /* ---- 2. horizontal timeline -------------------------------------- */
 
@@ -229,9 +259,12 @@
             pfList.appendChild(c);
           });
 
+          // offsetHeight, not getBoundingClientRect: the list lives inside the
+          // scaled .ab-detail card, so a rect height is scaled but the
+          // translateY we apply is in the list's own unscaled coordinates.
           var stepPx = function () {
             var gap = parseFloat(getComputedStyle(pfList).rowGap) || 0;
-            return originals[0].getBoundingClientRect().height + gap;
+            return originals[0].offsetHeight + gap;
           };
 
           var pos = 0; // translateY = -(n - pos) * step
@@ -280,12 +313,15 @@
       // visible prompt, or a translated conveyor with its clones.
       if (pfTimer) { clearInterval(pfTimer); pfTimer = null; }
       if (promptTimer) { clearTimeout(promptTimer); promptTimer = null; }
+      window.removeEventListener("scroll", onFocusScroll);
+      ScrollTrigger.removeEventListener("refresh", pickFocus);
 
       Array.prototype.forEach.call(
         document.querySelectorAll(".ab-scene"),
         function (s) { s.classList.remove("is-focus"); }
       );
       prompts.forEach(function (p) { p.classList.remove("is-visible"); });
+      edges.forEach(function (e) { e.disabled = true; });
 
       var list = document.querySelector("[data-ab-pf] .ab-pf-list");
       if (list) {
