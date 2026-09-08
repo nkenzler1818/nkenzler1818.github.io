@@ -1,17 +1,17 @@
-/* About page v3 motion.
+/* About page motion.
  *
  * Scope, deliberately small:
- *   1. the card stack, an outgoing scene scales down and dims as the next
- *      one rises over it, and its exposed top edge becomes a jump-back button
- *   2. the horizontal timeline, vertical scroll scrubs the track sideways and
- *      fills the centre rail behind you and stages the skill bars
+ *   1. the card stack: one scene wears .is-focus and CSS springs it larger;
+ *      the rest rest smaller and darken via their scrim. A bouncing arrow
+ *      prompt appears ~10s after a scene has held focus.
+ *   2. the horizontal timeline: vertical scroll scrubs the track sideways,
+ *      fills the centre rail behind you, and stages the skill bars.
+ *   3. Selected Work: a three-slot vertical conveyor of Project Portfolio
+ *      cards, stepping down one slot every ~1s.
  *
  * Everything else on the page is CSS. The hero entrance is a CSS animation so
  * it still plays if this file or GSAP never arrives, and all docking is
- * position:sticky, so this script creates ZERO ScrollTrigger pins. That is on
- * purpose: nested pins are what makes a stacked layout plus a horizontal
- * scrub fragile, and without them there is no pin spacing for the two
- * mechanics to fight over.
+ * position:sticky, so this script creates ZERO ScrollTrigger pins.
  *
  * Reduced motion is handled upstream. The pre-paint guard in about.html only
  * adds html.ab-armed when motion is allowed, and the stylesheet's default
@@ -80,52 +80,68 @@
     var target = document.getElementById(id);
     if (!target) return;
     var m = flowTops[id];
-    // Landing on flowTop - dock puts the scene back at exactly the offset it
-    // occupies when docked, so the jump ends where the eye expects it.
     var top = m
       ? m.top - m.dock
       : target.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   }
 
-  // Jump-back on a receded card's edge. Wired once, outside matchMedia, so the
-  // listener is not torn down and rebuilt on every breakpoint change. The
-  // buttons stay disabled until a scrub says otherwise, and CSS makes a
-  // disabled edge both invisible and pointer-events:none.
-  var edges = document.querySelectorAll(".ab-scene-edge");
-  Array.prototype.forEach.call(edges, function (edge) {
-    edge.addEventListener("click", function () {
-      scrollToScene(edge.getAttribute("data-ab-jump"));
-    });
-  });
+  // The bottom prompts jump to the next scene. Wired once, outside matchMedia,
+  // since the prompt elements are static DOM (card 3 is a plain link).
+  var prompts = Array.prototype.slice.call(
+    document.querySelectorAll(".ab-prompt")
+  );
+  Array.prototype.forEach.call(
+    document.querySelectorAll(".ab-prompt[data-ab-next]"),
+    function (p) {
+      p.addEventListener("click", function () {
+        scrollToScene(p.getAttribute("data-ab-next"));
+      });
+    }
+  );
 
   var mm = gsap.matchMedia();
 
-  // Below 721px the CSS already collapses the stack and the horizontal track,
-  // so building triggers there would animate elements that are no longer
-  // laid out for it. gsap.matchMedia reverts everything automatically when
-  // the query stops matching.
+  // Below 721px the CSS already collapses the stack, the horizontal track and
+  // the conveyor, so building triggers there would animate elements no longer
+  // laid out for it. gsap.matchMedia reverts everything when the query stops
+  // matching; the returned cleanup handles what it does not.
   mm.add("(min-width: 721px)", function () {
     var pfTimer = null;
+    var promptTimer = null;
 
     try {
       var scenes = Array.prototype.slice.call(
         document.querySelectorAll(".ab-scene")
       );
 
-      /* ---- 1. card stack: spring pop on the focused scene ------------ */
+      /* ---- 1. card stack: spring pop + delayed prompt --------------- */
 
-      // One scene wears .is-focus at a time; the CSS gives it a bouncy scale
-      // up (and the same easing back down when it recedes). This only decides
-      // which one. Focus steps forward as each later scene rises through the
-      // viewport and steps back on scroll-up, so it is fully bidirectional.
+      function showPromptFor(sceneId) {
+        if (promptTimer) {
+          clearTimeout(promptTimer);
+          promptTimer = null;
+        }
+        prompts.forEach(function (p) { p.classList.remove("is-visible"); });
+        var p = prompts.filter(function (x) {
+          return x.getAttribute("data-ab-for") === sceneId;
+        })[0];
+        if (!p) return;
+        // Only after the scene has genuinely held focus for ~10s.
+        promptTimer = setTimeout(function () {
+          p.classList.add("is-visible");
+        }, 10000);
+      }
+
+      // One scene wears .is-focus at a time; CSS springs it larger and lightens
+      // it back to the standard surface. Focus steps forward as each later
+      // scene rises through the viewport and steps back on scroll-up.
       function setFocus(idx) {
         scenes.forEach(function (scene, j) {
           scene.classList.toggle("is-focus", j === idx);
-          var e = scene.querySelector(".ab-scene-edge");
-          // A receded scene (above the focused one) offers a jump-back.
-          if (e) e.disabled = j >= idx;
         });
+        var focused = scenes[idx];
+        if (focused) showPromptFor(focused.id);
       }
       setFocus(0);
 
@@ -151,15 +167,10 @@
         var railFill = journey.querySelector("[data-ab-rail-fill]");
         var stops = journey.querySelectorAll(".ab-stop");
 
-        // Recomputed on every refresh via invalidateOnRefresh, so a resize or a
-        // late-loading font cannot leave the track short or overscrolled.
         var distance = function () {
           return Math.max(0, track.scrollWidth - inner.clientWidth);
         };
 
-        // The scene's sticky offset. The scrub should begin the moment the
-        // card docks, not when the section top reaches y=0, or the first stop
-        // starts moving while the heading is still travelling.
         var dockTop = function () {
           var v = parseFloat(getComputedStyle(journey).top);
           return isNaN(v) ? 0 : v;
@@ -172,9 +183,6 @@
             start: function () {
               return "top " + dockTop() + "px";
             },
-            // Ends with the runway, not with the journey card, because the
-            // card is only a viewport tall and the runway underneath it is
-            // what the scrub actually spends its scroll on.
             endTrigger: runway,
             end: "bottom bottom",
             scrub: 1,
@@ -185,49 +193,58 @@
 
         tl.to(track, { x: function () { return -distance(); }, duration: 1 }, 0);
 
-        // The rail is grey ahead of you and fills purple behind. It rides the
-        // same master timeline as the track, so it cannot drift out of sync
-        // with the stops travelling past it.
         if (railFill) {
           tl.to(railFill, { scaleX: 1, duration: 1 }, 0);
         }
 
-        // Skill rails ride the same master timeline rather than getting their
-        // own ScrollTriggers. Twelve extra trigger instances would cost more
-        // than the effect is worth, and sharing the timeline keeps each stop's
-        // fill locked to the moment that stop reaches the middle of the card.
         var lastIndex = stops.length - 1;
         Array.prototype.forEach.call(stops, function (stop, i) {
           var fills = stop.querySelectorAll(".ab-skill-fill");
           if (!fills.length) return;
           var at = lastIndex > 0 ? (i / lastIndex) * 0.82 : 0;
-          tl.to(
-            fills,
-            { scaleX: 1, duration: 0.13, stagger: 0.035 },
-            at
-          );
+          tl.to(fills, { scaleX: 1, duration: 0.13, stagger: 0.035 }, at);
         });
       }
 
-      /* ---- 3. selected-work flip carousel --------------------------- */
+      /* ---- 3. Selected Work conveyor -------------------------------- */
 
-      // One card faces forward; every ~3.4s it hard-flips to the next
-      // (CSS handles the flip and its small overshoot). Pauses while the
-      // pointer is over it or a card inside has focus. Below 721px the CSS
-      // shows the plain list and this loop is torn down with the breakpoint.
+      // Three slots visible; the whole stack steps down one slot every ~1.5s
+      // (1s hold, ~0.55s slide). The list is cloned once so the wrap is
+      // seamless: at the end we snap back with no transition to the identical
+      // clone frame. Pauses on hover / focus and while the tab is hidden.
       var pf = document.querySelector("[data-ab-pf]");
-      if (pf) {
-        var slots = Array.prototype.slice.call(
-          pf.querySelectorAll(".ab-pf-slot")
+      var pfList = pf && pf.querySelector(".ab-pf-list");
+
+      if (pf && pfList) {
+        var originals = Array.prototype.slice.call(
+          pfList.querySelectorAll(".ab-pf-slot")
         );
-        if (slots.length > 1) {
-          var pfIndex = 0;
+        var n = originals.length;
+
+        if (n >= 3) {
+          originals.forEach(function (s) {
+            var c = s.cloneNode(true);
+            c.setAttribute("aria-hidden", "true");
+            c.setAttribute("data-ab-clone", "");
+            pfList.appendChild(c);
+          });
+
+          var stepPx = function () {
+            var gap = parseFloat(getComputedStyle(pfList).rowGap) || 0;
+            return originals[0].getBoundingClientRect().height + gap;
+          };
+
+          var pos = 0; // translateY = -(n - pos) * step
           var pfPaused = false;
 
-          slots.forEach(function (s, i) {
-            s.classList.toggle("is-active", i === 0);
-            s.classList.remove("is-leaving");
-          });
+          var apply = function (withTransition) {
+            pfList.style.transition = withTransition
+              ? "transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1)"
+              : "none";
+            pfList.style.transform =
+              "translateY(" + (-(n - pos) * stepPx()) + "px)";
+          };
+          apply(false);
 
           var pfHold = function () { pfPaused = true; };
           var pfRelease = function () { pfPaused = false; };
@@ -238,56 +255,56 @@
 
           pfTimer = setInterval(function () {
             if (pfPaused || document.hidden) return;
-            var cur = slots[pfIndex];
-            pfIndex = (pfIndex + 1) % slots.length;
-            var nxt = slots[pfIndex];
-            cur.classList.remove("is-active");
-            cur.classList.add("is-leaving");
-            nxt.classList.add("is-active");
-            window.setTimeout(function () {
-              cur.classList.remove("is-leaving");
-            }, 520);
-          }, 3400);
+            pos += 1;
+            apply(true);
+            if (pos >= n) {
+              window.setTimeout(function () {
+                pos = 0;
+                apply(false);
+                void pfList.offsetHeight; // commit before the next transition
+              }, 580);
+            }
+          }, 1500);
         }
       }
-
     } catch (err) {
-      // Anything unexpected while building: tear the motion layer down and
-      // let the stylesheet's default state stand as the finished page.
       if (pfTimer) clearInterval(pfTimer);
+      if (promptTimer) clearTimeout(promptTimer);
       disarm();
       return;
     }
 
     return function () {
       // matchMedia reverts the GSAP tweens and triggers it created. Clean up
-      // what it does not: the interval, and any class the stack or the flip
-      // carousel left on an element, so a resize down cannot strand a scene
-      // scaled or a card mid-flip.
-      Array.prototype.forEach.call(edges, function (edge) {
-        edge.disabled = true;
-      });
-      if (pfTimer) {
-        clearInterval(pfTimer);
-        pfTimer = null;
-      }
+      // what it does not, so a resize down cannot strand a scaled scene, a
+      // visible prompt, or a translated conveyor with its clones.
+      if (pfTimer) { clearInterval(pfTimer); pfTimer = null; }
+      if (promptTimer) { clearTimeout(promptTimer); promptTimer = null; }
+
       Array.prototype.forEach.call(
         document.querySelectorAll(".ab-scene"),
         function (s) { s.classList.remove("is-focus"); }
       );
-      Array.prototype.forEach.call(
-        document.querySelectorAll(".ab-pf-slot"),
-        function (s) { s.classList.remove("is-active", "is-leaving"); }
-      );
+      prompts.forEach(function (p) { p.classList.remove("is-visible"); });
+
+      var list = document.querySelector("[data-ab-pf] .ab-pf-list");
+      if (list) {
+        list.style.transition = "";
+        list.style.transform = "";
+        Array.prototype.forEach.call(
+          list.querySelectorAll("[data-ab-clone]"),
+          function (c) { c.remove(); }
+        );
+      }
     };
   });
 
   measureFlowTops();
   ScrollTrigger.addEventListener("refresh", measureFlowTops);
 
-  // Scene heights depend on content, and the portrait plus the three personal
-  // images all settle after first paint. Without this the stack and the
-  // horizontal distance are measured against a shorter page.
+  // Scene heights depend on content that settles after first paint. Without
+  // this the stack and the horizontal distance are measured against a shorter
+  // page.
   window.addEventListener("load", function () {
     ScrollTrigger.refresh();
   });

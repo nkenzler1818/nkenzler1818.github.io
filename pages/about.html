@@ -195,14 +195,6 @@
         id="scene-hero"
         aria-labelledby="ab-hero-h"
       >
-        <button
-          class="ab-scene-edge"
-          type="button"
-          data-ab-jump="scene-hero"
-          disabled
-        >
-          Who I Am
-        </button>
         <div class="ab-scene-inner">
           <div class="ab-hero-grid">
             <div>
@@ -246,14 +238,6 @@
         id="scene-journey"
         aria-labelledby="ab-journey-h"
       >
-        <button
-          class="ab-scene-edge"
-          type="button"
-          data-ab-jump="scene-journey"
-          disabled
-        >
-          How I Got Here
-        </button>
         <div class="ab-scene-inner">
           <div class="ab-journey-head">
             <h2 class="ab-h2" id="ab-journey-h">How I Got Here</h2>
@@ -400,7 +384,7 @@
            journey card is docked and uncovered for its whole length. -->
       <div class="ab-journey-scroll" aria-hidden="true"></div>
 
-      <!-- Scene 3: education / honors / projects wheel -------------------- -->
+      <!-- Scene 3: education / honors / selected work -------------------- -->
       <section
         class="ab-scene ab-detail"
         id="scene-detail"
@@ -524,6 +508,43 @@
 
       <!-- Trailing gap: without it the last scene has no sticky range. -->
       <div class="ab-gap" aria-hidden="true"></div>
+
+      <!--
+        Wayfinding prompts. Fixed to the viewport (not inside a scene, whose
+        scale transform would push them off-screen) and outside the scenes in
+        the DOM. about-motion.js reveals exactly one, ~10s after its scene has
+        held focus: card 1 with a label, card 2 arrow-only, card 3 its own exit
+        CTA. Hidden entirely without motion.
+      -->
+      <button
+        class="ab-prompt"
+        type="button"
+        data-ab-for="scene-hero"
+        data-ab-next="scene-journey"
+        aria-label="Continue to How I Got Here"
+      >
+        <span class="ab-prompt-label">Click to continue</span>
+        <svg class="ab-prompt-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <button
+        class="ab-prompt ab-prompt--bare"
+        type="button"
+        data-ab-for="scene-journey"
+        data-ab-next="scene-detail"
+        aria-label="Continue to The Details"
+      >
+        <svg class="ab-prompt-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <a class="ab-prompt ab-prompt--exit" data-ab-for="scene-detail" href="projects.html">
+        <span class="ab-prompt-label">Visit the Projects page</span>
+        <svg class="ab-prompt-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </a>
     </main>
 
     <footer class="footer-bg py-12">

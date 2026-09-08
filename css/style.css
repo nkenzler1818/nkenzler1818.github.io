@@ -3143,7 +3143,9 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     --ab-hair: rgba(255, 255, 255, 0.1);
     --ab-dim: #8f8f8f;
     max-width: none;
-    padding: 0 1rem;
+    /* Bottom pad so the last card clears the footer by the same rhythm Home and
+       Projects use (their last section carries mb-16 = 4rem). */
+    padding: 0 1rem clamp(3.5rem, 7vh, 5rem);
 }
 
 /* --- scene shell ---------------------------------------------------------- */
@@ -3209,14 +3211,15 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     width: 100%;
 }
 
-/* Scrim used for the receding-card dim. A scrubbed opacity on a solid
-   overlay is far cheaper than filter: brightness() on a full-height card. */
+/* Scrim used for the receding-card dim. Black, not the page grey: an
+   off-focus / entering card reads DARKER than the standard #1F1F1F surface,
+   then lightens back up to it as it takes focus (scrim opacity -> 0). */
 .ab-scene-scrim {
     position: absolute;
     z-index: 3;
     inset: 0;
     border-radius: inherit;
-    background: #2A2A2A;
+    background: #000;
     opacity: 0;
     pointer-events: none;
 }
@@ -3280,11 +3283,14 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     --ab-top: 164px;
 }
 
-/* Last scene, so it is never covered and has no reason to hug the top. */
+/* Last scene, so it is never covered and has no reason to hug the top. Scale
+   it from the bottom edge so the focus pop grows upward and never pushes the
+   card's bottom down into the footer. */
 .ab-detail {
     --ab-top: 188px;
     justify-content: flex-start;
     padding-top: clamp(3rem, 10vh, 6rem);
+    transform-origin: center bottom;
 }
 
 .ab-hero-grid {
@@ -3614,7 +3620,7 @@ html.ab-armed .ab-scene {
 }
 
 html.ab-armed .ab-scene.is-focus {
-    transform: scale(1.03);
+    transform: scale(1.065);
     box-shadow:
         0 -12px 34px rgba(0, 0, 0, 0.36),
         0 16px 44px rgba(0, 0, 0, 0.3);
@@ -3634,7 +3640,7 @@ html.ab-armed .ab-scene-scrim {
 }
 
 html.ab-armed .ab-scene:not(.is-focus) > .ab-scene-scrim {
-    opacity: 0.5;
+    opacity: 0.55;
 }
 
 html.ab-armed .ab-journey-scroll {
@@ -3652,13 +3658,10 @@ html.ab-armed .ab-gap {
     height: 55svh;
 }
 
+/* The top-edge jump-back labels are retired: the only wayfinding affordance
+   now is the bouncing arrow prompt at the bottom of each card (.ab-prompt). */
 html.ab-armed .ab-scene-edge {
-    display: flex;
-}
-
-html.ab-armed .ab-scene-edge[disabled] {
-    pointer-events: none;
-    opacity: 0;
+    display: none;
 }
 
 /* Hero entrance. Pure CSS on load, so it still plays if cdnjs is blocked. */
@@ -3705,6 +3708,9 @@ html.ab-armed .ab-journey {
     overflow: hidden;
 }
 
+/* Thin, mostly-opaque masks hard against the stage edge, so a partly-scrolled
+   stop is cleanly cut off at the border instead of showing a wide faded ghost
+   across the middle of the card. */
 html.ab-armed .ab-journey-stage::before,
 html.ab-armed .ab-journey-stage::after {
     content: "";
@@ -3712,7 +3718,7 @@ html.ab-armed .ab-journey-stage::after {
     top: 0;
     bottom: 0;
     z-index: 2;
-    width: clamp(48px, 9vw, 130px);
+    width: clamp(16px, 2.5vw, 34px);
     pointer-events: none;
 }
 
@@ -3720,8 +3726,9 @@ html.ab-armed .ab-journey-stage::before {
     left: 0;
     background: linear-gradient(
         to right,
-        var(--ab-surface) 22%,
-        rgba(31, 31, 31, 0)
+        var(--ab-surface) 0,
+        var(--ab-surface) 62%,
+        rgba(31, 31, 31, 0) 100%
     );
 }
 
@@ -3729,8 +3736,9 @@ html.ab-armed .ab-journey-stage::after {
     right: 0;
     background: linear-gradient(
         to left,
-        var(--ab-surface) 22%,
-        rgba(31, 31, 31, 0)
+        var(--ab-surface) 0,
+        var(--ab-surface) 62%,
+        rgba(31, 31, 31, 0) 100%
     );
 }
 
@@ -3835,45 +3843,56 @@ html.ab-armed .ab-skill-fill {
     transform: scaleX(0);
 }
 
-/* Selected Work becomes a single-card flip. One .ab-pf-slot faces forward,
-   the rest are hinged out of view about the horizontal axis. about-motion.js
-   swaps .is-active on a timer and pauses on hover / focus; the incoming card
-   flips in with a small overshoot, the outgoing one flips away. No continuous
-   motion between beats. */
+/* Selected Work is a vertical conveyor: three card slots visible, and every
+   ~1s the whole stack steps down one slot. The bottom card leaves at the
+   bottom, a new one enters at the top. about-motion.js clones the list for a
+   seamless wrap and pauses the belt on hover / focus. */
 html.ab-armed .ab-pf {
-    height: 128px;
-    perspective: 900px;
+    --ab-pf-slot-h: 92px;
+    --ab-pf-gap: 0.5rem;
+    height: calc(3 * var(--ab-pf-slot-h) + 2 * var(--ab-pf-gap));
+    overflow: hidden;
+}
+
+/* Thin edge gradients (solid overlays, not mask-image, which breaks on
+   hover-promoted card layers) so an entering / exiting card dissolves at the
+   border instead of a hard line. Both surfaces are #1F1F1F, so this mostly
+   just hides a card's shadow as it clears the frame. */
+html.ab-armed .ab-pf::before,
+html.ab-armed .ab-pf::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 22px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+html.ab-armed .ab-pf::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--ab-surface), rgba(31, 31, 31, 0));
+}
+
+html.ab-armed .ab-pf::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--ab-surface), rgba(31, 31, 31, 0));
 }
 
 html.ab-armed .ab-pf-list {
     position: absolute;
-    inset: 0;
-    display: block;
-    transform-style: preserve-3d;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ab-pf-gap);
+    will-change: transform;
 }
 
 html.ab-armed .ab-pf-slot {
-    position: absolute;
-    inset: 0;
-    transform-origin: center center;
-    transform: rotateX(88deg);
-    opacity: 0;
-    pointer-events: none;
-    backface-visibility: hidden;
-    transition:
-        transform 0.5s cubic-bezier(0.2, 0.85, 0.25, 1.15),
-        opacity 0.42s ease;
-}
-
-html.ab-armed .ab-pf-slot.is-active {
-    transform: rotateX(0deg);
-    opacity: 1;
-    pointer-events: auto;
-}
-
-html.ab-armed .ab-pf-slot.is-leaving {
-    transform: rotateX(-88deg);
-    opacity: 0;
+    height: var(--ab-pf-slot-h);
+    flex: none;
 }
 
 html.ab-armed .ab-pf-card {
@@ -3881,6 +3900,91 @@ html.ab-armed .ab-pf-card {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow: hidden;
+}
+
+html.ab-armed .ab-pf-card .ab-pf-desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+/* --- bottom-of-card prompt ---------------------------------------------- */
+
+/* One per scene, hidden until about-motion.js has held focus on that scene
+   for ~10s, then bounces + shimmers. Card 1 carries a label, card 2 the
+   arrow alone, card 3 its own exit CTA. */
+.ab-prompt {
+    display: none;
+}
+
+html.ab-armed .ab-prompt {
+    position: fixed;
+    z-index: 6;
+    left: 50%;
+    bottom: clamp(1.25rem, 4.5vh, 2.75rem);
+    transform: translateX(-50%) translateY(8px);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.2rem;
+    background: none;
+    border: 0;
+    color: var(--accent-purple);
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+html.ab-armed .ab-prompt.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.ab-prompt-arrow {
+    width: 1.05rem;
+    height: 1.05rem;
+    display: block;
+    animation: ab-prompt-bounce 1.5s ease-in-out infinite;
+}
+
+.ab-prompt-label {
+    position: relative;
+    background: linear-gradient(
+        100deg,
+        var(--accent-purple) 0%,
+        var(--accent-purple) 38%,
+        #f0e6ff 50%,
+        var(--accent-purple) 62%,
+        var(--accent-purple) 100%);
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: ab-prompt-shimmer 2.6s linear infinite;
+}
+
+@keyframes ab-prompt-bounce {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(5px); }
+}
+
+@keyframes ab-prompt-shimmer {
+    from { background-position: 120% 0; }
+    to   { background-position: -120% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ab-prompt-arrow { animation: none; }
+    .ab-prompt-label { animation: none; }
 }
 
 /* --- responsive ----------------------------------------------------------- */
@@ -3901,7 +4005,7 @@ html.ab-armed .ab-pf-card {
     }
 
     html.ab-armed .ab-pf {
-        height: 132px;
+        --ab-pf-slot-h: 84px;
     }
 }
 
@@ -3915,7 +4019,8 @@ html.ab-armed .ab-pf-card {
         transform: none;
     }
 
-    html.ab-armed .ab-scene-edge {
+    html.ab-armed .ab-scene-edge,
+    html.ab-armed .ab-prompt {
         display: none;
     }
 
@@ -3965,27 +4070,36 @@ html.ab-armed .ab-pf-card {
         display: none;
     }
 
-    /* Flip stage collapses back to the plain card list. */
+    /* Conveyor collapses back to the plain card list. */
     html.ab-armed .ab-pf {
         height: auto;
-        perspective: none;
+        overflow: visible;
+    }
+
+    html.ab-armed .ab-pf::before,
+    html.ab-armed .ab-pf::after {
+        display: none;
     }
 
     html.ab-armed .ab-pf-list {
         position: static;
         display: grid;
+        gap: 0.6rem;
+        transform: none !important;
     }
 
     html.ab-armed .ab-pf-slot {
-        position: static;
-        transform: none;
-        opacity: 1;
-        pointer-events: auto;
-        transition: none;
+        height: auto;
     }
 
     html.ab-armed .ab-pf-card {
         display: block;
+        overflow: visible;
+    }
+
+    html.ab-armed .ab-pf-card .ab-pf-desc {
+        display: block;
+        -webkit-line-clamp: unset;
     }
 
     html.ab-armed .ab-skill-fill {
