@@ -464,68 +464,58 @@
             <div>
               <h3 class="ab-col-title">Selected Work</h3>
               <!--
-                A drum turning about the horizontal axis: each face is rotated
-                to its own angle then pushed out to the radius, so items rise
-                toward the viewer and fall away behind. Content is real, taken
-                from pages/projects.html, and every face routes there.
+                A downsized take on the Project Portfolio cards on
+                pages/projects.html: same charcoal card, same purple title.
+                With motion on, one card shows at a time and hard-flips to the
+                next on a timer (pauses on hover / focus). With motion off it
+                is just the full list. Every card routes to Projects.
               -->
-              <div class="ab-wheel">
-                <div class="ab-wheel-ring">
-                  <div class="ab-wheel-slot" style="--ab-angle: 0deg">
-                    <a class="ab-wheel-item" href="projects.html">
-                      <span class="ab-wheel-title"
-                        >Pharmacovigilance RAG Pipeline</span
-                      >
-                      <span class="ab-wheel-meta"
-                        >Agentic RAG system for drug safety monitoring</span
-                      >
+              <div class="ab-pf" data-ab-pf>
+                <ul class="ab-pf-list">
+                  <li class="ab-pf-slot">
+                    <a class="project-card ab-pf-card" href="projects.html">
+                      <h3>Pharmacovigilance RAG Pipeline</h3>
+                      <p class="ab-pf-desc">Agentic RAG system for drug safety monitoring.</p>
+                      <p class="ab-pf-meta">Graduate Work</p>
                     </a>
-                  </div>
-                  <div class="ab-wheel-slot" style="--ab-angle: 60deg">
-                    <a class="ab-wheel-item" href="projects.html">
-                      <span class="ab-wheel-title"
-                        >Native x Japan Market Entry</span
-                      >
-                      <span class="ab-wheel-meta"
-                        >International marketing project</span
-                      >
+                  </li>
+                  <li class="ab-pf-slot">
+                    <a class="project-card ab-pf-card" href="projects.html">
+                      <h3>Native &times; Japan Market Entry</h3>
+                      <p class="ab-pf-desc">International marketing strategy project.</p>
+                      <p class="ab-pf-meta">Graduate Work</p>
                     </a>
-                  </div>
-                  <div class="ab-wheel-slot" style="--ab-angle: 120deg">
-                    <a class="ab-wheel-item" href="projects.html">
-                      <span class="ab-wheel-title">AI Trust in Digital Search</span>
-                      <span class="ab-wheel-meta"
-                        >Quantitative research design and hypothesis testing</span
-                      >
+                  </li>
+                  <li class="ab-pf-slot">
+                    <a class="project-card ab-pf-card" href="projects.html">
+                      <h3>AI Trust in Digital Search</h3>
+                      <p class="ab-pf-desc">Quantitative research design and hypothesis testing.</p>
+                      <p class="ab-pf-meta">Graduate Work</p>
                     </a>
-                  </div>
-                  <div class="ab-wheel-slot" style="--ab-angle: 180deg">
-                    <a class="ab-wheel-item" href="projects.html">
-                      <span class="ab-wheel-title"
-                        >Campaign Efficiency Case Study</span
-                      >
-                      <span class="ab-wheel-meta"
-                        >Data modeling, SQL analysis, visualization</span
-                      >
+                  </li>
+                  <li class="ab-pf-slot">
+                    <a class="project-card ab-pf-card" href="projects.html">
+                      <h3>Campaign Efficiency Case Study</h3>
+                      <p class="ab-pf-desc">Data modeling, SQL analysis, visualization.</p>
+                      <p class="ab-pf-meta">Independent Project</p>
                     </a>
-                  </div>
-                  <div class="ab-wheel-slot" style="--ab-angle: 240deg">
-                    <a class="ab-wheel-item" href="projects.html">
-                      <span class="ab-wheel-title">Building My Website</span>
-                      <span class="ab-wheel-meta"
-                        >Design and development iterations</span
-                      >
+                  </li>
+                  <li class="ab-pf-slot">
+                    <a class="project-card ab-pf-card" href="projects.html">
+                      <h3>Building My Website</h3>
+                      <p class="ab-pf-desc">Design and development iterations.</p>
+                      <p class="ab-pf-meta">Independent Project</p>
                     </a>
-                  </div>
-                  <div class="ab-wheel-slot" style="--ab-angle: 300deg">
-                    <a class="ab-wheel-item" href="projects.html">
-                      <span class="ab-wheel-title">Photography</span>
-                      <span class="ab-wheel-meta">Personal portfolio series</span>
+                  </li>
+                  <li class="ab-pf-slot">
+                    <a class="project-card ab-pf-card" href="projects.html">
+                      <h3>Photography</h3>
+                      <p class="ab-pf-desc">Personal portfolio series.</p>
+                      <p class="ab-pf-meta">Independent Project</p>
                     </a>
-                  </div>
-                </div>
+                  </li>
+                </ul>
               </div>
-              <a class="ab-wheel-cta" href="projects.html">See the work</a>
             </div>
           </div>
         </div>

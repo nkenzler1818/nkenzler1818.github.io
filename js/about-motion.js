@@ -106,42 +106,38 @@
   // laid out for it. gsap.matchMedia reverts everything automatically when
   // the query stops matching.
   mm.add("(min-width: 721px)", function () {
+    var pfTimer = null;
+
     try {
       var scenes = Array.prototype.slice.call(
         document.querySelectorAll(".ab-scene")
       );
 
-      /* ---- 1. card stack ---------------------------------------------- */
+      /* ---- 1. card stack: spring pop on the focused scene ------------ */
+
+      // One scene wears .is-focus at a time; the CSS gives it a bouncy scale
+      // up (and the same easing back down when it recedes). This only decides
+      // which one. Focus steps forward as each later scene rises through the
+      // viewport and steps back on scroll-up, so it is fully bidirectional.
+      function setFocus(idx) {
+        scenes.forEach(function (scene, j) {
+          scene.classList.toggle("is-focus", j === idx);
+          var e = scene.querySelector(".ab-scene-edge");
+          // A receded scene (above the focused one) offers a jump-back.
+          if (e) e.disabled = j >= idx;
+        });
+      }
+      setFocus(0);
 
       scenes.forEach(function (scene, i) {
-        var next = scenes[i + 1];
-        if (!next) return; // last scene never recedes
-
-        var scrim = scene.querySelector(".ab-scene-scrim");
-        var edge = scene.querySelector(".ab-scene-edge");
-        if (!scrim) return;
-
-        gsap
-          .timeline({
-            defaults: { ease: "none" },
-            scrollTrigger: {
-              trigger: next,
-              start: "top bottom",
-              end: "top top",
-              scrub: true,
-              // Scenes are created top to bottom, but say so explicitly so a
-              // refresh recalculates them in page order.
-              refreshPriority: i,
-              onUpdate: function (self) {
-                if (!edge) return;
-                // Only offer the jump-back once the card has actually receded
-                // far enough for its edge to be visible and legible.
-                edge.disabled = self.progress < 0.65;
-              }
-            }
-          })
-          .to(scene, { scale: 0.94 }, 0)
-          .to(scrim, { opacity: 0.55 }, 0);
+        if (i === 0) return; // the hero holds focus until scene 1 arrives
+        ScrollTrigger.create({
+          trigger: scene,
+          start: "top 38%",
+          refreshPriority: i,
+          onEnter: function () { setFocus(i); },
+          onLeaveBack: function () { setFocus(i - 1); }
+        });
       });
 
       /* ---- 2. horizontal timeline -------------------------------------- */
@@ -213,19 +209,76 @@
         });
       }
 
+      /* ---- 3. selected-work flip carousel --------------------------- */
+
+      // One card faces forward; every ~3.4s it hard-flips to the next
+      // (CSS handles the flip and its small overshoot). Pauses while the
+      // pointer is over it or a card inside has focus. Below 721px the CSS
+      // shows the plain list and this loop is torn down with the breakpoint.
+      var pf = document.querySelector("[data-ab-pf]");
+      if (pf) {
+        var slots = Array.prototype.slice.call(
+          pf.querySelectorAll(".ab-pf-slot")
+        );
+        if (slots.length > 1) {
+          var pfIndex = 0;
+          var pfPaused = false;
+
+          slots.forEach(function (s, i) {
+            s.classList.toggle("is-active", i === 0);
+            s.classList.remove("is-leaving");
+          });
+
+          var pfHold = function () { pfPaused = true; };
+          var pfRelease = function () { pfPaused = false; };
+          pf.addEventListener("pointerenter", pfHold);
+          pf.addEventListener("pointerleave", pfRelease);
+          pf.addEventListener("focusin", pfHold);
+          pf.addEventListener("focusout", pfRelease);
+
+          pfTimer = setInterval(function () {
+            if (pfPaused || document.hidden) return;
+            var cur = slots[pfIndex];
+            pfIndex = (pfIndex + 1) % slots.length;
+            var nxt = slots[pfIndex];
+            cur.classList.remove("is-active");
+            cur.classList.add("is-leaving");
+            nxt.classList.add("is-active");
+            window.setTimeout(function () {
+              cur.classList.remove("is-leaving");
+            }, 520);
+          }, 3400);
+        }
+      }
+
     } catch (err) {
       // Anything unexpected while building: tear the motion layer down and
       // let the stylesheet's default state stand as the finished page.
+      if (pfTimer) clearInterval(pfTimer);
       disarm();
       return;
     }
 
     return function () {
-      // matchMedia reverts the tweens and triggers it created; just make sure
-      // no edge button is left clickable in a layout that has no stack.
+      // matchMedia reverts the GSAP tweens and triggers it created. Clean up
+      // what it does not: the interval, and any class the stack or the flip
+      // carousel left on an element, so a resize down cannot strand a scene
+      // scaled or a card mid-flip.
       Array.prototype.forEach.call(edges, function (edge) {
         edge.disabled = true;
       });
+      if (pfTimer) {
+        clearInterval(pfTimer);
+        pfTimer = null;
+      }
+      Array.prototype.forEach.call(
+        document.querySelectorAll(".ab-scene"),
+        function (s) { s.classList.remove("is-focus"); }
+      );
+      Array.prototype.forEach.call(
+        document.querySelectorAll(".ab-pf-slot"),
+        function (s) { s.classList.remove("is-active", "is-leaving"); }
+      );
     };
   });
 
