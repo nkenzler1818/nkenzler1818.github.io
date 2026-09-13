@@ -20,31 +20,22 @@
         } catch (err) {}
       })();
 
-      // About page motion guard. Also pre-paint, and deliberately the ONLY
-      // thing that turns motion on.
-      //
-      // The stylesheet's default state is the finished page: every scene
-      // visible, the timeline vertical, nothing transformed. Docked, hidden
-      // and horizontal states live exclusively under html.ab-armed. So the
-      // early return below is the whole reduced-motion implementation, and
-      // there is no reachable state where content is hidden.
-      //
-      // The timeout is the second backstop: if js/about-motion.js never
-      // reports ready (blocked cdnjs, script error, slow network), the class
-      // comes off and the page is a complete static document instead of a
-      // broken half-animated one.
-      (function () {
-        try {
-          var doc = document.documentElement;
-          if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-          doc.classList.add("ab-armed");
-          setTimeout(function () {
-            if (!doc.classList.contains("ab-ready")) {
-              doc.classList.remove("ab-armed");
-            }
+      // Pre-paint enhancement guard. The hero itself is never a blank loader.
+      window.aboutBoot = { expired: false };
+      if (matchMedia('(prefers-reduced-motion:no-preference)').matches && !location.search.includes('view=all')) {
+        document.documentElement.classList.add('about-intro');
+        window.aboutBoot.introTimer = setTimeout(function () {
+          document.documentElement.classList.remove('about-intro');
+        }, 4500);
+        if (matchMedia('(min-width:721px) and (min-height:650px)').matches) {
+          document.documentElement.classList.add('about-pending');
+          window.aboutBoot.timer = setTimeout(function () {
+            window.aboutBoot.expired = true;
+            document.documentElement.classList.remove('about-pending', 'about-intro');
+            if (window.aboutPage) window.aboutPage.fallback();
           }, 2000);
-        } catch (err) {}
-      })();
+        }
+      }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#2A2A2A" />
@@ -68,7 +59,7 @@
     <script src="../js/about-motion.js" defer></script>
     <script>
       window.addEventListener("scroll", function () {
-        const nav = document.querySelector("nav");
+        const nav = document.querySelector(".floating-nav");
         const isMobile = window.innerWidth <= 768;
 
         if (isMobile) {
@@ -106,9 +97,10 @@
       });
     </script>
   </head>
-  <body class="text-white font-sans about-page">
+  <body class="text-white font-sans about-page about-v5-page">
+    <a class="about-skip" href="#about-content">Skip to About content</a>
     <div class="nav-scroll-blur" aria-hidden="true"></div>
-    <header class="sticky top-6 z-10">
+    <div class="about-header-track"><header class="sticky top-6 z-10">
       <nav class="max-w-4xl mx-auto px-4 py-4 floating-nav">
         <a
           href="../index.html"
@@ -174,34 +166,21 @@
           </div>
         </div>
       </nav>
-    </header>
+    </header></div>
 
     <!--
-      Three scenes, each one sticky card, all siblings of a single tall
-      .ab-scenes container. The shared container is what lets the deck
-      accumulate: a sticky element stays docked until its CONTAINER scrolls
-      past, so the hero holds position while the later scenes rise over it and
-      leave its top edge showing. The empty .ab-journey-scroll after the
-      journey scene is where the horizontal scrub gets its scroll distance,
-      which is why GSAP needs no pin anywhere on this page.
+      Arrows navigate every card and chronology event in both directions.
+      Native scrolling and year links reach the same states. The complete chronology and work list
+      below are also the static fallback. CSS owns all sticky positioning.
 
       Copy here is PLACEHOLDER, written to the character ceilings in the build
       plan so the layout is validated at real length. Real copy replaces it.
     -->
-    <main class="about-v3 ab-scenes">
-      <!-- Scene 1: hero ------------------------------------------------- -->
-      <section
-        class="ab-scene ab-hero"
-        id="scene-hero"
-        aria-labelledby="ab-hero-h"
-      >
-        <button class="ab-scene-edge" type="button" data-ab-jump="scene-hero" disabled>
-          Who I Am
-        </button>
-        <div class="ab-scene-inner">
-          <div class="ab-hero-grid">
+    <main class="about-v5" id="about-content">
+      <div class="about-stage">
+        <section class="about-card" id="who" aria-labelledby="ab-hero-h"><div class="card-scroll" tabindex="0" aria-label="Who I Am"><div class="ab-hero-grid">
             <div>
-              <h1 class="ab-h1" id="ab-hero-h">
+              <h1 class="ab-h1" id="ab-hero-h" tabindex="-1">
                 <span class="ab-line">I take things apart.</span>
               </h1>
               <p class="ab-lede">
@@ -229,47 +208,17 @@
               />
             </figure>
           </div>
-        </div>
-        <div class="ab-scene-scrim" aria-hidden="true"></div>
-      </section>
-
-      <div class="ab-gap" aria-hidden="true"></div>
-
-      <!-- Scene 2: horizontal timeline ----------------------------------- -->
-      <section
-        class="ab-scene ab-journey"
-        id="scene-journey"
-        aria-labelledby="ab-journey-h"
-      >
-        <button class="ab-scene-edge" type="button" data-ab-jump="scene-journey" disabled>
-          How I Got Here
-        </button>
-        <div class="ab-scene-inner">
-          <div class="ab-journey-head">
-            <h2 class="ab-h2" id="ab-journey-h">How I Got Here</h2>
-          </div>
-
-          <!--
-            The rail is stuck at the stage's vertical centre and never moves;
-            the track slides underneath it. Both sit in the same stage so the
-            row boundary of the track lands exactly on the rail, which is what
-            keeps each node dot welded to the line while it scrubs.
-          -->
-          <div class="ab-journey-stage">
-            <div class="ab-journey-rail" aria-hidden="true">
-              <span class="ab-journey-rail-fill" data-ab-rail-fill></span>
-            </div>
-
-            <div class="ab-track" data-ab-track>
-              <article class="ab-stop">
-                <span class="ab-stop-node" aria-hidden="true"></span>
-                <span class="ab-stop-year">2019</span>
-                <h3 class="ab-stop-label">The first job</h3>
-                <p class="ab-stop-line">
-                  Nordstrom fulfillment. Learned what consistent execution
-                  under pressure costs.
-                </p>
-                <div class="ab-skills">
+        </div></section>
+        <section class="about-card" id="journey" aria-labelledby="journey-heading">
+          <div class="journey-heading"><h2 id="journey-heading" tabindex="-1">How I Got Here</h2><span class="year-range">2019 / <span data-end-year>2026</span></span></div>
+          <div class="journey-scroll" tabindex="0" aria-label="Timeline. Scroll the page through the years, or select a year.">
+            <div class="journey-runway"><div class="journey-window">
+              <div class="timeline-position">
+                <div class="chronology-rail" aria-hidden="true"><span class="chronology-fill"></span></div>
+                <ol class="timeline" aria-label="Chronology from 2019">
+    <li class="timeline-event" id="event-2019" data-year="2019" data-proof="Nordstrom fulfillment · Consistent execution">
+      <time datetime="2019">2019</time><span class="event-node" aria-hidden="true"></span>
+      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">The first job</h3><p>Nordstrom fulfillment. Learned what consistent execution under pressure costs.</p><div class="ab-skills">
                   <div class="ab-skill">
                     <span>Execution</span>
                     <span class="ab-skill-rail"
@@ -289,17 +238,12 @@
                     ></span>
                   </div>
                 </div>
-              </article>
-
-              <article class="ab-stop">
-                <span class="ab-stop-node" aria-hidden="true"></span>
-                <span class="ab-stop-year">2021</span>
-                <h3 class="ab-stop-label">Dogs, and a payroll</h3>
-                <p class="ab-stop-line">
-                  Ran a training venture to pay for school. Teaching was the
-                  part that stuck.
-                </p>
-                <div class="ab-skills">
+              </div>
+      <button type="button" class="event-compact" hidden><strong>The first job</strong><span>Nordstrom fulfillment · Consistent execution</span></button></div>
+    </li>
+<li class="timeline-event" id="event-2021" data-year="2021" data-proof="Training venture · Teaching + ownership">
+      <time datetime="2021">2021</time><span class="event-node" aria-hidden="true"></span>
+      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">Dogs, and a payroll</h3><p>Ran a training venture to pay for school. Teaching was the part that stuck.</p><div class="ab-skills">
                   <div class="ab-skill">
                     <span>Execution</span>
                     <span class="ab-skill-rail"
@@ -319,17 +263,12 @@
                     ></span>
                   </div>
                 </div>
-              </article>
-
-              <article class="ab-stop">
-                <span class="ab-stop-node" aria-hidden="true"></span>
-                <span class="ab-stop-year">2023</span>
-                <h3 class="ab-stop-label">The gym floor</h3>
-                <p class="ab-stop-line">
-                  Personal training. Same lesson, louder: the win is when they
-                  do it without me.
-                </p>
-                <div class="ab-skills">
+              </div>
+      <button type="button" class="event-compact" hidden><strong>Dogs, and a payroll</strong><span>Training venture · Teaching + ownership</span></button></div>
+    </li>
+<li class="timeline-event" id="event-2023" data-year="2023" data-proof="Personal training · Client independence">
+      <time datetime="2023">2023</time><span class="event-node" aria-hidden="true"></span>
+      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">The gym floor</h3><p>Personal training. Same lesson, louder: the win is when they do it without me.</p><div class="ab-skills">
                   <div class="ab-skill">
                     <span>Execution</span>
                     <span class="ab-skill-rail"
@@ -349,17 +288,12 @@
                     ></span>
                   </div>
                 </div>
-              </article>
-
-              <article class="ab-stop">
-                <span class="ab-stop-node" aria-hidden="true"></span>
-                <span class="ab-stop-year">2026</span>
-                <h3 class="ab-stop-label">Where I am now</h3>
-                <p class="ab-stop-line">
-                  Marketing for oncology KOLs. Same teaching instinct, a much
-                  larger room.
-                </p>
-                <div class="ab-skills">
+              </div>
+      <button type="button" class="event-compact" hidden><strong>The gym floor</strong><span>Personal training · Client independence</span></button></div>
+    </li>
+<li class="timeline-event" id="event-2026" data-year="2026" data-proof="Oncology marketing · Communication + systems">
+      <time datetime="2026">2026</time><span class="event-node" aria-hidden="true"></span>
+      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">Where I am now</h3><p>Marketing for oncology KOLs. Same teaching instinct, a much larger room.</p><div class="ab-skills">
                   <div class="ab-skill">
                     <span>Execution</span>
                     <span class="ab-skill-rail"
@@ -379,182 +313,72 @@
                     ></span>
                   </div>
                 </div>
-              </article>
-            </div>
+              </div>
+      <button type="button" class="event-compact" hidden><strong>Where I am now</strong><span>Oncology marketing · Communication + systems</span></button></div>
+    </li>
+   </ol>
+              </div>
+            </div></div>
           </div>
-        </div>
-        <div class="ab-scene-scrim" aria-hidden="true"></div>
-      </section>
-
-      <!-- Scroll runway for the horizontal scrub. Empty on purpose: the
-           journey card is docked and uncovered for its whole length. -->
-      <div class="ab-journey-scroll" aria-hidden="true"></div>
-
-      <!-- Scene 3: education / honors / selected work -------------------- -->
-      <section
-        class="ab-scene ab-detail"
-        id="scene-detail"
-        aria-labelledby="ab-detail-h"
-      >
-        <div class="ab-scene-inner">
-          <h2 class="ab-h2" id="ab-detail-h">The Details</h2>
-
-          <div class="ab-detail-grid">
-            <div class="ab-detail-lists">
-              <div>
-                <h3 class="ab-col-title">Education</h3>
-                <ul class="ab-list">
-                  <li>
-                    <p class="ab-list-title">MS Marketing</p>
-                    <p class="ab-list-meta">
-                      University of Arizona, Eller. Expected Dec 2026
-                    </p>
-                  </li>
-                  <li>
-                    <p class="ab-list-title">BS Business Administration</p>
-                    <p class="ab-list-meta">University of Arizona, May 2025</p>
-                  </li>
-                  <li>
-                    <p class="ab-list-title">AA Economics, AA Liberal Arts</p>
-                    <p class="ab-list-meta">
-                      Santa Barbara City College, May 2023
-                    </p>
-                  </li>
-                  <li>
-                    <p class="ab-list-title">High School Diploma</p>
-                    <p class="ab-list-meta">
-                      Bellarmine College Preparatory, May 2021
-                    </p>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 class="ab-col-title">
-                  Honors and Certifications
-                  <span class="ab-placeholder">Placeholder</span>
-                </h3>
-                <ul class="ab-list">
-                  <li>
-                    <p class="ab-list-title">Honor title goes here</p>
-                    <p class="ab-list-meta">Awarding body, year</p>
-                  </li>
-                  <li>
-                    <p class="ab-list-title">Certification name here</p>
-                    <p class="ab-list-meta">Issuing organization, year</p>
-                  </li>
-                  <li>
-                    <p class="ab-list-title">Certification name here</p>
-                    <p class="ab-list-meta">Issuing organization, year</p>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div>
-              <h3 class="ab-col-title">Selected Work</h3>
-              <!--
-                A downsized take on the Project Portfolio cards on
-                pages/projects.html: same charcoal card, same purple title.
-                With motion on, one card shows at a time and hard-flips to the
-                next on a timer (pauses on hover / focus). With motion off it
-                is just the full list. Every card routes to Projects.
-              -->
-              <div class="ab-pf" data-ab-pf>
-                <ul class="ab-pf-list">
-                  <li class="ab-pf-slot">
-                    <a class="project-card ab-pf-card" href="projects.html">
+        </section>
+        <section class="about-card" id="details" aria-labelledby="details-heading"><div class="card-scroll">
+        <h2 class="scene-title" id="details-heading" tabindex="-1">The Details</h2>
+        <div class="detail-columns">
+          <div><h3 class="column-label">Education</h3><ul class="education">
+            <li><strong>MS Marketing</strong><p>University of Arizona, Eller. Expected Dec 2026</p></li>
+            <li><strong>BS Business Administration</strong><p>University of Arizona, May 2025</p></li>
+            <li><strong>AA Economics, AA Liberal Arts</strong><p>Santa Barbara City College, May 2023</p></li>
+            <li><strong>High School Diploma</strong><p>Bellarmine College Preparatory, May 2021</p></li>
+          </ul><div class="honors"><h3 class="column-label">Honors and Certifications <span class="caption">Placeholder</span></h3><ul class="education">
+            <li><strong>Honor title goes here</strong><p>Awarding body, year</p></li>
+            <li><strong>Certification name here</strong><p>Issuing organization, year</p></li>
+            <li><strong>Certification name here</strong><p>Issuing organization, year</p></li>
+          </ul></div></div>
+          <div><h3 class="column-label">Selected Work</h3><div class="work-window" tabindex="0" aria-label="Selected Work. Rotation pauses on hover or focus."><div class="work-track"><a class="project-card tile-work-card" href="projects.html">
                       <h3>Pharmacovigilance RAG Pipeline</h3>
-                      <p class="ab-pf-desc">Agentic RAG system for drug safety monitoring.</p>
-                      <p class="ab-pf-meta">Graduate Work</p>
+                      <p class="work-description">Agentic RAG system for drug safety monitoring.</p>
+                      <p class="work-meta">Graduate Work</p>
                     </a>
-                  </li>
-                  <li class="ab-pf-slot">
-                    <a class="project-card ab-pf-card" href="projects.html">
+<a class="project-card tile-work-card" href="projects.html">
                       <h3>Native &times; Japan Market Entry</h3>
-                      <p class="ab-pf-desc">International marketing strategy project.</p>
-                      <p class="ab-pf-meta">Graduate Work</p>
+                      <p class="work-description">International marketing strategy project.</p>
+                      <p class="work-meta">Graduate Work</p>
                     </a>
-                  </li>
-                  <li class="ab-pf-slot">
-                    <a class="project-card ab-pf-card" href="projects.html">
+<a class="project-card tile-work-card" href="projects.html">
                       <h3>AI Trust in Digital Search</h3>
-                      <p class="ab-pf-desc">Quantitative research design and hypothesis testing.</p>
-                      <p class="ab-pf-meta">Graduate Work</p>
+                      <p class="work-description">Quantitative research design and hypothesis testing.</p>
+                      <p class="work-meta">Graduate Work</p>
                     </a>
-                  </li>
-                  <li class="ab-pf-slot">
-                    <a class="project-card ab-pf-card" href="projects.html">
+<a class="project-card tile-work-card" href="projects.html">
                       <h3>Campaign Efficiency Case Study</h3>
-                      <p class="ab-pf-desc">Data modeling, SQL analysis, visualization.</p>
-                      <p class="ab-pf-meta">Independent Project</p>
+                      <p class="work-description">Data modeling, SQL analysis, visualization.</p>
+                      <p class="work-meta">Independent Project</p>
                     </a>
-                  </li>
-                  <li class="ab-pf-slot">
-                    <a class="project-card ab-pf-card" href="projects.html">
+<a class="project-card tile-work-card" href="projects.html">
                       <h3>Building My Website</h3>
-                      <p class="ab-pf-desc">Design and development iterations.</p>
-                      <p class="ab-pf-meta">Independent Project</p>
+                      <p class="work-description">Design and development iterations.</p>
+                      <p class="work-meta">Independent Project</p>
                     </a>
-                  </li>
-                  <li class="ab-pf-slot">
-                    <a class="project-card ab-pf-card" href="projects.html">
+<a class="project-card tile-work-card" href="projects.html">
                       <h3>Photography</h3>
-                      <p class="ab-pf-desc">Personal portfolio series.</p>
-                      <p class="ab-pf-meta">Independent Project</p>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <a class="ab-pf-cta" href="projects.html">See all projects</a>
-            </div>
-          </div>
+                      <p class="work-description">Personal portfolio series.</p>
+                      <p class="work-meta">Independent Project</p>
+                    </a></div></div><a class="btn-dark-purple tile-cta" href="projects.html">See all projects <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 16h21M17 7l9 9-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
-        <div class="ab-scene-scrim" aria-hidden="true"></div>
-      </section>
-
-      <!-- Trailing gap: without it the last scene has no sticky range. -->
-      <div class="ab-gap" aria-hidden="true"></div>
-
-      <!--
-        Wayfinding prompts. Fixed to the viewport (not inside a scene, whose
-        scale transform would push them off-screen) and outside the scenes in
-        the DOM. about-motion.js reveals exactly one, ~5s after its scene has
-        held focus: card 1 with a label, card 2 arrow-only, card 3 its own exit
-        CTA. Hidden entirely without motion.
-      -->
-      <button
-        class="ab-prompt"
-        type="button"
-        data-ab-for="scene-hero"
-        data-ab-next="scene-journey"
-        aria-label="Continue to How I Got Here"
-      >
-        <span class="ab-prompt-label">Click to continue</span>
-        <svg class="ab-prompt-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
-      <button
-        class="ab-prompt ab-prompt--bare"
-        type="button"
-        data-ab-for="scene-journey"
-        data-ab-next="scene-detail"
-        aria-label="Continue to The Details"
-      >
-        <svg class="ab-prompt-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
-      <a class="ab-prompt ab-prompt--exit" data-ab-for="scene-detail" href="projects.html">
-        <span class="ab-prompt-label">Visit the Projects page</span>
-        <svg class="ab-prompt-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </a>
+      </div></section>
+        <div class="return-layer" aria-label="Return to an earlier section" hidden><div class="deck-back" data-back="0" hidden><button class="return-edge" type="button" data-scene="0">Who I Am<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M24 24 8 8M8 22V8h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><div class="deck-back" data-back="1" hidden><button class="return-edge" type="button" data-scene="1">How I Got Here<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M24 24 8 8M8 22V8h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+        <div class="navigation-track" hidden>
+          <nav class="card-navigation" aria-label="About card and timeline navigation">
+            <button type="button" data-step="-1" aria-label="Previous About state" hidden><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 27V6M7 15l9-9 9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" data-step="1" aria-label="Next: How I Got Here, 2019"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 5v21M7 17l9 9 9-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </nav>
+        </div>
+        <span class="about-status" role="status" aria-live="polite" aria-atomic="true"></span>
+      </div>
+      <div class="about-controls" hidden><a class="timeline-skip" href="#details"><span>Click to Skip to Next Card</span><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 5v21M7 17l9 9 9-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     </main>
 
-    <footer class="footer-bg py-12">
+    <footer id="about-footer" tabindex="-1" class="footer-bg py-12">
       <div class="max-w-4xl mx-auto px-4">
         <hr class="footer-divider" />
       </div>
@@ -562,9 +386,9 @@
         <div class="footer-section identity-section">
           <h3>Nathanael Kenzler</h3>
           <p class="footer-description">
-            <span>Marketing student at Arizona.</span>
-            <span>I take technical things apart,</span>
-            <span>then explain them to people.</span>
+            <span>Enterprise-focused business &amp;</span>
+            <span>marketing professional passionate</span>
+            <span>about turning strategy into impact.</span>
           </p>
           <div class="social-icons">
             <a href="https://github.com/nkenzler1818" title="GitHub"

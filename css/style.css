@@ -3118,1022 +3118,235 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     }
 }
 
-/* ==========================================================================
-   About page v3 - pinned/scrubbed scrollytelling
-   --------------------------------------------------------------------------
-   Reduced motion is an ARCHITECTURE here, not an override block.
-   The default state below IS the finished page: everything visible, the
-   timeline vertical, no transforms. Every hidden / docked / horizontal state
-   lives under html.ab-armed, which a pre-paint guard in about.html only sets
-   when prefers-reduced-motion is not "reduce". js/about-motion.js removes the
-   class on its way out, and a timeout backstop removes it if GSAP never
-   arrives. So there is no reachable state where content is hidden.
-
-   Docking is CSS position:sticky throughout. GSAP scrubs transforms only and
-   creates zero pins, which is why nothing here can fight over pin spacing.
-   ========================================================================== */
-
-.about-v3 {
-    /* .nav-scroll-blur is fixed, 128px tall and z-index 5, painting solid
-       #2A2A2A down to 108px. Cards are z-index 1, so anything docking above
-       128px docks underneath that band. This is the floor, not a taste call. */
-    --ab-stack-top: 140px;
-    --ab-step: 24px;
-    --ab-surface: #1F1F1F;
-    --ab-hair: rgba(255, 255, 255, 0.1);
-    --ab-dim: #8f8f8f;
-    max-width: none;
-    /* Bottom pad so the last card clears the footer by the same rhythm Home and
-       Projects use (their last section carries mb-16 = 4rem). */
-    padding: 0 1rem clamp(3.5rem, 7vh, 5rem);
-}
-
-/* --- scene shell ---------------------------------------------------------- */
-
-/* Every scene is one sticky card, and all three are siblings inside the single
-   tall .ab-scenes container. That shared containing block is the whole trick:
-   a sticky element stays docked until its CONTAINER scrolls past, so scene 1
-   holds its position while 2 and 3 rise over it. Give each scene its own
-   wrapper instead and every card leaves with its own section, which is a deck
-   that never stacks. */
-.ab-scenes {
-    position: relative;
-    /* flow-root, not block: the last scene's dwell margin is a bottom margin
-       on the final child, and without a BFC it collapses straight out of this
-       container. The container then gains no height, the last card gets zero
-       sticky range, and it scrolls away instead of docking. */
-    display: flow-root;
-}
-
-.ab-scene {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    /* Same column every other page uses: main is max-w-4xl (896px) on
-       index, projects, uses and blog. The card edge lands where their
-       content edge lands, which is the whole point. */
-    width: 100%;
-    max-width: 896px;
-    margin-inline: auto;
-    background: var(--ab-surface);
-    /* Hairline on the top edge so a card's 24px peek strip is legible where it
-       shows above the next card in the stack. Kept low so it does not read as
-       a pale halo the way rgba(255,255,255,0.1) did. */
-    border-top: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.28), 0 2px 14px rgba(0, 0, 0, 0.22);
-    transform-origin: center top;
-    padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1.25rem, 3.5vw, 2.5rem)
-             clamp(3rem, 6vw, 4rem);
-}
-
-/* Empty, and the only job is to give the horizontal scrub its scroll
-   distance while the journey card is docked and nothing covers it yet. */
-.ab-journey-scroll {
-    display: none;
-}
-
-/* Dwell between scenes, as a sibling rather than a margin on the scene.
-   A sticky box's own bottom margin is SUBTRACTED from its sticky range, so
-   margin-based dwell buys time for the next scene while quietly stealing it
-   from the one it is set on. On the last scene that cancels out exactly and
-   the card never docks at all. A spacer sibling has no such side effect. */
-.ab-gap {
-    display: none;
-}
-
-/* The card constrains the column now, so this just fills it. */
-.ab-scene-inner {
-    width: 100%;
-}
-
-/* Scrim used for the receding-card dim. Black, not the page grey: an
-   off-focus / entering card reads DARKER than the standard #1F1F1F surface,
-   then lightens back up to it as it takes focus (scrim opacity -> 0). */
-.ab-scene-scrim {
-    position: absolute;
-    z-index: 3;
-    inset: 0;
-    border-radius: inherit;
-    background: #000;
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* The exposed top edge of a receded card. Inert until the card is dimmed,
-   so it can never swallow clicks meant for the live scene. */
-.ab-scene-edge {
-    position: absolute;
-    z-index: 4;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: calc(var(--ab-step) + 8px);
-    display: none;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0 clamp(1.25rem, 3.5vw, 2.5rem);
-    background: linear-gradient(to bottom, rgba(192, 132, 252, 0.09), rgba(192, 132, 252, 0));
-    border: 0;
-    border-radius: 20px 20px 0 0;
-    color: #cbb8e6;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    text-align: left;
-    cursor: pointer;
-    transition: color 0.15s ease, background 0.15s ease;
-}
-
-.ab-scene-edge:hover {
-    color: #f0e6ff;
-    background: linear-gradient(to bottom, rgba(192, 132, 252, 0.16), rgba(192, 132, 252, 0));
-}
-
-/* Up-pointing chevron: this card is above you, click to go back to it. */
-.ab-scene-edge::before {
-    content: "";
-    width: 0;
-    height: 0;
-    border: 5px solid transparent;
-    border-top: 0;
-    border-bottom-color: var(--accent-purple);
-    flex: none;
-}
-
-/* --- hero ----------------------------------------------------------------- */
-
-.ab-lede + .ab-lede {
-    margin-top: 1rem;
-}
-
-/* How far down each card docks. The 24px step between them is what leaves
-   the previous card's edge showing once the deck stacks. Content sits in the
-   upper third rather than dead-centre so the card does not read as a small
-   block floating in an empty panel; the space below it is deliberate stage
-   room for the next card to rise into. */
-.ab-hero {
-    --ab-top: 140px;
-    justify-content: flex-start;
-    padding-top: clamp(2.25rem, 8vh, 5rem);
-}
-
-.ab-journey {
-    --ab-top: 164px;
-}
-
-/* Last scene, never covered. Keeps the shared centre-top origin so the focus
-   pop grows DOWNWARD and never rides up over the peek strips of the hero and
-   journey cards behind it. Its downward overflow lands in the trailing
-   .ab-gap, not the footer. */
-.ab-detail {
-    --ab-top: 188px;
-    justify-content: flex-start;
-    padding-top: clamp(1.75rem, 4vh, 2.75rem);
-}
-
-.ab-hero-grid {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: center;
-}
-
-.ab-h1 {
-    font-size: clamp(2.5rem, 6.2vw, 4rem);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    color: #f5f5f5;
-    margin: 0 0 1.5rem;
-}
-
-/* Reveal wipe: a solid plate the same colour as the card sits over the line
-   and retracts to the right. The type underneath never changes opacity, so
-   there is no flash-of-invisible-text if the animation never runs. */
-.ab-line {
-    position: relative;
-    display: inline-block;
-}
-
-.ab-line::after {
-    content: "";
-    position: absolute;
-    inset: -0.08em -0.12em;
-    background: var(--ab-surface);
-    transform: scaleX(0);
-    transform-origin: right center;
-    pointer-events: none;
-}
-
-.ab-lede {
-    font-size: clamp(1.02rem, 1.5vw, 1.18rem);
-    line-height: 1.65;
-    color: #d4d4d4;
-    max-width: 46ch;
-    margin: 0;
-}
-
-.ab-hero-figure {
-    margin: 0;
-    justify-self: end;
-    width: min(100%, 380px);
-}
-
-.ab-portrait {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
-    border-radius: 14px;
-    border: 1px solid var(--ab-hair);
-}
-
-/* --- journey (horizontal timeline) ---------------------------------------- */
-
-.ab-journey .ab-scene-inner {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.ab-journey-head {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    margin-bottom: clamp(1.25rem, 2.5vw, 1.75rem);
-}
-
-.ab-h2 {
-    font-size: clamp(1.6rem, 3vw, 2.25rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--accent-purple);
-    margin: 0;
-}
-
-/* The stage is the positioning context the rail and the track share. Its
-   midline IS the rail, which is the only way the node dots can stay welded
-   to the line while the track scrubs underneath it. */
-.ab-journey-stage {
-    position: static;
-}
-
-/* Hidden by default: the vertical fallback timeline has no centre rail. */
-.ab-journey-rail {
-    display: none;
-}
-
-.ab-track {
-    display: grid;
-    gap: clamp(1.5rem, 3vw, 2.25rem);
-}
-
-.ab-stop {
-    position: relative;
-    border-top: 1px solid var(--ab-hair);
-    padding-top: 1.15rem;
-}
-
-/* Sits on the rail. Shared by both sides; only the edge it anchors to
-   changes, so the two armed rules below just flip top for bottom. */
-.ab-stop-node {
-    display: none;
-    position: absolute;
-    left: 0;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: var(--ab-surface);
-    border: 2px solid var(--accent-purple);
-}
-
-/* Drawn inside the stop's rail-facing padding, joining card to line. */
-.ab-stop-node::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    width: 1px;
-    height: 22px;
-    margin-left: -0.5px;
-    background: var(--ab-hair);
-}
-
-.ab-stop-year {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    color: var(--accent-purple);
-    letter-spacing: 0.06em;
-}
-
-.ab-stop-label {
-    font-size: clamp(1.1rem, 1.9vw, 1.4rem);
-    font-weight: 700;
-    color: #f5f5f5;
-    margin: 0.35rem 0 0.5rem;
-}
-
-.ab-stop-line {
-    font-size: 0.98rem;
-    line-height: 1.6;
-    color: #d4d4d4;
-    margin: 0 0 1rem;
-    max-width: 42ch;
-}
-
-.ab-skills {
-    display: grid;
-    gap: 0.5rem;
-    margin: 0;
-    max-width: 300px;
-}
-
-.ab-skill {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.3rem 0.75rem;
-    align-items: center;
-    font-size: 0.74rem;
-    color: var(--ab-dim);
-    letter-spacing: 0.03em;
-}
-
-/* Thin rail rather than a filled dashboard track, so this reads as
-   accumulation over time and not as a scorecard. */
-.ab-skill-rail {
-    grid-column: 1 / -1;
-    height: 2px;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-}
-
-.ab-skill-fill {
-    display: block;
-    height: 100%;
-    width: var(--ab-skill, 60%);
-    border-radius: inherit;
-    background: var(--accent-purple);
-    transform-origin: left center;
-}
-
-/* --- detail (education / honors / projects wheel) ------------------------- */
-
-/* Two columns, not three. Inside an 896px card a third column leaves the
-   carousel about 250px, which is too small to read a project card in. */
-.ab-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 0.95fr;
-    gap: clamp(1.75rem, 4vw, 3rem);
-    align-items: start;
-    margin-top: clamp(1.5rem, 3vw, 2rem);
-}
-
-.ab-detail-lists {
-    display: grid;
-    gap: clamp(1.5rem, 3vw, 2rem);
-}
-
-.ab-col-title {
-    font-size: 0.76rem;
-    font-weight: 700;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--ab-dim);
-    margin: 0 0 1.25rem;
-}
-
-.ab-list {
-    display: grid;
-    gap: 1.15rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.ab-list-title {
-    font-size: 0.98rem;
-    font-weight: 600;
-    color: #f5f5f5;
-    margin: 0;
-}
-
-.ab-list-meta {
-    font-size: 0.85rem;
-    color: var(--ab-dim);
-    margin: 0.2rem 0 0;
-}
-
-/* Selected Work: the Project Portfolio card, shrunk. Default (motion off) is
-   the plain list of every card. The single-card flip stage is layered on in
-   the armed block below. .project-card carries the shared card look
-   (#1F1F1F, radius, site shadow, hover lift); .ab-pf-card only resizes it. */
-.ab-pf {
-    position: relative;
-    margin-top: 0.35rem;
-}
-
-.ab-pf-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0.6rem;
-}
-
-/* The Details scene surface is #1F1F1F, the same as .project-card, so the
-   card would vanish into it. Lift it one step (#292929 + a hairline) so it
-   reads as a card on the dark scene, the way the Project Portfolio cards read
-   against the lighter page. */
-.ab-pf-card {
-    display: block;
-    padding: 0.8rem 1rem;
-    text-decoration: none;
-    background: #292929;
-    border: 1px solid var(--ab-hair);
-}
-
-.ab-pf-card:hover {
-    border-color: rgba(192, 132, 252, 0.45);
-}
-
-.ab-pf-cta {
-    display: block;
-    width: 100%;
-    margin-top: 0.7rem;
-    padding: 0.72rem 1rem;
-    border-radius: 10px;
-    background: var(--accent-purple);
-    color: #1f1f1f;
-    font-weight: 700;
-    font-size: 0.86rem;
-    letter-spacing: 0.02em;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.18s ease;
-}
-
-.ab-pf-cta:hover {
-    background: #d8b4fe;
-}
-
-/* <h3> already inherits the sitewide purple heading; just size it down so it
-   reads as a smaller sibling of the Projects card title, not a new style. */
-.ab-pf-card h3 {
-    font-size: 0.95rem;
-    line-height: 1.3;
-    margin: 0 0 0.2rem;
-    font-style: normal;
-}
-
-.ab-pf-desc {
-    font-size: 0.8rem;
-    color: #d4d4d4;
-    line-height: 1.4;
-    margin: 0;
-}
-
-.ab-pf-meta {
-    font-size: 0.72rem;
-    color: var(--ab-dim);
-    margin: 0.35rem 0 0;
-}
-
-/* --- personal ------------------------------------------------------------- */
-
-.ab-uses-link {
-    display: inline-block;
-    margin-top: 1.5rem;
-    color: var(--accent-purple);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-}
-
-.ab-placeholder {
-    display: inline-block;
-    margin-left: 0.4rem;
-    padding: 0.05rem 0.4rem;
-    border-radius: 4px;
-    background: rgba(192, 132, 252, 0.14);
-    color: var(--accent-purple);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    vertical-align: middle;
-}
-
-/* ==========================================================================
-   ARMED STATE. Everything below runs only when motion is allowed.
-   Removing html.ab-armed returns the page to the finished static document
-   defined above.
-   ========================================================================== */
-
-/* The scale/stack move. Every scene rests slightly reduced; whichever one
-   about-motion.js marks .is-focus springs up past its target and settles
-   (bouncy-modal easing, not a linear scrub), a touch wider than the 896px
-   nav container. The overshoot cubic-bezier runs both ways, so scrolling
-   back up re-expands a scene the same way. Origin is centre-top so the docked
-   edge stays put under the nav while the card grows downward. */
-html.ab-armed .ab-scene {
-    position: sticky;
-    top: var(--ab-top, var(--ab-stack-top));
-    min-height: calc(100svh - var(--ab-top, var(--ab-stack-top)));
-    will-change: transform;
-    transform: scale(0.955);
-    transition:
-        transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
-        box-shadow 0.4s ease;
-}
-
-/* The focused card casts a deep shadow UP onto the peek strips of the cards
-   behind it, which is what makes the stack read as layered depth rather than
-   one flat panel. */
-html.ab-armed .ab-scene.is-focus {
-    transform: scale(1.065);
-    box-shadow:
-        0 -22px 40px -6px rgba(0, 0, 0, 0.55),
-        0 20px 48px rgba(0, 0, 0, 0.32);
-}
-
-/* Keep the transient overshoot from forcing a horizontal scrollbar on
-   mid-width viewports. clip does not create a scroll container, so the
-   scenes still stick against the viewport. */
-html.ab-armed .ab-scenes {
-    overflow-x: clip;
-}
-
-/* Receded cards (everything not in focus) dim via the scrim, on a timed
-   transition rather than a scrubbed tween now that focus is class-driven. */
-html.ab-armed .ab-scene-scrim {
-    transition: opacity 0.45s ease;
-}
-
-html.ab-armed .ab-scene:not(.is-focus) > .ab-scene-scrim {
-    opacity: 0.42;
-}
-
-html.ab-armed .ab-journey-scroll {
-    display: block;
-    height: 150svh;
-}
-
-/* Dwell. A sticky card fills the viewport, so flow space after it is
-   scrolled through while the card is still docked and still covering the
-   screen. Without it the next scene starts rising the moment the current one
-   docks and no scene gets a solo moment. The trailing gap is what gives the
-   last scene any sticky range at all. */
-html.ab-armed .ab-gap {
-    display: block;
-    height: 55svh;
-}
-
-/* Jump-back affordance on a receded card's exposed top edge. Inert (invisible,
-   pointer-events:none) until about-motion.js enables it once the card is
-   actually behind the focused one. Sits alongside the bottom arrow prompt. */
-html.ab-armed .ab-scene-edge {
-    display: flex;
-}
-
-html.ab-armed .ab-scene-edge[disabled] {
-    pointer-events: none;
-    opacity: 0;
-}
-
-/* Hero entrance. Pure CSS on load, so it still plays if cdnjs is blocked. */
-html.ab-armed .ab-line::after {
-    animation: ab-wipe 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
-    transform: scaleX(1);
-}
-
-html.ab-armed .ab-lede {
-    animation: ab-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.55s both;
-}
-
-/* Two distinct beats: the photo settles into place, then develops from
-   grayscale to colour like a print coming up. */
-html.ab-armed .ab-portrait {
-    animation:
-        ab-settle 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.95s both,
-        ab-develop 2.4s ease-out 1.6s both;
-}
-
-@keyframes ab-wipe {
-    from { transform: scaleX(1); }
-    to   { transform: scaleX(0); }
-}
-
-@keyframes ab-rise {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: none; }
-}
-
-@keyframes ab-settle {
-    from { opacity: 0; transform: translateY(30px) scale(0.97); }
-    to   { opacity: 1; transform: none; }
-}
-
-@keyframes ab-develop {
-    from { filter: grayscale(1) contrast(1.06); }
-    to   { filter: grayscale(0) contrast(1); }
-}
-
-/* Horizontal timeline. The tall .ab-journey gives the scrub its scroll
-   distance; the card inside stays docked via sticky, so GSAP needs no pin. */
-html.ab-armed .ab-journey {
-    overflow: hidden;
-}
-
-/* Fully-opaque masks that cover the whole card padding out to the rounded
-   border, so a partly-scrolled stop is hidden completely at the edge with
-   only a short fade lip. */
-html.ab-armed .ab-journey-stage::before,
-html.ab-armed .ab-journey-stage::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    z-index: 2;
-    width: clamp(100px, 15vw, 180px);
-    pointer-events: none;
-}
-
-html.ab-armed .ab-journey-stage::before {
-    left: 0;
-    background: linear-gradient(
-        to right,
-        var(--ab-surface) 0,
-        var(--ab-surface) 78%,
-        rgba(31, 31, 31, 0) 100%
-    );
-}
-
-html.ab-armed .ab-journey-stage::after {
-    right: 0;
-    background: linear-gradient(
-        to left,
-        var(--ab-surface) 0,
-        var(--ab-surface) 78%,
-        rgba(31, 31, 31, 0) 100%
-    );
-}
-
-/* Wide gaps so only the centred stop is ever legible; its neighbours sit far
-   past the edge and are covered entirely by the opaque masks. */
-html.ab-armed .ab-track {
-    gap: clamp(7rem, 18vw, 13rem);
-}
-
-/* The rail is stuck at the vertical centre and does not move. The track
-   translates underneath it, so the stops travel past a fixed line. Both live
-   in .ab-journey-stage, whose midline is the rail, which is what keeps every
-   node dot welded to the line at any scrub position. */
-html.ab-armed .ab-journey-stage {
-    position: relative;
-    flex: 1;
-    overflow: hidden;
-    /* Pull out to the card's inner border so the track is clipped exactly at
-       the rounded edge, not ~40px in where a half-stop would otherwise show
-       ghosting through the middle of the card. The opaque ::before/::after
-       masks then hide anything right up to that border. */
-    margin-inline: calc(-1 * clamp(1.25rem, 3.5vw, 2.5rem));
-}
-
-html.ab-armed .ab-journey-rail {
-    display: block;
-    position: absolute;
-    z-index: 0;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    margin-top: -1px;
-    background: var(--ab-hair);
-}
-
-/* Grey ahead of you, purple behind. This is the page progress the top-left
-   bar used to carry, folded into the line itself. */
-html.ab-armed .ab-journey-rail-fill {
-    display: block;
-    height: 100%;
-    background: var(--accent-purple);
-    transform: scaleX(0);
-    transform-origin: left center;
-}
-
-html.ab-armed .ab-track {
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    width: max-content;
-    will-change: transform;
-}
-
-html.ab-armed .ab-stop {
-    width: min(52vw, 380px);
-    flex: none;
-    /* Exactly half the stage, so the stop's rail-facing edge IS the rail. */
-    height: 50%;
-    display: flex;
-    flex-direction: column;
-    border-top: 0;
-    padding-top: 0;
-}
-
-/* Odd stops hang above the line, even below, so the row alternates. */
-html.ab-armed .ab-stop:nth-child(odd) {
-    align-self: flex-start;
-    justify-content: flex-end;
-    padding-bottom: 24px;
-}
-
-html.ab-armed .ab-stop:nth-child(even) {
-    align-self: flex-end;
-    justify-content: flex-start;
-    padding-top: 24px;
-}
-
-html.ab-armed .ab-stop-node {
-    display: block;
-}
-
-html.ab-armed .ab-stop:nth-child(odd) .ab-stop-node {
-    bottom: -5px;
-}
-
-html.ab-armed .ab-stop:nth-child(odd) .ab-stop-node::before {
-    bottom: 100%;
-}
-
-html.ab-armed .ab-stop:nth-child(even) .ab-stop-node {
-    top: -5px;
-}
-
-html.ab-armed .ab-stop:nth-child(even) .ab-stop-node::before {
-    top: 100%;
-}
-
-/* Rails span the stop rather than a narrow 300px column, so each stop reads
-   as one block instead of a caption with a stub under it. */
-html.ab-armed .ab-skills {
-    max-width: none;
-}
-
-html.ab-armed .ab-skill-fill {
-    transform: scaleX(0);
-}
-
-/* Selected Work is a vertical conveyor: three card slots visible, and every
-   ~1s the whole stack steps down one slot. The bottom card leaves at the
-   bottom, a new one enters at the top. about-motion.js clones the list for a
-   seamless wrap and pauses the belt on hover / focus. */
-html.ab-armed .ab-pf {
-    --ab-pf-slot-h: 94px;
-    --ab-pf-gap: 0.55rem;
-    height: calc(3 * var(--ab-pf-slot-h) + 2 * var(--ab-pf-gap));
-    overflow: hidden;
-}
-
-html.ab-armed .ab-pf-list {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--ab-pf-gap);
-    will-change: transform;
-}
-
-html.ab-armed .ab-pf-slot {
-    height: var(--ab-pf-slot-h);
-    flex: none;
-}
-
-html.ab-armed .ab-pf-card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: hidden;
-}
-
-html.ab-armed .ab-pf-card .ab-pf-desc {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-}
-
-/* --- bottom-of-card prompt ---------------------------------------------- */
-
-/* One per scene, hidden until about-motion.js has held focus on that scene
-   for ~10s, then bounces + shimmers. Card 1 carries a label, card 2 the
-   arrow alone, card 3 its own exit CTA. */
-.ab-prompt {
-    display: none;
-}
-
-html.ab-armed .ab-prompt {
-    position: fixed;
-    z-index: 6;
-    left: 50%;
-    bottom: clamp(1.25rem, 4.5vh, 2.75rem);
-    transform: translateX(-50%) translateY(8px);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.3rem 0.2rem;
-    background: none;
-    border: 0;
-    color: var(--accent-purple);
-    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    text-decoration: none;
-    cursor: pointer;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-html.ab-armed .ab-prompt.is-visible {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateX(-50%) translateY(0);
-}
-
-.ab-prompt-arrow {
-    width: 1.05rem;
-    height: 1.05rem;
-    display: block;
-    animation: ab-prompt-bounce 1.5s ease-in-out infinite;
-}
-
-.ab-prompt-label {
-    position: relative;
-    background: linear-gradient(
-        100deg,
-        var(--accent-purple) 0%,
-        var(--accent-purple) 38%,
-        #f0e6ff 50%,
-        var(--accent-purple) 62%,
-        var(--accent-purple) 100%);
-    background-size: 240% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: ab-prompt-shimmer 2.6s linear infinite;
-}
-
-@keyframes ab-prompt-bounce {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(5px); }
-}
-
-@keyframes ab-prompt-shimmer {
-    from { background-position: 120% 0; }
-    to   { background-position: -120% 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .ab-prompt-arrow { animation: none; }
-    .ab-prompt-label { animation: none; }
-}
-
-/* --- responsive ----------------------------------------------------------- */
-
-@media (max-width: 900px) {
-    .ab-hero-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .ab-hero-figure {
-        justify-self: start;
-        width: min(100%, 300px);
-        order: -1;
-    }
-
-    .ab-detail-grid {
-        grid-template-columns: 1fr;
-    }
-
-    html.ab-armed .ab-pf {
-        --ab-pf-slot-h: 84px;
-    }
-}
-
-/* Below this width the horizontal scrub and the card stack both cost more
-   than they give, so the page runs as the static document on purpose. */
-@media (max-width: 720px) {
-    html.ab-armed .ab-scene {
-        position: relative;
-        top: auto;
-        min-height: 0;
-        transform: none;
-    }
-
-    html.ab-armed .ab-scene-edge,
-    html.ab-armed .ab-prompt {
-        display: none;
-    }
-
-    /* Nothing is sticky down here, so the runway and the dwell gaps are just
-       dead space between sections. */
-    html.ab-armed .ab-journey-scroll,
-    html.ab-armed .ab-gap {
-        display: none;
-    }
-
-    html.ab-armed .ab-journey-stage {
-        position: static;
-        overflow: visible;
-    }
-
-    html.ab-armed .ab-journey-rail {
-        display: none;
-    }
-
-    html.ab-armed .ab-track {
-        position: static;
-        display: grid;
-        grid-auto-flow: row;
-        width: auto;
-        transform: none !important;
-    }
-
-    html.ab-armed .ab-stop {
-        width: auto;
-        height: auto;
-        display: block;
-        border-top: 1px solid var(--ab-hair);
-    }
-
-    /* Matched specificity on purpose: the alternation rules are written with
-       :nth-child, so a plain .ab-stop reset here loses to them and the stops
-       keep their half-height and alignment in the vertical layout. */
-    html.ab-armed .ab-stop:nth-child(odd),
-    html.ab-armed .ab-stop:nth-child(even) {
-        align-self: auto;
-        justify-content: normal;
-        padding-top: 1.15rem;
-        padding-bottom: 0;
-    }
-
-    html.ab-armed .ab-stop-node {
-        display: none;
-    }
-
-    /* Conveyor collapses back to the plain card list. */
-    html.ab-armed .ab-pf {
-        height: auto;
-        overflow: visible;
-    }
-
-    html.ab-armed .ab-pf-list {
-        position: static;
-        display: grid;
-        gap: 0.6rem;
-        transform: none !important;
-    }
-
-    html.ab-armed .ab-pf-slot {
-        height: auto;
-    }
-
-    html.ab-armed .ab-pf-card {
-        display: block;
-        overflow: visible;
-    }
-
-    html.ab-armed .ab-pf-card .ab-pf-desc {
-        display: block;
-        -webkit-line-clamp: unset;
-    }
-
-    html.ab-armed .ab-skill-fill {
-        transform: none;
-    }
-}
-
-@media (max-width: 420px) {
-    .ab-scene {
-        border-radius: 14px 14px 0 0;
-    }
-
-    .ab-skills {
-        max-width: none;
-    }
-}
+/* About: one anchored deck. The default is the complete, readable document. */
+.about-v5 {--deck:#1f1f1f;--inset:#2a2a2a;--hair:rgba(255,255,255,.1);--shadow:0 4px 20px rgba(0,0,0,.3);width:min(896px,calc(100% - 48px));margin:80px auto 64px;color:#d4d4d4}
+.about-v5 *, .about-v5 *:before,.about-v5 *:after {box-sizing:border-box}
+.about-v5 [hidden] {display:none!important}
+.about-skip {position:fixed;left:16px;top:-100px;z-index:200;padding:12px 20px;background:#1f1f1f;color:#fff;border-radius:8px}
+.about-skip:focus {top:16px}
+.about-header-track {position:relative;z-index:100}
+.about-header-track > header {position:relative;top:24px}
+.about-v5-page .nav-scroll-blur {display:none}
+.about-stage {position:relative}
+.about-v5 {margin-bottom:0}
+.about-v5 #details {margin-bottom:0}
+.about-v5-page {overflow-anchor:none}
+.about-v5-page .floating-nav {max-width:56rem;margin-inline:auto;box-sizing:border-box}
+.about-card {position:relative;min-width:0;margin-bottom:32px;border:0;border-radius:16px;background:var(--deck);box-shadow:var(--shadow);transform-origin:center top}
+.about-v5 .card-scroll {padding:40px;border-radius:inherit}
+.about-v5 .ab-hero-grid {display:grid;grid-template-columns:1fr .8fr;align-items:center;gap:32px}
+.about-v5 .ab-h1 {font-size:clamp(32px,3.5vw,48px);line-height:1.08;font-weight:800;margin:0 0 24px;color:#f5f5f5}
+.about-v5 .ab-lede {font-size:16px;line-height:1.7;margin:0 0 16px;max-width:36ch}
+.about-v5 .ab-hero-figure {margin:0}
+.about-v5 .ab-portrait {display:block;width:100%;max-width:320px;height:auto;aspect-ratio:3/4;object-fit:cover;border-radius:12px}
+.about-v5 h2 {font-size:32px;line-height:1.2;font-weight:700;color:#f5f5f5;margin:0}
+.about-v5 .journey-heading {display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:32px 36px 24px}
+.about-v5 .year-range,.about-v5 time {font:400 13px/1.5 "JetBrains Mono",monospace;color:#c084fc;white-space:nowrap}
+.about-v5 .timeline {list-style:none;position:relative;margin:0;padding:0 36px 24px}
+.about-v5 .timeline:before {content:"";position:absolute;top:38px;bottom:60px;left:111px;width:2px;background:var(--hair)}
+.about-v5 .timeline-event {position:relative;display:grid;grid-template-columns:100px 1fr;gap:0;align-items:center;padding:24px 0;min-width:0}
+.about-v5 .event-node {position:absolute;top:calc(50% - 4px);left:71px;width:10px;height:10px;border:2px solid #c084fc;border-radius:50%;background:var(--deck);z-index:1}
+.about-v5 .event-full h3 {font-size:22px;line-height:1.3;color:#f5f5f5;margin:0 0 10px;font-weight:700}
+.about-v5 .event-full p {font-size:15px;line-height:1.6;max-width:48ch;margin:0 0 12px}
+.about-v5 .event-year {background:none;border:0;color:inherit;font:inherit;min-height:44px;min-width:52px;text-align:left;border-radius:4px;cursor:pointer}
+.about-v5 .event-compact {display:none;background:none;border:0;text-align:left;font-size:13px;line-height:1.6;color:#aaa;padding:8px 0;min-height:44px;border-radius:4px;cursor:pointer}
+.about-v5 .event-year:hover,.about-v5 .event-compact:hover {color:#c084fc}
+.about-v5 .event-copy {min-width:0}
+.about-v5 .chronology-rail {display:none;position:absolute;left:111px;width:2px;background:var(--hair);transform-origin:top}
+.about-v5 .chronology-fill {display:block;width:100%;height:100%;background:#c084fc;transform-origin:top}
+.about-v5 .ab-skills {display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:440px;margin-top:18px}
+.about-v5 .ab-skill {font-size:12px;color:#aaa}
+.about-v5 .ab-skill-rail {display:block;height:2px;background:var(--hair);margin-top:8px}
+.about-v5 .ab-skill-fill {display:block;height:100%;width:var(--ab-skill);background:#c084fc}
+.about-v5-page footer {position:relative;z-index:1;background:#2a2a2a}
+
+/* Literal approved v5 component styles, scoped to the actual page. */
+.about-v5 .scene-title {font-size:36px; letter-spacing:-.025em; line-height:1.2}
+.about-v5 .detail-columns {display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:32px}
+.about-v5 .column-label {font-size:12px; font-weight:700; letter-spacing:.09em; color:var(--muted); text-transform:uppercase; margin-bottom:20px}
+.about-v5 .education {list-style:none; padding:0; margin:0; display:grid; gap:18px}
+.about-v5 .education strong {display:block; font-size:15px; font-weight:600; line-height:1.45}
+.about-v5 .education p {font-size:13px; color:var(--muted); line-height:1.6; margin-top:4px}
+.about-v5 .honors {margin-top:32px}
+.about-v5 .honors .education {gap:14px}
+.about-v5 .honors .education strong {font-size:14px}
+.about-v5 .honors .caption {display:block; letter-spacing:0; margin:6px 0 0}
+.about-v5 .tile-work-card {display:block; padding:16px; background:var(--page); border:1px solid var(--hair); transition:opacity .3s ease,transform .3s ease,box-shadow .2s cubic-bezier(.4,0,.2,1)}
+.about-v5 .tile-work-card h3 {font-size:15.2px; line-height:1.3; margin:0 0 4px; font-weight:600}
+.about-v5 .work-description {font-size:12.8px; color:var(--body); line-height:1.4}
+.about-v5 .work-meta {font-size:11.52px; color:var(--muted); margin-top:6px}
+.about-v5 .tile-cta {display:inline-flex; align-items:center; justify-content:center; gap:12px; min-height:44px; padding:8px 16px; font-size:14px; line-height:1.5; border:0; border-radius:8px}
+.about-v5 .tile-cta svg {width:20px; height:20px}
+.about-v5 .tile-cta:hover {box-shadow:inset 0 0 0 1px var(--hair); text-decoration:underline; text-underline-offset:4px}
+.about-v5 .timeline-skip {display:inline-flex; flex-direction:column; align-items:center; gap:12px; color:var(--accent); padding:16px 24px; font-size:16px; font-weight:600; border-radius:8px; min-width:180px}
+.about-v5 .timeline-skip svg {width:40px; height:40px}
+.about-v5 .timeline-skip:hover span {text-decoration:underline; text-underline-offset:5px}
+.about-v5 .timeline-skip:hover {background:var(--page)}
+.about-v5 {--page:#2a2a2a;--surface:#1f1f1f;--accent:#c084fc;--button:#7c46af;--text:#f5f5f5;--body:#d4d4d4;--muted:#8f8f8f;--step-y:56px;--dock:216px;font-family:"Plus Jakarta Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:normal;color:var(--text)}
+.about-v5 .ab-lede,.about-v5 .event-full p {color:var(--body)}
+.about-v5 .scene-title {font-weight:700}
+.about-v5 h2.scene-title {font-size:36px;letter-spacing:-.025em;line-height:1.2}
+.about-v5 .detail-columns {grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.about-v5 .detail-columns > div {min-width:0}
+.about-v5 .column-label {line-height:normal}
+.about-v5 .detail-columns .column-label {position:relative;z-index:3}
+.about-v5 .education p {margin-bottom:0}
+.about-v5 .honors .caption {font-family:"JetBrains Mono",monospace;font-size:11px;line-height:1.7;font-weight:400}
+.about-v5 .work-window {margin:-24px -24px 0;padding:24px;min-width:0}
+.about-v5 .work-track {display:grid;gap:16px}
+.about-v5 .work-track {margin-bottom:0}
+.about-v5 .tile-work-card {border-radius:8px;box-shadow:var(--shadow)}
+.about-v5 .work-meta {line-height:1.65}
+.about-v5 .tile-work-card h3 {color:var(--accent)}
+.about-v5 .tile-work-card p {margin-bottom:0}
+.about-v5 .tile-work-card:hover {transform:translateY(-4px) scale(1.04);box-shadow:0 8px 30px rgba(0,0,0,.4);border-color:var(--hair)}
+.about-v5 .tile-work-card:hover h3,.about-v5 .tile-work-card:hover p {opacity:.95}
+.about-v5 .tile-cta {font-weight:600;background:var(--button);color:#fff;text-decoration:none}
+.about-v5 .tile-cta svg,.about-v5 .timeline-skip svg,.about-v5 .return-edge svg {display:block;flex:none}
+.about-v5 .about-controls {display:flex;justify-content:center;margin-top:24px}
+.about-v5 .timeline-skip {background:none;border:0;box-shadow:none;text-decoration:none;line-height:normal}
+.about-v5 .return-layer {display:none;position:absolute;inset:0;pointer-events:none}
+.about-v5 .deck-back {position:absolute;top:0;left:0;width:100%;height:var(--focused-height);border:0;border-radius:16px;background:var(--surface);box-shadow:var(--shadow);transform-origin:center top;pointer-events:none}
+.about-v5 .return-edge {display:flex;align-items:center;justify-content:space-between;gap:16px;height:52px;padding:0 24px;width:100%;font:600 14px/normal "Plus Jakarta Sans",sans-serif;border:0;border-radius:16px 16px 0 0;color:var(--body);background:none;pointer-events:auto;text-align:left;cursor:pointer}
+.about-v5 .return-edge svg {width:20px;height:20px}
+.about-v5 .return-edge:hover {background:var(--page);color:var(--accent)}
+.about-v5 .timeline-skip:focus-visible,.about-v5 .tile-cta:focus-visible,.about-v5 .return-edge:focus-visible {outline:2px solid #c084fc;outline-offset:3px}
+.about-v5 .journey-heading {padding:0 0 24px;margin:32px 40px 16px;border-bottom:1px solid var(--hair)}
+.about-v5 .journey-heading h2 {font-size:36px;font-weight:700;letter-spacing:-.025em;line-height:1.2}
+.about-v5 .year-range {font-size:12px}
+.about-v5 .timeline {padding-left:40px;padding-right:40px}
+.about-v5 .timeline-event {grid-template-columns:112px 1fr}
+.about-v5 .event-full p {font-size:15.68px}
+.about-v5 .event-node {left:84px;width:9px;height:9px}
+.about-v5 .chronology-rail,.about-v5 .timeline:before {left:128px;width:1px}
+.about-v5 .ab-skill {font-size:11.84px;color:var(--muted)}
+@media screen and (min-width:721px) and (min-height:650px) and (prefers-reduced-motion:no-preference) {
+ html.about-pending .about-header-track {position:absolute;top:0;left:0;right:0}
+ html.about-pending .about-v5 {width:min(896px,calc(100% - 144px));margin:232px auto 0}
+ html.about-pending .ab-portrait {max-height:clamp(220px,calc(100svh - 530px),427px);width:auto;max-width:100%}
+ html.about-pending .about-card:not(#who) {display:none}
+ html.about-active {scrollbar-gutter:stable;scroll-behavior:auto}
+ html.about-active .about-header-track {position:absolute;top:0;left:0;right:0;height:var(--nav-runway);pointer-events:none}
+ html.about-active .about-header-track > header {position:sticky;top:24px;pointer-events:auto}
+ html.about-active .about-v5 {--reading-height:clamp(280px,calc(100svh - 600px),360px);width:min(896px,calc(100% - 144px));margin:var(--dock) auto 0;height:var(--runway-height);position:relative;z-index:6;overflow-anchor:none}
+ html.about-active .ab-portrait {max-height:clamp(220px,calc(100svh - 530px),427px);width:auto;max-width:100%}
+ html.about-active .about-stage {position:sticky;top:var(--dock);height:var(--stage-height);isolation:isolate}
+ html.about-active .about-card {position:absolute;top:0;left:0;width:100%;margin:0;will-change:transform}
+ html.about-active .card-scroll {overflow:visible;max-height:none}
+ html.about-active .return-layer {display:block;z-index:0}
+ html.about-active .journey-scroll {height:var(--reading-height);overflow:visible;margin-bottom:32px;outline-offset:-3px}
+ html.about-active .journey-runway,html.about-active .journey-window {position:relative;height:var(--reading-height)}
+ html.about-active .journey-window {overflow:hidden}
+ html.about-active .timeline-position {position:absolute;top:0;left:0;right:0}
+ html.about-active .timeline {padding-bottom:0}
+ html.about-active .timeline:before {display:none}
+ html.about-active .timeline-event {padding:12px 0}
+ html.about-active .timeline-event:not(.is-active) .event-full {display:none}
+ html.about-active .timeline-event:not(.is-active) .event-compact {display:block}
+ html.about-active .chronology-rail {display:block}
+
+ html.about-active #about-footer {padding-top:32px}
+ html.about-active #about-footer .footer-divider {margin-top:0}
+}
+@media (max-width:950px) {
+ .about-v5 .detail-columns {grid-template-columns:1fr;gap:32px}
+ .about-v5 .card-scroll {padding:32px}
+ .about-v5 .ab-hero-grid {grid-template-columns:1fr .65fr;gap:24px}
+ .about-v5 .ab-h1 {font-size:34px}
+ .about-v5 .ab-lede {font-size:14px}
+ .about-v5 .journey-heading {margin:32px 32px 24px;align-items:flex-start;flex-direction:column;gap:12px}
+ .about-v5 .journey-heading h2 {font-size:28px}
+ .about-v5 .timeline {padding-left:32px;padding-right:32px}
+ .about-v5 .chronology-rail,.about-v5 .timeline:before {left:120px}
+}
+@media (min-width:721px) and (max-width:950px) {
+ html.about-active .journey-heading {margin:24px 32px 16px;padding-bottom:16px;flex-direction:row;align-items:baseline}
+}
+@media (max-width:720px) {
+ .about-v5 {margin-top:64px}
+ .about-v5 .card-scroll {padding:24px}
+ .about-v5 .ab-hero-grid {grid-template-columns:1fr}
+ .about-v5 .ab-portrait {width:240px;max-width:100%}
+ .about-v5 .ab-lede {font-size:16px}
+ .about-v5 h2.scene-title {font-size:28px}
+ .about-v5 .timeline-event {grid-template-columns:60px 1fr}
+ .about-v5 .event-node {left:43px}
+ .about-v5 .timeline:before {left:79px}
+ .about-v5 .ab-skills {grid-template-columns:1fr;gap:12px}
+ .about-v5 .event-full h3 {font-size:20px}
+}
+@media (prefers-reduced-motion:reduce) {
+ .about-v5 *, .about-v5 *:before,.about-v5 *:after {transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+@media print {
+ .about-card {position:relative!important;visibility:visible!important;transform:none!important;margin-bottom:32px!important}
+ .about-card > *,.event-full {visibility:visible!important;display:block!important}
+ .about-stage {height:auto!important}
+ .return-layer,.about-controls,.event-compact {display:none!important}
+ .work-track {display:grid!important;height:auto!important}
+ .tile-work-card {position:relative!important;transform:none!important}
+}
+
+
+/* One complete arrow path, attached to the right edge in both layouts. */
+html.about-navigation .about-v5 {width:min(896px,calc(100% - 144px))}
+.about-v5 .navigation-track {position:absolute;top:0;bottom:0;right:-64px;width:48px;pointer-events:none;z-index:40}
+.about-v5 .card-navigation {position:sticky;top:calc(50svh - 52px);display:flex;flex-direction:column;gap:8px;width:48px;height:104px;pointer-events:auto}
+.about-v5 .card-navigation [data-step="1"] {margin-top:auto}
+.about-v5 .card-navigation button {display:grid;place-items:center;width:48px;height:48px;padding:10px;border:0;border-radius:12px;background:var(--surface);color:var(--accent);box-shadow:var(--shadow);cursor:pointer}
+.about-v5 .card-navigation button:hover {background:#333}
+.about-v5 .card-navigation svg {display:block;width:28px;height:28px}
+.about-v5 button:focus-visible,.about-v5 a:focus-visible {outline:2px solid var(--accent);outline-offset:3px}
+.about-v5 .about-status {position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+html.about-navigation .about-controls {position:fixed;bottom:64px;left:0;right:0;margin:0;z-index:50;pointer-events:none}
+html.about-navigation .timeline-skip {pointer-events:auto;background:var(--page)}
+html.about-active .navigation-track {height:var(--focused-height);bottom:auto}
+html.about-active .card-navigation {top:min(calc(50svh - 52px),calc(var(--dock) + var(--focused-height) - 104px))}
+.about-v5-page #about-footer {padding-top:32px}
+.about-v5-page #about-footer .footer-divider {margin-top:0}
+@media (max-width:720px) {
+ html.about-navigation .about-v5 {width:calc(100% - 88px);margin-left:20px;margin-right:68px}
+ .about-v5 .navigation-track {right:-56px}
+ html.about-navigation .timeline-skip {padding:12px 16px;font-size:13px;gap:4px}
+ html.about-navigation .timeline-skip svg {width:24px;height:24px}
+ html.about-navigation .about-controls {bottom:24px}
+ .about-v5 .journey-heading {margin-inline:24px}
+ .about-v5 .timeline {padding-inline:24px}
+ .about-v5 .timeline:before {left:71px}
+}
+@media (min-width:951px) and (max-height:950px) {
+ .about-v5 #details .card-scroll {padding:32px}
+ .about-v5 #details .detail-columns {margin-top:24px}
+ .about-v5 #details .education {gap:14px}
+ .about-v5 #details .honors {margin-top:24px}
+ .about-v5 #details .honors .education {gap:12px}
+ .about-v5 #details .column-label {margin-bottom:16px}
+}
+@media (prefers-reduced-motion:no-preference) {
+ html.about-conveyor .work-window {overflow:hidden;position:relative;overflow-anchor:none}
+ html.about-conveyor .work-window:before,html.about-conveyor .work-window:after {content:"";position:absolute;left:0;right:0;height:10px;background:var(--surface);z-index:2;pointer-events:none}
+ html.about-conveyor .work-window:before {top:0}
+ html.about-conveyor .work-window:after {bottom:0}
+ html.about-conveyor .work-track {position:relative;height:var(--work-height);display:block}
+ html.about-conveyor .tile-work-card {position:absolute;top:0;left:0;width:100%;min-height:var(--work-card-height);transition:box-shadow .2s ease}
+ html.about-conveyor .tile-work-card:hover {transform:none}
+}
+/* V4 entrance: independent of the scroll controller, never re-armed on return. */
+.about-v5 .ab-line {position:relative;display:inline-block}
+.about-v5 .ab-line:after {content:"";position:absolute;inset:-.08em -.12em;background:var(--surface);transform:scaleX(0);transform-origin:right center;pointer-events:none}
+@media (prefers-reduced-motion:no-preference) {
+ html.about-intro .ab-line:after {animation:about-wipe .85s cubic-bezier(.16,1,.3,1) both}
+ html.about-intro .ab-lede {animation:about-rise .7s cubic-bezier(.16,1,.3,1) .55s both}
+ html.about-intro .ab-lede + .ab-lede {animation-delay:.67s}
+ html.about-intro .ab-portrait {animation:about-settle .75s cubic-bezier(.16,1,.3,1) .95s both,about-develop 1.3s ease-out 1.2s both}
+ html.about-intro #who .card-scroll {animation:about-land .6s cubic-bezier(.16,1,.3,1) both}
+}
+@keyframes about-wipe {from {transform:scaleX(1)} to {transform:scaleX(0)}}
+@keyframes about-rise {from {opacity:0;transform:translateY(18px)} to {opacity:1;transform:none}}
+@keyframes about-settle {from {opacity:0;transform:translateY(24px) scale(.98)} to {opacity:1;transform:none}}
+@keyframes about-develop {from {filter:grayscale(.65) contrast(1.03)} to {filter:grayscale(0) contrast(1)}}
+@keyframes about-land {from {transform:translateY(12px)} to {transform:none}}
+@media print {.navigation-track,.about-status {display:none!important}}
 
 /* --------------------------------------------------------------------------
    Uses page, parked. The real content lives on the uses-page-wip branch

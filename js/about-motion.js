@@ -1,347 +1,272 @@
-/* About page motion.
- *
- * Scope, deliberately small:
- *   1. the card stack: one scene wears .is-focus and CSS springs it larger;
- *      the rest rest smaller and darken via their scrim. A bouncing arrow
- *      prompt appears ~5s after a scene has held focus.
- *   2. the horizontal timeline: vertical scroll scrubs the track sideways,
- *      fills the centre rail behind you, and stages the skill bars.
- *   3. Selected Work: a three-slot vertical conveyor of Project Portfolio
- *      cards, stepping down one slot every ~1s.
- *
- * Everything else on the page is CSS. The hero entrance is a CSS animation so
- * it still plays if this file or GSAP never arrives, and all docking is
- * position:sticky, so this script creates ZERO ScrollTrigger pins.
- *
- * Reduced motion is handled upstream. The pre-paint guard in about.html only
- * adds html.ab-armed when motion is allowed, and the stylesheet's default
- * state is the finished page. So this file never has to hide anything, and
- * bailing out early is always safe.
- */
-(function () {
-  "use strict";
+﻿/* One controller: native document scroll determines every stack/timeline pose.
+ * CSS owns sticky layout. No pins, snapping, wheel interception or scroll gates.
+ * The semantic HTML remains the complete static/reduced-motion document. */
+(() => {
+  'use strict';
+  const root = document.documentElement, deck = document.querySelector('.about-v5');
+  if (!deck) return;
+  const $ = (s, p = deck) => p.querySelector(s), $$ = (s, p = deck) => [...p.querySelectorAll(s)];
+  const cards = $$('.about-card'), backs = $$('.deck-back'), skip = $('.timeline-skip');
+  const navigation = $('.navigation-track'), up = $('[data-step="-1"]'), down = $('[data-step="1"]');
+  const headerTrack = document.querySelector('.about-header-track'), header = $('header', headerTrack);
+  const stage = $('.about-stage'), list = $('.timeline'), position = $('.timeline-position');
+  const rail = $('.chronology-rail'), fill = $('.chronology-fill'), footer = document.querySelector('#about-footer');
+  const work = $('.work-window'), track = $('.work-track'), workItems = $$('.tile-work-card');
+  const gsap = window.gsap, ST = window.ScrollTrigger;
+  const mq = matchMedia('(min-width:721px) and (min-height:650px) and (prefers-reduced-motion:no-preference)');
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const reduced = matchMedia('(prefers-reduced-motion:reduce)');
+  const state = {enhanced:false, conveyor:false, scene:0, event:0, progress:0, stack:0, workIndex:0, index:0};
+  let events = [], trigger, resizeTimer, workTimer, workTween, hovered = false, destination = null;
+  let distance = 1, journeyStart = 320, timelineStart = 460, timelineEnd = 1000, detailsStart = 1460, readingEnd = 1460;
+  let cardHeights = [], step = 116, stageHeight = 687, dock = 232, lastScene = -1;
+  const transitionDistance = 320, eventHold = 140;
 
-  var doc = document.documentElement;
-
-  function disarm() {
-    doc.classList.remove("ab-armed");
-  }
-
-  // The guard never armed us, so reduced motion is on. Nothing to do.
-  if (!doc.classList.contains("ab-armed")) return;
-
-  // GSAP blocked, offline, or the CDN changed under us. Fall back to the
-  // static document rather than leaving a half-built stack on screen.
-  if (!window.gsap || !window.ScrollTrigger) {
-    disarm();
-    return;
-  }
-
-  var gsap = window.gsap;
-  var ScrollTrigger = window.ScrollTrigger;
-  gsap.registerPlugin(ScrollTrigger);
-
-  // Tell the guard's 2000ms backstop that motion is live, so it leaves
-  // ab-armed alone. Set before building anything: if construction throws, the
-  // catch below disarms explicitly.
-  doc.classList.add("ab-ready");
-
-  // Flow positions of the scenes, keyed by id.
-  //
-  // A docked sticky element reports its STUCK position from both
-  // getBoundingClientRect() and offsetTop, so neither can tell us where the
-  // scene actually lives in the document while the deck is stacked. The only
-  // reliable read is to take position out of the equation, measure, and put
-  // it back. Two reflows, and only on refresh, so it stays off the scroll
-  // path entirely.
-  var flowTops = {};
-
-  function measureFlowTops() {
-    var scenes = document.querySelectorAll(".ab-scene");
-    var prev = [];
-    var docks = [];
-    // Read the sticky dock offset BEFORE neutralising position: once it is
-    // static, getComputedStyle(scene).top returns "auto".
-    Array.prototype.forEach.call(scenes, function (scene, i) {
-      var d = parseFloat(getComputedStyle(scene).top);
-      docks[i] = isNaN(d) ? 0 : d;
-      prev[i] = scene.style.position;
-      scene.style.position = "static";
+  function readModel() {
+    events = $$('.timeline-event', list);
+    events.forEach(event => {
+      const date = $('time', event);
+      if (!$('.event-year', date)) {
+        const button = document.createElement('button');
+        button.type = 'button'; button.className = 'event-year'; button.textContent = date.textContent; date.replaceChildren(button);
+      }
+      let compact = $('.event-compact', event);
+      if (!compact) {compact = document.createElement('button'); compact.type = 'button'; compact.className = 'event-compact'; $('.event-copy', event).append(compact);}
+      compact.textContent = event.dataset.proof;
+      compact.removeAttribute('hidden');
+      const full = $('.event-full', event); full.id = event.id + '-detail';
+      [$('.event-year', event), compact].forEach(button => button.setAttribute('aria-controls', full.id));
     });
-    Array.prototype.forEach.call(scenes, function (scene, i) {
-      if (!scene.id) return;
-      flowTops[scene.id] = {
-        top: scene.getBoundingClientRect().top + window.pageYOffset,
-        dock: docks[i]
-      };
-    });
-    Array.prototype.forEach.call(scenes, function (scene, i) {
-      scene.style.position = prev[i];
+    $('[data-end-year]').textContent = events.at(-1)?.dataset.year || '2019';
+  }
+  const lastIndex = () => events.length + 1;
+  function label(index) {
+    return index === 0 ? 'Who I Am' : index === lastIndex() ? 'The Details' : 'How I Got Here, ' + events[index - 1].dataset.year;
+  }
+  function targetElement(index) {
+    return index === 0 ? $('#ab-hero-h') : index === lastIndex() ? $('#details-heading') : $('.event-year', events[index - 1]);
+  }
+  function targetY(index) {
+    if (!state.enhanced) return index === 0 ? 0 : targetElement(index).getBoundingClientRect().top + scrollY - 128;
+    if (index === 0) return 0;
+    if (index === lastIndex()) return detailsStart;
+    return timelineStart + distance * (index - 1) / Math.max(1, events.length - 1);
+  }
+  function paintNavigation(index) {
+    state.index = index;
+    const focused = document.activeElement;
+    up.hidden = index === 0; down.hidden = index === lastIndex();
+    up.setAttribute('aria-label', 'Previous: ' + label(Math.max(0, index - 1)));
+    down.setAttribute('aria-label', 'Next: ' + label(Math.min(lastIndex(), index + 1)));
+    if ((focused === up && up.hidden) || (focused === down && down.hidden)) (up.hidden ? down : up).focus({preventScroll:true});
+    $('.about-controls').hidden = index === 0 || index === lastIndex();
+    $('.about-status').textContent = label(index);
+  }
+  function navigate(index, smooth = true) {
+    index = clamp(index, 0, lastIndex());
+    const y = clamp(targetY(index), 0, document.documentElement.scrollHeight - innerHeight);
+    // Rapid clicks advance from the requested destination, not an intermediate pose.
+    destination = {index, y}; paintNavigation(index);
+    window.scrollTo({top:y, behavior:smooth && !reduced.matches ? 'smooth' : 'instant'});
+    render();
+  }
+  function activateEvent(index) {
+    state.event = index;
+    events.forEach((event, i) => {
+      const active = i === index;
+      if ((!active && $('.event-full', event).contains(document.activeElement)) || (active && $('.event-compact', event) === document.activeElement)) $('.event-year', event).focus({preventScroll:true});
+      event.classList.toggle('is-active', active);
+      $$('.event-year,.event-compact', event).forEach(button => button.setAttribute('aria-expanded', String(active)));
     });
   }
-
-  function scrollToScene(id) {
-    var target = document.getElementById(id);
-    if (!target) return;
-    var m = flowTops[id];
-    var top = m
-      ? m.top - m.dock
-      : target.getBoundingClientRect().top + window.pageYOffset;
-    window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  function paintTimeline(progress) {
+    const point = progress * (events.length - 1), index = Math.round(point);
+    if (state.event !== index || !events[index].classList.contains('is-active')) activateEvent(index);
+    const centers = events.map(e => e.offsetTop + e.offsetHeight / 2);
+    const lower = Math.floor(point), upper = Math.min(centers.length - 1, lower + 1);
+    const center = centers[lower] + (centers[upper] - centers[lower]) * (point - lower);
+    // Keep the focused copy near the heading, without the previous half-card void.
+    const focusY = Math.max(100, events[index].offsetHeight / 2 + 24) + 56 * clamp(point);
+    gsap.set(position, {y:focusY - center});
+    rail.style.top = centers[0] + 'px'; rail.style.height = Math.max(1, centers.at(-1) - centers[0]) + 'px';
+    gsap.set(fill, {scaleY:progress}); state.progress = progress;
   }
-
-  // The bottom prompts jump to the next scene; the top-edge labels jump back to
-  // a receded card. Wired once, outside matchMedia, since both are static DOM.
-  var prompts = Array.prototype.slice.call(
-    document.querySelectorAll(".ab-prompt")
-  );
-  Array.prototype.forEach.call(
-    document.querySelectorAll(".ab-prompt[data-ab-next]"),
-    function (p) {
-      p.addEventListener("click", function () {
-        scrollToScene(p.getAttribute("data-ab-next"));
-      });
+  function stopWork() {clearTimeout(workTimer); workTimer = null; workTween?.pause();}
+  function workAllowed() {
+    const rect = work.getBoundingClientRect();
+    return state.conveyor && state.scene === 2 && !document.hidden && !hovered && !work.contains(document.activeElement) && rect.bottom > 0 && rect.top < innerHeight;
+  }
+  function placeWork() {
+    workItems.forEach((item, i) => gsap.set(item, {y:((i - state.workIndex + workItems.length) % workItems.length) * step}));
+  }
+  function scheduleWork(delay = 3000) {
+    if (!workAllowed()) {stopWork(); return;}
+    if (workTween && workTween.progress() < 1) {workTween.resume(); return;}
+    if (!workTimer) workTimer = setTimeout(advanceWork, delay);
+  }
+  function advanceWork() {
+    workTimer = null;
+    if (!workAllowed()) return;
+    workTween = gsap.to(workItems, {y:'-=' + step, duration:.5, ease:'power2.inOut', onComplete:() => {
+      state.workIndex = (state.workIndex + 1) % workItems.length;
+      placeWork(); workTween = null; scheduleWork(2500);
+    }});
+  }
+  function render() {
+    const y = scrollY;
+    if (destination && Math.abs(y - destination.y) < 2) destination = null;
+    if (!state.enhanced) {
+      let index = 0;
+      for (let i = 1; i <= lastIndex(); i++) if (targetElement(i).getBoundingClientRect().top <= 164) index = i;
+      state.scene = index === 0 ? 0 : index === lastIndex() ? 2 : 1;
+      state.event = clamp(index - 1, 0, events.length - 1); state.stack = state.scene;
+      paintNavigation(destination?.index ?? index); scheduleWork(); return;
     }
-  );
-
-  var edges = Array.prototype.slice.call(
-    document.querySelectorAll(".ab-scene-edge")
-  );
-  edges.forEach(function (edge) {
-    edge.addEventListener("click", function () {
-      scrollToScene(edge.getAttribute("data-ab-jump"));
+    const stack = y < journeyStart ? clamp(y / transitionDistance) : 1 + clamp((y - timelineEnd - eventHold) / transitionDistance);
+    state.stack = stack; state.scene = Math.round(stack);
+    paintTimeline(clamp((y - timelineStart) / distance));
+    const floor = Math.floor(stack), fraction = stack - floor;
+    cards.forEach((card, i) => {
+      const incoming = i === floor + 1 && fraction > 0, front = i === floor;
+      const visible = front || incoming;
+      const offset = incoming ? (innerHeight - dock + 32) * (1 - fraction) : front ? -56 * fraction : 0;
+      gsap.set(card, {x:0, y:offset, scale:front ? 1 - .04 * fraction : 1, visibility:visible ? 'visible' : 'hidden', zIndex:10 + i});
+      card.inert = i !== state.scene;
+      card.classList.toggle('is-current', i === state.scene);
     });
-  });
-
-  var mm = gsap.matchMedia();
-
-  // Below 721px the CSS already collapses the stack, the horizontal track and
-  // the conveyor, so building triggers there would animate elements no longer
-  // laid out for it. gsap.matchMedia reverts everything when the query stops
-  // matching; the returned cleanup handles what it does not.
-  mm.add("(min-width: 721px)", function () {
-    var pfTimer = null;
-    var promptTimer = null;
-
+    deck.style.setProperty('--focused-height', cardHeights[state.scene] + 'px');
+    backs.forEach((back, i) => {
+      const depth = stack - i;
+      back.hidden = depth < 1;
+      if (!back.hidden) gsap.set(back, {x:0, y:-56 * depth, scale:1 - .04 * depth, zIndex:i + 1});
+    });
+    paintNavigation(destination?.index ?? (state.scene === 0 ? 0 : state.scene === 2 ? lastIndex() : state.event + 1));
+    // Focus follows a completed return, but ordinary wheel reading never steals it.
+    if (lastScene !== state.scene) {
+      const previous = cards[lastScene];
+      if (previous?.contains(document.activeElement)) $('h1,h2', cards[state.scene]).focus({preventScroll:true});
+      lastScene = state.scene;
+    }
+    scheduleWork();
+  }
+  function focusYear(index, smooth = true) {
+    navigate(index + 1, smooth);
+  }
+  function fallback() {
+    stopWork(); workTween?.kill(); workTween = null; trigger?.kill(); trigger = null; destination = null;
+    gsap?.killTweensOf([...cards, position, fill, ...backs, ...workItems]);
+    state.enhanced = false; state.conveyor = false;
+    root.classList.remove('about-active', 'about-pending', 'about-conveyor');
+    cards.forEach(card => {card.removeAttribute('style'); card.classList.remove('is-current'); card.inert = false;});
+    events.forEach(event => {event.classList.remove('is-active'); $$('.event-year,.event-compact', event).forEach(button => button.setAttribute('aria-expanded','true'));});
+    [position, rail, fill, ...backs, ...workItems, work, track].forEach(el => el.removeAttribute('style'));
+    backs.forEach(back => back.hidden = true); $('.return-layer').hidden = true; $('.about-controls').hidden = true;
+    footer.inert = false; footer.style.removeProperty('min-height'); deck.removeAttribute('style'); clearTimeout(window.aboutBoot?.timer);
+    headerTrack.removeAttribute('style');
+  }
+  function setupWork() {
+    if (reduced.matches || !gsap || !ST || location.search.includes('view=all') || window.aboutBoot?.expired) return;
+    root.classList.add('about-conveyor');
+    const itemHeight = Math.ceil(Math.max(...workItems.map(item => item.offsetHeight)));
+    step = itemHeight + 16;
+    work.style.setProperty('--work-card-height', itemHeight + 'px');
+    track.style.setProperty('--work-height', itemHeight * 3 + 32 + 'px');
+    state.conveyor = true; placeWork();
+  }
+  function start() {
+    const oldY = scrollY;
+    fallback(); readModel();
+    root.classList.add('about-navigation'); navigation.hidden = false;
+    if (!mq.matches || location.search.includes('view=all') || !gsap || !ST || window.aboutBoot?.expired) {setupWork(); render(); return;}
     try {
-      var scenes = Array.prototype.slice.call(
-        document.querySelectorAll(".ab-scene")
-      );
-
-      /* ---- 1. card stack: spring pop + delayed prompt --------------- */
-
-      function showPromptFor(sceneId) {
-        if (promptTimer) {
-          clearTimeout(promptTimer);
-          promptTimer = null;
-        }
-        prompts.forEach(function (p) { p.classList.remove("is-visible"); });
-        var p = prompts.filter(function (x) {
-          return x.getAttribute("data-ab-for") === sceneId;
-        })[0];
-        if (!p) return;
-        // Only after the scene has genuinely held focus for ~5s.
-        promptTimer = setTimeout(function () {
-          p.classList.add("is-visible");
-        }, 5000);
-      }
-
-      // One scene wears .is-focus at a time; CSS springs it larger and
-      // lightens it back to the standard surface, and the receded ones darken
-      // and show their jump-back label.
-      var focusIdx = -1;
-      function setFocus(idx) {
-        if (idx === focusIdx) return;
-        focusIdx = idx;
-        scenes.forEach(function (scene, j) {
-          scene.classList.toggle("is-focus", j === idx);
-          var e = scene.querySelector(".ab-scene-edge");
-          // A receded scene (above the focused one) offers a jump-back.
-          if (e) e.disabled = j >= idx;
-        });
-        var focused = scenes[idx];
-        if (focused) showPromptFor(focused.id);
-      }
-
-      // Focus follows the absolute scroll position against each scene's
-      // measured flow top. A plain rAF-throttled scroll listener, not a
-      // per-scene ScrollTrigger: sticky elements confuse ScrollTrigger's
-      // start calc, and this also stays correct after a jump-scroll.
-      function pickFocus() {
-        var mark = window.pageYOffset + window.innerHeight * 0.42;
-        var idx = 0;
-        for (var i = 0; i < scenes.length; i++) {
-          var ft = flowTops[scenes[i].id];
-          if (ft && mark >= ft.top) idx = i;
-        }
-        setFocus(idx);
-      }
-      var focusRaf = false;
-      function onFocusScroll() {
-        if (focusRaf) return;
-        focusRaf = true;
-        requestAnimationFrame(function () { focusRaf = false; pickFocus(); });
-      }
-      window.addEventListener("scroll", onFocusScroll, { passive: true });
-      ScrollTrigger.addEventListener("refresh", pickFocus);
-      pickFocus();
-
-      /* ---- 2. horizontal timeline -------------------------------------- */
-
-      var journey = document.querySelector(".ab-journey");
-      var runway = document.querySelector(".ab-journey-scroll");
-      var track = journey && journey.querySelector("[data-ab-track]");
-      var inner = journey && journey.querySelector(".ab-scene-inner");
-
-      if (journey && runway && track && inner) {
-        var railFill = journey.querySelector("[data-ab-rail-fill]");
-        var stops = journey.querySelectorAll(".ab-stop");
-
-        var distance = function () {
-          return Math.max(0, track.scrollWidth - inner.clientWidth);
-        };
-
-        var dockTop = function () {
-          var v = parseFloat(getComputedStyle(journey).top);
-          return isNaN(v) ? 0 : v;
-        };
-
-        var tl = gsap.timeline({
-          defaults: { ease: "none" },
-          scrollTrigger: {
-            trigger: journey,
-            start: function () {
-              return "top " + dockTop() + "px";
-            },
-            endTrigger: runway,
-            end: "bottom bottom",
-            scrub: 1,
-            invalidateOnRefresh: true,
-            refreshPriority: 1
-          }
-        });
-
-        tl.to(track, { x: function () { return -distance(); }, duration: 1 }, 0);
-
-        if (railFill) {
-          tl.to(railFill, { scaleX: 1, duration: 1 }, 0);
-        }
-
-        var lastIndex = stops.length - 1;
-        Array.prototype.forEach.call(stops, function (stop, i) {
-          var fills = stop.querySelectorAll(".ab-skill-fill");
-          if (!fills.length) return;
-          var at = lastIndex > 0 ? (i / lastIndex) * 0.82 : 0;
-          tl.to(fills, { scaleX: 1, duration: 0.13, stagger: 0.035 }, at);
-        });
-      }
-
-      /* ---- 3. Selected Work conveyor -------------------------------- */
-
-      // Three slots visible; the whole stack steps down one slot every ~1.5s
-      // (1s hold, ~0.55s slide). The list is cloned once so the wrap is
-      // seamless: at the end we snap back with no transition to the identical
-      // clone frame. Pauses on hover / focus and while the tab is hidden.
-      var pf = document.querySelector("[data-ab-pf]");
-      var pfList = pf && pf.querySelector(".ab-pf-list");
-
-      if (pf && pfList) {
-        var originals = Array.prototype.slice.call(
-          pfList.querySelectorAll(".ab-pf-slot")
-        );
-        var n = originals.length;
-
-        if (n >= 3) {
-          originals.forEach(function (s) {
-            var c = s.cloneNode(true);
-            c.setAttribute("aria-hidden", "true");
-            c.setAttribute("data-ab-clone", "");
-            pfList.appendChild(c);
-          });
-
-          // offsetHeight, not getBoundingClientRect: the list lives inside the
-          // scaled .ab-detail card, so a rect height is scaled but the
-          // translateY we apply is in the list's own unscaled coordinates.
-          var stepPx = function () {
-            var gap = parseFloat(getComputedStyle(pfList).rowGap) || 0;
-            return originals[0].offsetHeight + gap;
-          };
-
-          var pos = 0; // translateY = -(n - pos) * step
-          var pfPaused = false;
-
-          var apply = function (withTransition) {
-            pfList.style.transition = withTransition
-              ? "transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1)"
-              : "none";
-            pfList.style.transform =
-              "translateY(" + (-(n - pos) * stepPx()) + "px)";
-          };
-          apply(false);
-
-          var pfHold = function () { pfPaused = true; };
-          var pfRelease = function () { pfPaused = false; };
-          pf.addEventListener("pointerenter", pfHold);
-          pf.addEventListener("pointerleave", pfRelease);
-          pf.addEventListener("focusin", pfHold);
-          pf.addEventListener("focusout", pfRelease);
-
-          pfTimer = setInterval(function () {
-            if (pfPaused || document.hidden) return;
-            pos += 1;
-            apply(true);
-            if (pos >= n) {
-              window.setTimeout(function () {
-                pos = 0;
-                apply(false);
-                void pfList.offsetHeight; // commit before the next transition
-              }, 580);
-            }
-          }, 1500);
-        }
-      }
-    } catch (err) {
-      if (pfTimer) clearInterval(pfTimer);
-      if (promptTimer) clearTimeout(promptTimer);
-      disarm();
-      return;
+      gsap.registerPlugin(ST); root.classList.add('about-active');
+      events.forEach(event => event.classList.add('is-active'));
+      const heights = events.map(event => event.offsetHeight), windowHeight = $('.journey-window').clientHeight;
+      if (Math.max(...heights) > windowHeight - 48) {fallback(); setupWork(); render(); return;}
+      // All work entries remain in source order; the belt uses transforms, no clones.
+      setupWork();
+      activateEvent(0); cardHeights = cards.map(card => card.offsetHeight);
+      if (Math.max(cardHeights[0], cardHeights[1]) > innerHeight - dock - 150) {fallback(); setupWork(); render(); return;}
+      stageHeight = cardHeights[2];
+      distance = heights.slice(1).reduce((sum, height, i) => sum + Math.max(240, (height + heights[i]) * 1.5), 0) || 1;
+      journeyStart = transitionDistance; timelineStart = journeyStart + eventHold;
+      timelineEnd = timelineStart + distance; detailsStart = timelineEnd + eventHold + transitionDistance;
+      readingEnd = detailsStart + Math.max(0, dock + stageHeight + 64 - innerHeight);
+      deck.style.setProperty('--stage-height', stageHeight + 'px');
+      deck.style.setProperty('--dock', dock + 'px');
+      deck.style.setProperty('--runway-height', detailsStart + stageHeight + 'px');
+      headerTrack.style.setProperty('--nav-runway', detailsStart + header.offsetHeight + 24 + 'px');
+      // A tall viewport still needs enough native scroll range to finish docking.
+      footer.style.minHeight = Math.max(0, innerHeight - dock - stageHeight + 32) + 'px';
+      state.enhanced = true; $('.return-layer').hidden = false;
+      placeWork();
+      trigger = ST.create({id:'about-page', start:0, end:() => readingEnd, onUpdate:render, onRefresh:render});
+      window.scrollTo({top:oldY, behavior:'instant'}); ST.refresh(); render(); clearTimeout(window.aboutBoot?.timer);
+    } catch (error) {fallback(); render(); console.error('About restored its complete document.', error);}
+  }
+  [up, down].forEach(button => button.addEventListener('click', () => navigate((destination?.index ?? state.index) + Number(button.dataset.step))));
+  skip.addEventListener('click', event => {
+    event.preventDefault(); navigate(lastIndex()); up.focus({preventScroll:true});
+  });
+  $$('.return-edge').forEach(button => button.addEventListener('click', () => {
+    navigate(Number(button.dataset.scene) === 0 ? 0 : state.event + 1);
+  }));
+  $$('.return-edge').forEach(button => button.addEventListener('focus', () => {
+    if (state.enhanced && scrollY > detailsStart) window.scrollTo({top:detailsStart, behavior:'instant'});
+  }));
+  list.addEventListener('click', event => {
+    if (event.target.closest('.event-year,.event-compact')) focusYear(events.indexOf(event.target.closest('.timeline-event')));
+  });
+  list.addEventListener('focusin', event => {
+    if (!state.enhanced || !event.target.matches(':focus-visible')) return;
+    const index = events.indexOf(event.target.closest('.timeline-event'));
+    if (index >= 0 && index !== state.event) focusYear(index, false);
+  });
+  work.addEventListener('pointerenter', () => {hovered = true; stopWork();});
+  work.addEventListener('pointerleave', () => {hovered = false; scheduleWork();});
+  work.addEventListener('focusin', event => {
+    stopWork(); if (!state.conveyor) return;
+    workTween?.kill(); workTween = null;
+    const index = workItems.indexOf(event.target.closest('.tile-work-card'));
+    if (index >= 0 && (index - state.workIndex + workItems.length) % workItems.length >= 3) state.workIndex = index;
+    placeWork();
+    // Browsers may scroll an overflow:hidden box to the old focused position.
+    work.scrollTop = 0;
+  });
+  work.addEventListener('focusout', () => queueMicrotask(() => scheduleWork()));
+  document.addEventListener('visibilitychange', () => document.hidden ? stopWork() : scheduleWork());
+  ['wheel','touchstart','pointerdown','keydown'].forEach(type => addEventListener(type, event => {
+    if (type === 'pointerdown' && event.target.closest('.card-navigation,.timeline-skip')) return;
+    if (type === 'keydown' && event.target.closest('.card-navigation,.timeline-skip') && [' ','Enter'].includes(event.key)) return;
+    if (type === 'keydown' && !['PageUp','PageDown','Home','End','ArrowUp','ArrowDown',' '].includes(event.key)) return;
+    // Cancel only our pending smooth jump; the native wheel/touch/key action
+    // still runs normally. Clearing the destination alone does not stop it.
+    if (destination) window.scrollTo({top:scrollY, behavior:'instant'});
+    destination = null;
+  }, {passive:true}));
+  addEventListener('scroll', () => {if (!state.enhanced) render();}, {passive:true});
+  mq.addEventListener('change', start);
+  reduced.addEventListener('change', () => {if (reduced.matches) root.classList.remove('about-intro'); start();});
+  addEventListener('resize', () => {clearTimeout(resizeTimer); resizeTimer = setTimeout(start, 180);});
+  addEventListener('pagehide', fallback);
+  addEventListener('pageshow', event => {if (event.persisted) start();});
+  $('.ab-portrait').addEventListener('animationend', event => {
+    if (event.animationName === 'about-develop') {root.classList.remove('about-intro'); clearTimeout(window.aboutBoot?.introTimer);}
+  });
+  window.aboutPage = {fallback, refresh:start, navigate,
+    snapshot:() => ({...state, scrollY, distance, journeyStart, timelineStart, timelineEnd, detailsStart, readingEnd, stageTop:stage.getBoundingClientRect().top, workPaused:!workAllowed(), pins:ST?.getAll().filter(t => t.pin).length || 0, triggers:ST?.getAll().length || 0}),
+    addEvent(data) {
+      if (!Number.isFinite(+data.year) || +data.year < 2019 || document.getElementById(data.id)) throw new Error('Use a unique id and a year from 2019 onward.');
+      const li = document.createElement('li'); li.className = 'timeline-event'; li.id = data.id; li.dataset.year = data.year; li.dataset.proof = data.proof;
+      const time = document.createElement('time'); time.dateTime = data.year; time.textContent = data.year;
+      const node = document.createElement('span'); node.className = 'event-node'; node.setAttribute('aria-hidden','true');
+      const copy = document.createElement('div'); copy.className = 'event-copy'; const full = document.createElement('div'); full.className = 'event-full';
+      const title = document.createElement('h3'); title.textContent = data.title; full.append(title);
+      data.paragraphs.forEach(text => {const p = document.createElement('p'); p.textContent = text; full.append(p);});
+      copy.append(full); li.append(time, node, copy); list.append(li);
+      $$('.timeline-event', list).sort((a,b) => +a.dataset.year - +b.dataset.year).forEach(el => list.append(el)); start();
     }
-
-    return function () {
-      // matchMedia reverts the GSAP tweens and triggers it created. Clean up
-      // what it does not, so a resize down cannot strand a scaled scene, a
-      // visible prompt, or a translated conveyor with its clones.
-      if (pfTimer) { clearInterval(pfTimer); pfTimer = null; }
-      if (promptTimer) { clearTimeout(promptTimer); promptTimer = null; }
-      window.removeEventListener("scroll", onFocusScroll);
-      ScrollTrigger.removeEventListener("refresh", pickFocus);
-
-      Array.prototype.forEach.call(
-        document.querySelectorAll(".ab-scene"),
-        function (s) { s.classList.remove("is-focus"); }
-      );
-      prompts.forEach(function (p) { p.classList.remove("is-visible"); });
-      edges.forEach(function (e) { e.disabled = true; });
-
-      var list = document.querySelector("[data-ab-pf] .ab-pf-list");
-      if (list) {
-        list.style.transition = "";
-        list.style.transform = "";
-        Array.prototype.forEach.call(
-          list.querySelectorAll("[data-ab-clone]"),
-          function (c) { c.remove(); }
-        );
-      }
-    };
-  });
-
-  measureFlowTops();
-  ScrollTrigger.addEventListener("refresh", measureFlowTops);
-
-  // Scene heights depend on content that settles after first paint. Without
-  // this the stack and the horizontal distance are measured against a shorter
-  // page.
-  window.addEventListener("load", function () {
-    ScrollTrigger.refresh();
-  });
+  };
+  readModel(); start();
+  document.fonts.ready.then(start);
 })();
