@@ -347,6 +347,37 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     transition: background-color 0.2s;
 }
 
+/* Arrow CTA: the About "See all projects" treatment (Plus Jakarta Sans, arrow, underline on
+   hover), scaled from its 14px / 44px proportions to Home's 16px body text. */
+.btn-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 50px;
+    padding: 9px 18px;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 600;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-arrow svg {
+    display: block;
+    flex: none;
+    width: 23px;
+    height: 23px;
+}
+
+.btn-arrow:hover {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
 /* Full-width strip pinned behind the floating nav so scrolling content
    never collides with it: solid page background up top, fading out
    toward transparent (same idea as the carousel edge fade) rather than
@@ -2953,6 +2984,11 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         padding-left: 1rem;
         padding-right: 1rem;
     }
+
+    .hero-container .flex.flex-wrap .btn-arrow {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
 }
 
 /* Mobile hero layout - center-aligned action row */
@@ -2976,8 +3012,49 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         padding-right: 1.25rem;
     }
 
+    /* The arrow CTA must never shrink below its label and arrow; tighten it instead. */
+    .hero-container .flex.flex-wrap .btn-arrow {
+        flex-shrink: 0;
+        gap: 8px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
     .hero-container .flex.flex-wrap .flex {
         gap: 0.625rem;
+    }
+}
+
+/* Phones: the arrow CTA and the three icons share one tight line inside the card.
+   Below 360px there is no room, so the icons wrap under the button instead of overflowing. */
+@media (max-width: 640px) {
+    .hero-container .flex.flex-wrap {
+        gap: 16px;
+    }
+
+    /* Phones keep the About button's own 14px / 44px size so the row fits at 360px. */
+    .hero-container .flex.flex-wrap .btn-arrow {
+        min-height: 44px;
+        font-size: 14px;
+        gap: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .hero-container .flex.flex-wrap .btn-arrow svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .hero-container .flex.flex-wrap .flex {
+        gap: 4px;
+    }
+}
+
+@media (max-width: 359px) {
+    .hero-container .flex.flex-wrap {
+        flex-wrap: wrap;
+        row-gap: 8px;
     }
 }
 
@@ -3124,11 +3201,14 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .about-v5 [hidden] {display:none!important}
 .about-skip {position:fixed;left:16px;top:-100px;z-index:200;padding:12px 20px;background:#1f1f1f;color:#fff;border-radius:8px}
 .about-skip:focus {top:16px}
-.about-header-track {position:relative;z-index:100}
-.about-header-track > header {position:relative;top:24px}
-.about-v5-page .nav-scroll-blur {display:none}
+/* The nav holds its resting position for the whole page, like every other page. */
+.about-v5-page {position:relative;display:flow-root}
+.about-header-track {display:contents}
+.about-header-track > header {position:sticky;top:24px;z-index:100}
+/* Same solid fade as other pages, raised above the card deck and ending above the highest return edge. */
+.about-v5-page .nav-scroll-blur {z-index:20;background:linear-gradient(to bottom,#2a2a2a 0,#2a2a2a 100px,rgba(42,42,42,0) 118px)}
 .about-stage {position:relative}
-.about-v5 {margin-bottom:0}
+.about-v5 {margin-bottom:64px}
 .about-v5 #details {margin-bottom:0}
 .about-v5-page {overflow-anchor:none}
 .about-v5-page .floating-nav {max-width:56rem;margin-inline:auto;box-sizing:border-box}
@@ -3221,14 +3301,14 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .about-v5 .chronology-rail,.about-v5 .timeline:before {left:128px;width:1px}
 .about-v5 .ab-skill {font-size:11.84px;color:var(--muted)}
 @media screen and (min-width:721px) and (min-height:650px) and (prefers-reduced-motion:no-preference) {
- html.about-pending .about-header-track {position:absolute;top:0;left:0;right:0}
+ html.about-pending .about-header-track {display:block;position:absolute;top:0;left:0;right:0}
  html.about-pending .about-v5 {width:min(896px,calc(100% - 144px));margin:232px auto 0}
  html.about-pending .ab-portrait {max-height:clamp(220px,calc(100svh - 530px),427px);width:auto;max-width:100%}
  html.about-pending .about-card:not(#who) {display:none}
  html.about-active {scrollbar-gutter:stable;scroll-behavior:auto}
- html.about-active .about-header-track {position:absolute;top:0;left:0;right:0;height:var(--nav-runway);pointer-events:none}
+ html.about-active .about-header-track {display:block;position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
  html.about-active .about-header-track > header {position:sticky;top:24px;pointer-events:auto}
- html.about-active .about-v5 {--reading-height:clamp(280px,calc(100svh - 600px),360px);width:min(896px,calc(100% - 144px));margin:var(--dock) auto 0;height:var(--runway-height);position:relative;z-index:6;overflow-anchor:none}
+ html.about-active .about-v5 {--reading-height:clamp(280px,calc(100svh - 600px),360px);width:min(896px,calc(100% - 144px));margin:var(--dock) auto 64px;height:var(--runway-height);position:relative;z-index:6;overflow-anchor:none}
  html.about-active .ab-portrait {max-height:clamp(220px,calc(100svh - 530px),427px);width:auto;max-width:100%}
  html.about-active .about-stage {position:sticky;top:var(--dock);height:var(--stage-height);isolation:isolate}
  html.about-active .about-card {position:absolute;top:0;left:0;width:100%;margin:0;will-change:transform}
@@ -3244,9 +3324,6 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
  html.about-active .timeline-event:not(.is-active) .event-full {display:none}
  html.about-active .timeline-event:not(.is-active) .event-compact {display:block}
  html.about-active .chronology-rail {display:block}
-
- html.about-active #about-footer {padding-top:32px}
- html.about-active #about-footer .footer-divider {margin-top:0}
 }
 @media (max-width:950px) {
  .about-v5 .detail-columns {grid-template-columns:1fr;gap:32px}
@@ -3302,8 +3379,6 @@ html.about-navigation .about-controls {position:fixed;bottom:64px;left:0;right:0
 html.about-navigation .timeline-skip {pointer-events:auto;background:var(--page)}
 html.about-active .navigation-track {height:var(--focused-height);bottom:auto}
 html.about-active .card-navigation {top:min(calc(50svh - 52px),calc(var(--dock) + var(--focused-height) - 104px))}
-.about-v5-page #about-footer {padding-top:32px}
-.about-v5-page #about-footer .footer-divider {margin-top:0}
 @media (max-width:720px) {
  html.about-navigation .about-v5 {width:calc(100% - 88px);margin-left:20px;margin-right:68px}
  .about-v5 .navigation-track {right:-56px}
@@ -3338,7 +3413,7 @@ html.about-active .card-navigation {top:min(calc(50svh - 52px),calc(var(--dock) 
  html.about-intro .ab-line:after {animation:about-wipe .85s cubic-bezier(.16,1,.3,1) both}
  html.about-intro .ab-lede {animation:about-rise .7s cubic-bezier(.16,1,.3,1) .55s both}
  html.about-intro .ab-lede + .ab-lede {animation-delay:.67s}
- html.about-intro .ab-portrait {animation:about-settle .75s cubic-bezier(.16,1,.3,1) .95s both,about-develop 1.3s ease-out 1.2s both}
+ html.about-intro .ab-portrait {animation:about-settle .75s cubic-bezier(.16,1,.3,1) .95s both,about-develop 2.3s ease-out 1.2s both}
  html.about-intro #who .card-scroll {animation:about-land .6s cubic-bezier(.16,1,.3,1) both}
 }
 @keyframes about-wipe {from {transform:scaleX(1)} to {transform:scaleX(0)}}
@@ -3347,6 +3422,11 @@ html.about-active .card-navigation {top:min(calc(50svh - 52px),calc(var(--dock) 
 @keyframes about-develop {from {filter:grayscale(.65) contrast(1.03)} to {filter:grayscale(0) contrast(1)}}
 @keyframes about-land {from {transform:translateY(12px)} to {transform:none}}
 @media print {.navigation-track,.about-status {display:none!important}}
+/* Click to continue: joins the down arrow on Who I Am after an idle pause, evaporates on the first move. */
+.about-v5 .continue-prompt {position:absolute;top:calc(100% + 10px);right:0;width:64px;text-align:right;font:600 12px/1.35 "Plus Jakarta Sans",sans-serif;color:var(--accent);pointer-events:none}
+.about-v5 .continue-prompt.is-beside {top:auto;bottom:0;right:auto;left:calc(100% + 14px);width:max-content;height:48px;display:flex;align-items:center;gap:.3em;font-size:13px;text-align:left;white-space:nowrap}
+.about-v5 .prompt-word {display:inline-block;white-space:nowrap}
+.about-v5 .prompt-char {display:inline-block}
 
 /* --------------------------------------------------------------------------
    Uses page, parked. The real content lives on the uses-page-wip branch
