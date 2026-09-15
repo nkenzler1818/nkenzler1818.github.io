@@ -31,6 +31,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="../js/nav-transition.js" defer></script>
     <script src="../js/resume-viewer.js" defer></script>
+    <script src="../js/pc-preview.js" defer></script>
     <script>
         window.addEventListener('scroll', function() {
             const nav = document.querySelector('nav');
@@ -145,6 +146,18 @@
                     best place to see what I have built.
                 </p>
             </div>
+            <section class="pc-preview" aria-labelledby="pc-preview-title">
+                <h2 id="pc-preview-title" class="uses-soon-head">A little sneak peek.</h2>
+                <p class="uses-soon-body">While I put the rest together, explore this Blender model of my PC.</p>
+                <div class="pc-preview-stage" id="pc-preview-stage">
+                    <img class="pc-preview-poster" src="../assets/models/pc-preview.webp" width="640" height="520" loading="lazy" decoding="async" alt="My PC, with glass panels, purple lighting, a vertical graphics card, and a portrait display.">
+                </div>
+                <div class="pc-preview-controls">
+                    <button type="button" class="pc-preview-button" id="pc-preview-load" hidden>Explore in 3D</button>
+                    <button type="button" class="pc-preview-button" id="pc-preview-reset" hidden>Reset view</button>
+                </div>
+                <p class="pc-preview-status" id="pc-preview-status" role="status">A preview of my personal workstation.</p>
+            </section>
         </section>
     </main>
 
