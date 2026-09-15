@@ -7,6 +7,7 @@
     src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Regular.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -14,6 +15,7 @@
     src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Medium.ttf") format("truetype");
     font-weight: 500;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -21,9 +23,33 @@
     src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf") format("truetype");
     font-weight: 600;
     font-style: normal;
+    font-display: swap;
+}
+
+/* Headings ask for 700 and .projects-heading asks for 800, but no face above
+   600 was ever declared, so every heading on the site was rendering as
+   browser-synthesised faux bold. The Bold file was already on disk. */
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
 }
 
 html {
+    /* The whole site is dark. Without this the browser still paints
+       scrollbars and native controls light. */
+    color-scheme: dark;
+
     /* Always reserve the scrollbar's track, whether or not a page's content
        is tall enough to need it, so centered content doesn't shift left/right
        from page to page as the scrollbar appears/disappears. */
@@ -47,6 +73,28 @@ h3, h4, h5, h6 {
 
 code {
     font-family: 'JetBrains Mono', monospace;
+}
+
+/* Keyboard focus, sitewide.
+
+   Without this, links fall back to the browser default ring, which Chrome
+   draws in near-black. On a #2A2A2A page and a #1F1F1F nav that is close to
+   invisible, so a keyboard user cannot tell where they are. Scoped to
+   :focus-visible so it never shows on mouse clicks, and it uses the one
+   accent already locked for the site. Components that define their own
+   focus ring (project cards, the About page controls) already match this. */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--accent-purple);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* The nav pill clips tightly, so the ring sits inside rather than outside. */
+.floating-nav a:focus-visible,
+.more-dropdown a:focus-visible {
+    outline-offset: 2px;
 }
 
 .backdrop-blur-sm {
@@ -97,7 +145,7 @@ code {
     font-weight: 600;
 }
 
-/* Active-tab pill fill — a separate layer (not the link itself) so it can
+/* Active-tab pill fill, a separate layer (not the link itself) so it can
    be hidden independently while the JS "flying ghost" pill (below) animates
    over it during a page navigation. */
 .nav-link[aria-current="page"]::after {
@@ -144,6 +192,152 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     font-weight: 600;
 }
 
+/* --------------------------------------------------------------------------
+   "Uses" nav link, under construction. The real page content is parked on the
+   uses-page-wip branch until the Blender tech-stack model is ready. The link
+   stays in the nav with a hazard-tape marker wound around the word and a
+   hover / focus tooltip. Desktop only for now; the mobile nav is a later pass.
+   -------------------------------------------------------------------------- */
+.nav-link-wip {
+    position: relative;
+}
+
+@media (min-width: 921px) {
+    /* Strip passing BEHIND the word. Sits in .nav-link's own stacking
+       context (it already sets z-index: 0), so -1 stays above the pill. */
+.nav-link-wip .nav-wip-deco {
+        position: absolute;
+        z-index: -1;
+        left: 2px;
+        right: 2px;
+        top: 50%;
+        height: 10px;
+        margin-top: -8px;
+        pointer-events: none;
+        background:
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.42)),
+            repeating-linear-gradient(-54deg, #f4c21c 0 6px, #18140a 6px 12px);
+        background-blend-mode: overlay, normal;
+        transform: rotate(-6deg);
+        border-radius: 1px;
+        opacity: 0.9;
+    }
+
+    /* Strip passing in FRONT of the word: the two together read as wound
+       around the letters rather than laid flat on top. */
+.nav-link-wip .nav-wip-deco::before {
+        content: "";
+        position: absolute;
+        z-index: 3;
+        left: -2px;
+        right: -5px;
+        top: 50%;
+        height: 12px;
+        margin-top: -3px;
+        background:
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.36) 0%, rgba(255, 255, 255, 0.05) 44%, rgba(0, 0, 0, 0.46) 100%),
+            repeating-linear-gradient(-54deg, #f6c81f 0 6px, #17130a 6px 12px);
+        background-blend-mode: overlay, normal;
+        transform: rotate(-13deg) skewX(-4deg);
+        border-radius: 2px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.55);
+    }
+
+    /* The loose end past the "s". The only piece that moves. */
+.nav-link-wip .nav-wip-deco::after {
+        content: "";
+        position: absolute;
+        z-index: 3;
+        left: calc(100% - 3px);
+        top: 50%;
+        width: 8px;
+        height: 12px;
+        margin-top: -3px;
+        background:
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.32), rgba(0, 0, 0, 0.5)),
+            repeating-linear-gradient(-54deg, #f6c81f 0 6px, #17130a 6px 12px);
+        background-blend-mode: overlay, normal;
+        border-radius: 0 2px 4px 0;
+        transform-origin: left center;
+        transform: rotate(-16deg);
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        animation: nav-wip-sway 3.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes nav-wip-sway {
+        from { transform: rotate(-20deg); }
+        to   { transform: rotate(-3deg); }
+    }
+
+    .nav-wip-tip {
+        position: absolute;
+        z-index: 30;
+        top: calc(100% + 12px);
+        left: 50%;
+        width: max-content;
+        max-width: 232px;
+        transform: translateX(-50%) translateY(-4px);
+        padding: 0.5rem 0.7rem;
+        border-radius: 8px;
+        background: #1f1f1f;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+        color: var(--accent-purple);
+        font-size: 0.64rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.16s ease, transform 0.16s ease;
+    }
+
+    .nav-wip-tip span {
+        display: block;
+        margin-top: 4px;
+        color: #d4d4d4;
+        font-size: 0.72rem;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        text-transform: none;
+        line-height: 1.45;
+    }
+
+    .nav-wip-tip::before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border: 5px solid transparent;
+        border-bottom-color: #1f1f1f;
+    }
+
+    .nav-link-wip:hover .nav-wip-tip,
+    .nav-link-wip:focus-visible .nav-wip-tip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-link-wip .nav-wip-deco::after {
+        animation: none;
+    }
+}
+
+/* Below the desktop breakpoint the marker is hidden (mobile nav is a separate
+   pass). The link still works and the parked page still says it is coming. */
+@media (max-width: 920px) {
+    .nav-link-wip .nav-wip-deco,
+    .nav-link-wip .nav-wip-tip {
+        display: none;
+    }
+}
+
 .btn-dark-purple {
     background-color: #7c46af;
     color: white;
@@ -153,8 +347,45 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     transition: background-color 0.2s;
 }
 
+/* Arrow CTA: the About "See all projects" treatment (Plus Jakarta Sans, arrow, underline on
+   hover), scaled from its 14px / 44px proportions to Home's 16px body text. */
+.btn-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-height: 50px;
+    padding: 9px 18px;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 600;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-arrow svg {
+    display: block;
+    flex: none;
+    width: 23px;
+    height: 23px;
+}
+
+.btn-arrow:hover {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.btn-home-cta:hover {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
 /* Full-width strip pinned behind the floating nav so scrolling content
-   never collides with it — solid page background up top, fading out
+   never collides with it: solid page background up top, fading out
    toward transparent (same idea as the carousel edge fade) rather than
    blurring content, which just left text half-legible under the nav. */
 .nav-scroll-blur {
@@ -170,7 +401,8 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 
 .floating-nav {
     background-color: #1f1f1f;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* No hairline border here. The grey outline read as a seam against the
+       page background; the pill separates on its own with the shadow. */
     border-radius: 1rem;
     padding: 0.75rem 1.5rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -258,6 +490,10 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .icon-btn img {
     width: 24px;
     height: 24px;
+}
+
+.hero-container .flex.flex-wrap > .flex {
+    align-items: center;
 }
 
 .project-pane, .project-card, .hero-container, .blog-card {
@@ -410,10 +646,17 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    /* vertical padding gives shadow + hover-lift room;
-       horizontal padding allows first/last card to snap to center */
-    padding: 4px 0 6px;
+    /* overflow-x:auto forces overflow-y to compute to auto, so without real
+       room here the focused card's hover lift (translateY -4px + scale 1.04)
+       and its 0 8px 30px shadow get clipped to a hard flat edge. Chrome on
+       Windows clips this harder than Safari on macOS, which is why the older
+       carousel-width fix looked resolved on Mac but was still broken here.
+       Negative margins pull the row's layout footprint back to roughly what
+       the old 4px/6px padding gave; the counter below compensates too.
+       horizontal padding lets the first/last card snap to centre. */
+    padding: 22px 0 40px;
     padding-inline: calc(50% - 140px);
+    margin: -14px 0 -30px;
     cursor: grab;
     user-select: none;
 }
@@ -488,8 +731,9 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     font-size: 0.72rem;
     line-height: 1;
     color: rgba(255, 255, 255, 0.35);
-    margin-top: 2px;
-    margin-bottom: -14px;
+    /* Keep the counter below the carousel so it does not overlap the edge fade. */
+    margin-top: 8px;
+    margin-bottom: 0;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.08em;
     user-select: none;
@@ -604,6 +848,20 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     margin-bottom: 0;
 }
 
+.footer-bg .social-icons .resume-pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    margin-bottom: 0;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 .footer-bg .social-icons img {
     width: 22px;
     height: 22px;
@@ -612,6 +870,16 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .footer-bg .social-icons a:hover {
     color: var(--accent-purple);
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer-bg .social-icons .resume-pdf-btn:hover {
+    color: var(--accent-purple);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer-bg .social-icons .resume-pdf-btn:focus-visible {
+    outline: 2px solid var(--accent-purple);
+    outline-offset: 2px;
 }
 
 /* Content text color overrides */
@@ -753,6 +1021,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     position: relative;
     width: 100%;
     max-width: 900px;
+    height: min(80vh, calc(100vh - 2rem));
     max-height: 80vh;
     margin: auto;
     background: #141414;
@@ -1103,7 +1372,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     color: rgba(209, 213, 219, 0.35);
 }
 
-/* Journey timeline (About page — career history) */
+/* Journey timeline (About page, career history) */
 .journey-timeline {
     display: flex;
     flex-direction: column;
@@ -2632,131 +2901,9 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 }
 
 
-.about-profile-image {
-    width: min(35%, clamp(130px, 24vw, 260px));
-    max-width: 100%;
-    height: auto;
-    float: right;
-    margin-left: clamp(10px, 2vw, 20px);
-    margin-bottom: 16px;
-    margin-top: 0;
-    clear: right;
-    object-fit: cover;
-}
-
-.about-section .about-profile-image {
-    margin-top: 0;
-}
-
-.about-text-wrap {
-    display: flow-root;
-    max-width: 100%;
-}
-
-.about-page .about-text-wrap p {
-    margin-bottom: 0.75rem;
-}
-
-.about-page .about-text-wrap p:last-child {
-    margin-bottom: 0;
-}
-
 .about-section {
     max-width: 100%;
     min-width: 0;
-}
-
-.faq-section {
-    max-width: 100%;
-}
-
-.faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.faq-item {
-    background: #1F1F1F;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(192, 132, 252, 0.15);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.faq-item:hover {
-    border-color: rgba(192, 132, 252, 0.35);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.32);
-}
-
-.faq-question {
-    width: 100%;
-    background: none;
-    border: none;
-    color: #f5f5f5;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    text-align: left;
-    padding: 1.25rem 1.5rem;
-    font-size: 1.05rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.faq-question:focus-visible {
-    outline: 2px solid rgba(192, 132, 252, 0.4);
-    outline-offset: -2px;
-}
-
-.faq-question-text {
-    flex: 1;
-}
-
-.faq-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(192, 132, 252, 0.7);
-    font-size: 1rem;
-    transition: transform 0.25s ease, color 0.2s ease;
-}
-
-.faq-question:hover .faq-icon {
-    color: #c084fc;
-}
-
-.faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease;
-}
-
-.faq-answer-content {
-    padding: 0 1.5rem 1.25rem;
-    color: #d4d4d4;
-    line-height: 1.7;
-    font-size: 0.98rem;
-}
-
-.faq-item.open .faq-icon {
-    transform: rotate(90deg);
-}
-
-@media (max-width: 640px) {
-    .faq-question {
-        padding: 1rem 1.25rem;
-        font-size: 1rem;
-    }
-
-    .faq-answer-content {
-        padding: 0 1.25rem 1rem;
-    }
 }
 
 @media (max-width: 740px) {
@@ -2803,16 +2950,6 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     }
 }
 
-@media (max-width: 340px) {
-    .about-profile-image {
-        float: none;
-        display: block;
-        max-width: 100%;
-        width: min(180px, 74vw);
-        margin: 0 auto 16px auto;
-    }
-}
-
 @media (max-width: 280px) {
     .mobile-primary-links a:nth-child(1) {
         display: none;
@@ -2820,14 +2957,6 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 
     .more-home {
         display: block;
-    }
-}
-
-@media (max-width: 320px) {
-    .about-profile-image {
-        width: min(200px, 80vw);
-        margin-left: auto;
-        margin-right: auto;
     }
 }
 
@@ -2889,6 +3018,11 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         padding-left: 1rem;
         padding-right: 1rem;
     }
+
+    .hero-container .flex.flex-wrap .btn-arrow {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
 }
 
 /* Mobile hero layout - center-aligned action row */
@@ -2912,8 +3046,49 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         padding-right: 1.25rem;
     }
 
+    /* The arrow CTA must never shrink below its label and arrow; tighten it instead. */
+    .hero-container .flex.flex-wrap .btn-arrow {
+        flex-shrink: 0;
+        gap: 8px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
     .hero-container .flex.flex-wrap .flex {
         gap: 0.625rem;
+    }
+}
+
+/* Phones: the arrow CTA and the three icons share one tight line inside the card.
+   Below 360px there is no room, so the icons wrap under the button instead of overflowing. */
+@media (max-width: 640px) {
+    .hero-container .flex.flex-wrap {
+        gap: 16px;
+    }
+
+    /* Phones keep the About button's own 14px / 44px size so the row fits at 360px. */
+    .hero-container .flex.flex-wrap .btn-arrow {
+        min-height: 44px;
+        font-size: 14px;
+        gap: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .hero-container .flex.flex-wrap .btn-arrow svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .hero-container .flex.flex-wrap .flex {
+        gap: 4px;
+    }
+}
+
+@media (max-width: 359px) {
+    .hero-container .flex.flex-wrap {
+        flex-wrap: wrap;
+        row-gap: 8px;
     }
 }
 
@@ -3052,4 +3227,294 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         width: 20px;
         height: 20px;
     }
+}
+
+/* About: one anchored deck. The default is the complete, readable document. */
+.about-v5 {--deck:#1f1f1f;--inset:#2a2a2a;--hair:rgba(255,255,255,.1);--shadow:0 4px 20px rgba(0,0,0,.3);width:min(896px,calc(100% - 48px));margin:80px auto 64px;color:#d4d4d4}
+.about-v5 *, .about-v5 *:before,.about-v5 *:after {box-sizing:border-box}
+.about-v5 [hidden] {display:none!important}
+.about-skip {position:fixed;left:16px;top:-100px;z-index:200;padding:12px 20px;background:#1f1f1f;color:#fff;border-radius:8px}
+.about-skip:focus {top:16px}
+/* The nav holds its resting position for the whole page, like every other page. */
+.about-v5-page {position:relative;display:flow-root}
+.about-header-track {display:contents}
+.about-header-track > header {position:sticky;top:24px;z-index:100}
+/* Same solid fade as other pages, raised above the card deck and ending above the highest return edge. */
+.about-v5-page .nav-scroll-blur {z-index:20;background:linear-gradient(to bottom,#2a2a2a 0,#2a2a2a 100px,rgba(42,42,42,0) 118px)}
+.about-stage {position:relative}
+.about-v5 {margin-bottom:64px}
+.about-v5 #details {margin-bottom:0}
+.about-v5-page {overflow-anchor:none}
+.about-v5-page .floating-nav {max-width:56rem;margin-inline:auto;box-sizing:border-box}
+.about-card {position:relative;min-width:0;margin-bottom:32px;border:0;border-radius:16px;background:var(--deck);box-shadow:var(--shadow);transform-origin:center top}
+.about-v5 .card-scroll {padding:40px;border-radius:inherit}
+.about-v5 .ab-hero-grid {display:grid;grid-template-columns:1fr .8fr;align-items:center;gap:32px}
+.about-v5 .ab-h1 {font-size:clamp(32px,3.5vw,48px);line-height:1.08;font-weight:800;margin:0 0 24px;color:#f5f5f5}
+.about-v5 .ab-lede {font-size:16px;line-height:1.7;margin:0 0 16px;max-width:36ch}
+.about-v5 .ab-hero-figure {margin:0}
+.about-v5 .ab-portrait {display:block;width:100%;max-width:320px;height:auto;aspect-ratio:3/4;object-fit:cover;border-radius:12px}
+.about-v5 h2 {font-size:32px;line-height:1.2;font-weight:700;color:#f5f5f5;margin:0}
+.about-v5 .journey-heading {display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:32px 36px 24px}
+.about-v5 .year-range,.about-v5 time {font:400 13px/1.5 "JetBrains Mono",monospace;color:#c084fc;white-space:nowrap}
+.about-v5 .timeline {list-style:none;position:relative;margin:0;padding:0 36px 24px}
+.about-v5 .timeline:before {content:"";position:absolute;top:38px;bottom:60px;left:111px;width:2px;background:var(--hair)}
+.about-v5 .timeline-event {position:relative;display:grid;grid-template-columns:100px 1fr;gap:0;align-items:center;padding:24px 0;min-width:0}
+.about-v5 .event-node {position:absolute;top:calc(50% - 4px);left:71px;width:10px;height:10px;border:2px solid #c084fc;border-radius:50%;background:var(--deck);z-index:1}
+.about-v5 .event-full h3 {font-size:22px;line-height:1.3;color:#f5f5f5;margin:0 0 10px;font-weight:700}
+.about-v5 .event-full p {font-size:15px;line-height:1.6;max-width:48ch;margin:0 0 12px}
+.about-v5 .event-year {background:none;border:0;color:inherit;font:inherit;min-height:44px;min-width:52px;text-align:left;border-radius:4px;cursor:pointer}
+.about-v5 .event-compact {display:none;background:none;border:0;text-align:left;font-size:13px;line-height:1.6;color:#aaa;padding:8px 0;min-height:44px;border-radius:4px;cursor:pointer}
+.about-v5 .event-year:hover,.about-v5 .event-compact:hover {color:#c084fc}
+.about-v5 .event-copy {min-width:0}
+.about-v5 .chronology-rail {display:none;position:absolute;left:111px;width:2px;background:var(--hair);transform-origin:top}
+.about-v5 .chronology-fill {display:block;width:100%;height:100%;background:#c084fc;transform-origin:top}
+.about-v5 .ab-skills {display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:440px;margin-top:18px}
+.about-v5 .ab-skill {font-size:12px;color:#aaa}
+.about-v5 .ab-skill-rail {display:block;height:2px;background:var(--hair);margin-top:8px}
+.about-v5 .ab-skill-fill {display:block;height:100%;width:var(--ab-skill);background:#c084fc}
+.about-v5-page footer {position:relative;z-index:1;background:#2a2a2a}
+
+/* Literal approved v5 component styles, scoped to the actual page. */
+.about-v5 .scene-title {font-size:36px; letter-spacing:-.025em; line-height:1.2}
+.about-v5 .detail-columns {display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:32px}
+.about-v5 .column-label {font-size:12px; font-weight:700; letter-spacing:.09em; color:var(--muted); text-transform:uppercase; margin-bottom:20px}
+.about-v5 .education {list-style:none; padding:0; margin:0; display:grid; gap:18px}
+.about-v5 .education strong {display:block; font-size:15px; font-weight:600; line-height:1.45}
+.about-v5 .education p {font-size:13px; color:var(--muted); line-height:1.6; margin-top:4px}
+.about-v5 .honors {margin-top:32px}
+.about-v5 .honors .education {gap:14px}
+.about-v5 .honors .education strong {font-size:14px}
+.about-v5 .honors .caption {display:block; letter-spacing:0; margin:6px 0 0}
+.about-v5 .tile-work-card {display:block; padding:16px; background:var(--page); border:1px solid var(--hair); transition:opacity .3s ease,transform .3s ease,box-shadow .2s cubic-bezier(.4,0,.2,1)}
+.about-v5 .tile-work-card h3 {font-size:15.2px; line-height:1.3; margin:0 0 4px; font-weight:600}
+.about-v5 .work-description {font-size:12.8px; color:var(--body); line-height:1.4}
+.about-v5 .work-meta {font-size:11.52px; color:var(--muted); margin-top:6px}
+.about-v5 .tile-cta {display:inline-flex; align-items:center; justify-content:center; gap:12px; min-height:44px; padding:8px 16px; font-size:14px; line-height:1.5; border:0; border-radius:8px}
+.about-v5 .tile-cta svg {width:20px; height:20px}
+.about-v5 .tile-cta:hover {box-shadow:inset 0 0 0 1px var(--hair); text-decoration:underline; text-underline-offset:4px}
+.about-v5 .timeline-skip {display:inline-flex; flex-direction:column; align-items:center; gap:12px; color:var(--accent); padding:16px 24px; font-size:16px; font-weight:600; border-radius:8px; min-width:180px}
+.about-v5 .timeline-skip svg {width:40px; height:40px}
+.about-v5 .timeline-skip:hover span {text-decoration:underline; text-underline-offset:5px}
+.about-v5 .timeline-skip:hover {background:var(--page)}
+.about-v5 {--page:#2a2a2a;--surface:#1f1f1f;--accent:#c084fc;--button:#7c46af;--text:#f5f5f5;--body:#d4d4d4;--muted:#8f8f8f;--step-y:56px;--dock:216px;font-family:"Plus Jakarta Sans",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:normal;color:var(--text)}
+.about-v5 .ab-lede,.about-v5 .event-full p {color:var(--body)}
+.about-v5 .scene-title {font-weight:700}
+.about-v5 h2.scene-title {font-size:36px;letter-spacing:-.025em;line-height:1.2}
+.about-v5 .detail-columns {grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.about-v5 .detail-columns > div {min-width:0}
+.about-v5 .column-label {line-height:normal}
+.about-v5 .detail-columns .column-label {position:relative;z-index:3}
+.about-v5 .education p {margin-bottom:0}
+.about-v5 .honors .caption {font-family:"JetBrains Mono",monospace;font-size:11px;line-height:1.7;font-weight:400}
+.about-v5 .work-window {margin:-24px -24px 0;padding:24px;min-width:0}
+.about-v5 .work-track {display:grid;gap:16px}
+.about-v5 .work-track {margin-bottom:0}
+.about-v5 .tile-work-card {border-radius:8px;box-shadow:var(--shadow)}
+.about-v5 .work-meta {line-height:1.65}
+.about-v5 .tile-work-card h3 {color:var(--accent)}
+.about-v5 .tile-work-card p {margin-bottom:0}
+.about-v5 .tile-work-card:hover {transform:translateY(-4px) scale(1.04);box-shadow:0 8px 30px rgba(0,0,0,.4);border-color:var(--hair)}
+.about-v5 .tile-work-card:hover h3,.about-v5 .tile-work-card:hover p {opacity:.95}
+.about-v5 .tile-cta {font-weight:600;background:var(--button);color:#fff;text-decoration:none}
+.about-v5 .tile-cta svg,.about-v5 .timeline-skip svg,.about-v5 .return-edge svg {display:block;flex:none}
+.about-v5 .about-controls {display:flex;justify-content:center;margin-top:24px}
+.about-v5 .timeline-skip {background:none;border:0;box-shadow:none;text-decoration:none;line-height:normal}
+.about-v5 .return-layer {display:none;position:absolute;inset:0;pointer-events:none}
+.about-v5 .deck-back {position:absolute;top:0;left:0;width:100%;height:var(--focused-height);border:0;border-radius:16px;background:var(--surface);box-shadow:var(--shadow);transform-origin:center top;pointer-events:none}
+.about-v5 .return-edge {display:flex;align-items:center;justify-content:space-between;gap:16px;height:52px;padding:0 24px;width:100%;font:600 14px/normal "Plus Jakarta Sans",sans-serif;border:0;border-radius:16px 16px 0 0;color:var(--body);background:none;pointer-events:auto;text-align:left;cursor:pointer}
+.about-v5 .return-edge svg {width:20px;height:20px}
+.about-v5 .return-edge:hover {background:var(--page);color:var(--accent)}
+.about-v5 .timeline-skip:focus-visible,.about-v5 .tile-cta:focus-visible,.about-v5 .return-edge:focus-visible {outline:2px solid #c084fc;outline-offset:3px}
+.about-v5 .journey-heading {padding:0 0 24px;margin:32px 40px 16px;border-bottom:1px solid var(--hair)}
+.about-v5 .journey-heading h2 {font-size:36px;font-weight:700;letter-spacing:-.025em;line-height:1.2}
+.about-v5 .year-range {font-size:12px}
+.about-v5 .timeline {padding-left:40px;padding-right:40px}
+.about-v5 .timeline-event {grid-template-columns:112px 1fr}
+.about-v5 .event-full p {font-size:15.68px}
+.about-v5 .event-node {left:84px;width:9px;height:9px}
+.about-v5 .chronology-rail,.about-v5 .timeline:before {left:128px;width:1px}
+.about-v5 .ab-skill {font-size:11.84px;color:var(--muted)}
+@media screen and (min-width:721px) and (min-height:650px) and (prefers-reduced-motion:no-preference) {
+ html.about-pending .about-header-track {display:block;position:absolute;top:0;left:0;right:0}
+ html.about-pending .about-v5 {width:min(896px,calc(100% - 144px));margin:232px auto 0}
+ html.about-pending .ab-portrait {max-height:clamp(220px,calc(100svh - 530px),427px);width:auto;max-width:100%}
+ html.about-pending .about-card:not(#who) {display:none}
+ html.about-active {scrollbar-gutter:stable;scroll-behavior:auto}
+ html.about-active .about-header-track {display:block;position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
+ html.about-active .about-header-track > header {position:sticky;top:24px;pointer-events:auto}
+ html.about-active .about-v5 {--reading-height:clamp(280px,calc(100svh - 600px),360px);width:min(896px,calc(100% - 144px));margin:var(--dock) auto 64px;height:var(--runway-height);position:relative;z-index:6;overflow-anchor:none}
+ html.about-active .ab-portrait {max-height:clamp(220px,calc(100svh - 530px),427px);width:auto;max-width:100%}
+ html.about-active .about-stage {position:sticky;top:var(--dock);height:var(--stage-height);isolation:isolate}
+ html.about-active .about-card {position:absolute;top:0;left:0;width:100%;margin:0;will-change:transform}
+ html.about-active .card-scroll {overflow:visible;max-height:none}
+ html.about-active .return-layer {display:block;z-index:0}
+ html.about-active .journey-scroll {height:var(--reading-height);overflow:visible;margin-bottom:32px;outline-offset:-3px}
+ html.about-active .journey-runway,html.about-active .journey-window {position:relative;height:var(--reading-height)}
+ html.about-active .journey-window {overflow:hidden}
+ html.about-active .timeline-position {position:absolute;top:0;left:0;right:0}
+ html.about-active .timeline {padding-bottom:0}
+ html.about-active .timeline:before {display:none}
+ html.about-active .timeline-event {padding:12px 0}
+ html.about-active .timeline-event:not(.is-active) .event-full {display:none}
+ html.about-active .timeline-event:not(.is-active) .event-compact {display:block}
+ html.about-active .chronology-rail {display:block}
+}
+@media (max-width:950px) {
+ .about-v5 .detail-columns {grid-template-columns:1fr;gap:32px}
+ .about-v5 .card-scroll {padding:32px}
+ .about-v5 .ab-hero-grid {grid-template-columns:1fr .65fr;gap:24px}
+ .about-v5 .ab-h1 {font-size:34px}
+ .about-v5 .ab-lede {font-size:14px}
+ .about-v5 .journey-heading {margin:32px 32px 24px;align-items:flex-start;flex-direction:column;gap:12px}
+ .about-v5 .journey-heading h2 {font-size:28px}
+ .about-v5 .timeline {padding-left:32px;padding-right:32px}
+ .about-v5 .chronology-rail,.about-v5 .timeline:before {left:120px}
+}
+@media (min-width:721px) and (max-width:950px) {
+ html.about-active .journey-heading {margin:24px 32px 16px;padding-bottom:16px;flex-direction:row;align-items:baseline}
+}
+@media (max-width:720px) {
+ .about-v5 {margin-top:64px}
+ .about-v5 .card-scroll {padding:24px}
+ .about-v5 .ab-hero-grid {grid-template-columns:1fr}
+ .about-v5 .ab-portrait {width:240px;max-width:100%}
+ .about-v5 .ab-lede {font-size:16px}
+ .about-v5 h2.scene-title {font-size:28px}
+ .about-v5 .timeline-event {grid-template-columns:60px 1fr}
+ .about-v5 .event-node {left:43px}
+ .about-v5 .timeline:before {left:79px}
+ .about-v5 .ab-skills {grid-template-columns:1fr;gap:12px}
+ .about-v5 .event-full h3 {font-size:20px}
+}
+@media (prefers-reduced-motion:reduce) {
+ .about-v5 *, .about-v5 *:before,.about-v5 *:after {transition:none!important;animation:none!important;scroll-behavior:auto!important}
+}
+@media print {
+ .about-card {position:relative!important;visibility:visible!important;transform:none!important;margin-bottom:32px!important}
+ .about-card > *,.event-full {visibility:visible!important;display:block!important}
+ .about-stage {height:auto!important}
+ .return-layer,.about-controls,.event-compact {display:none!important}
+ .work-track {display:grid!important;height:auto!important}
+ .tile-work-card {position:relative!important;transform:none!important}
+}
+
+
+/* One complete arrow path, attached to the right edge in both layouts. */
+html.about-navigation .about-v5 {width:min(896px,calc(100% - 144px))}
+.about-v5 .navigation-track {position:absolute;top:0;bottom:0;right:-64px;width:48px;pointer-events:none;z-index:40}
+.about-v5 .card-navigation {position:sticky;top:calc(50svh - 52px);display:flex;flex-direction:column;gap:8px;width:48px;height:104px;pointer-events:auto}
+.about-v5 .card-navigation [data-step="1"] {margin-top:auto}
+.about-v5 .card-navigation button {display:grid;place-items:center;width:48px;height:48px;padding:10px;border:0;border-radius:12px;background:var(--surface);color:var(--accent);box-shadow:var(--shadow);cursor:pointer}
+.about-v5 .card-navigation button:hover {background:#333}
+.about-v5 .card-navigation svg {display:block;width:28px;height:28px}
+.about-v5 button:focus-visible,.about-v5 a:focus-visible {outline:2px solid var(--accent);outline-offset:3px}
+.about-v5 .about-status {position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+html.about-navigation .about-controls {position:fixed;bottom:64px;left:0;right:0;margin:0;z-index:50;pointer-events:none}
+html.about-navigation .timeline-skip {pointer-events:auto;background:var(--page)}
+html.about-active .navigation-track {height:var(--focused-height);bottom:auto}
+html.about-active .card-navigation {top:min(calc(50svh - 52px),calc(var(--dock) + var(--focused-height) - 104px))}
+@media (max-width:720px) {
+ html.about-navigation .about-v5 {width:calc(100% - 88px);margin-left:20px;margin-right:68px}
+ .about-v5 .navigation-track {right:-56px}
+ html.about-navigation .timeline-skip {padding:12px 16px;font-size:13px;gap:4px}
+ html.about-navigation .timeline-skip svg {width:24px;height:24px}
+ html.about-navigation .about-controls {bottom:24px}
+ .about-v5 .journey-heading {margin-inline:24px}
+ .about-v5 .timeline {padding-inline:24px}
+ .about-v5 .timeline:before {left:71px}
+}
+@media (min-width:951px) and (max-height:950px) {
+ .about-v5 #details .card-scroll {padding:32px}
+ .about-v5 #details .detail-columns {margin-top:24px}
+ .about-v5 #details .education {gap:14px}
+ .about-v5 #details .honors {margin-top:24px}
+ .about-v5 #details .honors .education {gap:12px}
+ .about-v5 #details .column-label {margin-bottom:16px}
+}
+@media (prefers-reduced-motion:no-preference) {
+ html.about-conveyor .work-window {overflow:hidden;position:relative;overflow-anchor:none}
+ html.about-conveyor .work-window:before,html.about-conveyor .work-window:after {content:"";position:absolute;left:0;right:0;height:10px;background:var(--surface);z-index:2;pointer-events:none}
+ html.about-conveyor .work-window:before {top:0}
+ html.about-conveyor .work-window:after {bottom:0}
+ html.about-conveyor .work-track {position:relative;height:var(--work-height);display:block}
+ html.about-conveyor .tile-work-card {position:absolute;top:0;left:0;width:100%;min-height:var(--work-card-height);transition:box-shadow .2s ease}
+ html.about-conveyor .tile-work-card:hover {transform:none}
+}
+/* V4 entrance: independent of the scroll controller, never re-armed on return. */
+.about-v5 .ab-line {position:relative;display:inline-block}
+.about-v5 .ab-line:after {content:"";position:absolute;inset:-.08em -.12em;background:var(--surface);transform:scaleX(0);transform-origin:right center;pointer-events:none}
+@media (prefers-reduced-motion:no-preference) {
+ html.about-intro .ab-line:after {animation:about-wipe .85s cubic-bezier(.16,1,.3,1) both}
+ html.about-intro .ab-lede {animation:about-rise .7s cubic-bezier(.16,1,.3,1) .55s both}
+ html.about-intro .ab-lede + .ab-lede {animation-delay:.67s}
+ html.about-intro .ab-portrait {animation:about-settle .75s cubic-bezier(.16,1,.3,1) .95s both,about-develop 2.3s ease-out 1.2s both}
+ html.about-intro #who .card-scroll {animation:about-land .6s cubic-bezier(.16,1,.3,1) both}
+}
+@keyframes about-wipe {from {transform:scaleX(1)} to {transform:scaleX(0)}}
+@keyframes about-rise {from {opacity:0;transform:translateY(18px)} to {opacity:1;transform:none}}
+@keyframes about-settle {from {opacity:0;transform:translateY(24px) scale(.98)} to {opacity:1;transform:none}}
+@keyframes about-develop {from {filter:grayscale(.65) contrast(1.03)} to {filter:grayscale(0) contrast(1)}}
+@keyframes about-land {from {transform:translateY(12px)} to {transform:none}}
+@media print {.navigation-track,.about-status {display:none!important}}
+/* Click to continue: joins the down arrow on Who I Am after an idle pause, evaporates on the first move. */
+.about-v5 .continue-prompt {position:absolute;top:calc(100% + 10px);right:0;width:64px;text-align:right;font:600 12px/1.35 "Plus Jakarta Sans",sans-serif;color:var(--accent);pointer-events:none}
+.about-v5 .continue-prompt.is-beside {top:auto;bottom:0;right:auto;left:calc(100% + 14px);width:max-content;height:48px;display:flex;align-items:center;gap:.3em;font-size:13px;text-align:left;white-space:nowrap}
+.about-v5 .prompt-word {display:inline-block;white-space:nowrap}
+.about-v5 .prompt-char {display:inline-block}
+
+/* --------------------------------------------------------------------------
+   Uses page, parked. The real content lives on the uses-page-wip branch
+   until the Blender tech-stack model is ready. Same card language as the
+   rest of the site: charcoal panel, hairline, site shadow.
+   -------------------------------------------------------------------------- */
+.uses-soon {
+    max-width: 40rem;
+    margin: 0 auto;
+    background-color: #1f1f1f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    padding: clamp(1.75rem, 5vw, 2.75rem);
+    text-align: center;
+}
+
+.uses-soon-tag {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 5px;
+    background: rgba(192, 132, 252, 0.14);
+    color: var(--accent-purple);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.uses-soon-head {
+    margin: 1rem 0 0.75rem;
+    color: #f5f5f5;
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.uses-soon-body {
+    margin: 0 auto;
+    max-width: 34rem;
+    color: #d4d4d4;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.uses-soon-meta {
+    margin: 1.25rem 0 0;
+    color: #8f8f8f;
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.uses-soon-meta a {
+    color: var(--accent-purple);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }

@@ -1,3 +1,25 @@
 ._*
 .DS_Store
 .claude/
+
+# ---------------------------------------------------------------------------
+# Private / internal. Not part of the published site. Never push to a public repo.
+# The site is public; the strategy, positioning work, and agent tooling are not.
+# ---------------------------------------------------------------------------
+
+# Local agent + editor tooling
+.claude/settings.local.json
+CLAUDE.md
+
+# Career-strategy and positioning docs (names targets, internal framing, skill gaps)
+NVIDIA-*
+portfolio-audit-prompt.md
+
+# Internal docs (briefs, working notes, checkpoints, rebuild notes). Not site
+# content, not referenced by any page.
+docs/
+
+# Screenshots of private systems (the Obsidian vault, the Olympus dashboard).
+# Kept on disk for the next rebuild; never publish as-is. See docs/about-rebuild-notes.md
+images/about/vault-*
+images/about/olympus-dashboard*
