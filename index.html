@@ -316,7 +316,7 @@
                 <a href="pages/about.html" class="nav-link">About</a>
                 <a href="pages/projects.html" class="nav-link">Projects</a>
                 <a href="pages/blog.html" class="nav-link">Blog</a>
-                <a href="pages/uses.html" class="nav-link nav-link-wip" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A Blender-built PC model breaking down the tech stack I use, part by part.</span></span></a>
+                <a href="pages/uses.html" class="nav-link nav-link-wip" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A practical look at the hardware, software, and workflows behind my work.</span></span></a>
             </div>
             <!-- Mobile nav -->
             <div class="nav-mobile items-center ml-4 translate-y-px">
@@ -325,7 +325,7 @@
                     <a href="pages/about.html" class="nav-link">About</a>
                     <a href="pages/projects.html" class="nav-link">Projects</a>
                     <a href="pages/blog.html" class="nav-link">Blog</a>
-                    <a href="pages/uses.html" class="nav-link nav-link-wip" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A Blender-built PC model breaking down the tech stack I use, part by part.</span></span></a>
+                    <a href="pages/uses.html" class="nav-link nav-link-wip" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A practical look at the hardware, software, and workflows behind my work.</span></span></a>
                 </div>
                 <div class="relative ml-1 mobile-more-trigger">
                     <button class="more-btn text-white p-1 rounded hover:bg-gray-700" onclick="toggleDropdown()">⋮</button>
@@ -354,11 +354,11 @@
                         <p class="text-lg mb-4">M.S. in Marketing Candidate | Marketing Strategy &amp; Applied AI</p>
                         <p class="mb-6">I am a first-generation graduate student pursuing a Master of Science in Marketing at the University of Arizona. My background spans marketing support, operations, and client-facing roles, with a focus on clarity, execution, and data-driven storytelling.</p>
                         <div class="flex flex-wrap gap-2 mb-6">
-                            <a href="pages/about.html" class="btn-dark-purple btn-arrow">More about me <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5 16h21M17 7l9 9-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                            <a href="pages/about.html" class="btn-dark-purple btn-home-cta">More about me</a>
                             <div class="flex gap-4">
                                 <a href="https://www.linkedin.com/in/nathanaelkenzler/" class="icon-btn" title="LinkedIn"><img src="Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn"></a>
                                 <a href="mailto:nkenzler@arizona.edu" class="icon-btn" title="Email"><img src="Project Files/Link Icons/icons8-email-48.png" alt="Email"></a>
-                                <button class="icon-btn" id="resume-pdf-btn" title="Resume"><img src="Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="Resume" style="width:24px;height:24px;pointer-events:none;"></button>
+                                <button class="icon-btn resume-pdf-btn" id="resume-pdf-btn" title="Resume" aria-label="Open resume"><img src="Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="" style="width:24px;height:24px;pointer-events:none;"></button>
                             </div>
                         </div>
                         <p class="mb-4 -mt-2.5 md:mt-0"><em>See the "Building this Site..." blog post for the story of this interactive portfolio. Also, while the site is viewable on mobile devices, the site is optimized for a desktop view!</em></p>
@@ -410,14 +410,15 @@
                 <div class="footer-section identity-section">
                     <h3>Nathanael Kenzler</h3>
                     <p class="footer-description">
-                        <span>Marketing student at Arizona.</span>
-                        <span>I take technical things apart,</span>
-                        <span>then explain them to people.</span>
-                    </p>
+            <span>Enterprise-focused business &amp;</span>
+            <span>marketing professional passionate</span>
+            <span>about turning strategy into impact.</span>
+          </p>
                     <div class="social-icons">
                         <a href="https://github.com/nkenzler1818" title="GitHub"><img src="Project Files/Link Icons/icons8-github-24.png" alt="GitHub" width="22" height="22"></a>
                         <a href="https://www.linkedin.com/in/nathanaelkenzler/" title="LinkedIn"><img src="Project Files/Link Icons/icons8-linkedin-30.png" alt="LinkedIn" width="22" height="22"></a>
                         <a href="mailto:nkenzler@arizona.edu" title="Email"><img src="Project Files/Link Icons/icons8-email-48.png" alt="Email" width="22" height="22"></a>
+                        <button type="button" class="resume-pdf-btn" title="Resume" aria-label="Open resume"><img src="Project Files/Link Icons/icons8-download-resume-50 (1).png" alt="" width="22" height="22"></button>
                     </div>
                 </div>
                 <div class="footer-section">
@@ -772,11 +773,11 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var btn      = document.getElementById('resume-pdf-btn');
+            var buttons  = document.querySelectorAll('.resume-pdf-btn');
             var overlay  = document.getElementById('resume-pdf-overlay');
             var frame    = document.getElementById('resume-pdf-frame');
             var closeBtn = document.getElementById('resume-pdf-close');
-            if (!btn || !overlay) return;
+            if (!buttons.length || !overlay) return;
 
             // iOS Safari cannot render PDFs in iframes, so open natively instead
             function isIOS() {
@@ -806,9 +807,11 @@
                 document.body.style.overflow = '';
             }
 
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                openPdf('assets/docs/Kenzler_CV2026.pdf#view=FitH');
+            buttons.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openPdf('assets/docs/Kenzler_CV2026.pdf#view=FitH');
+                });
             });
 
             closeBtn.addEventListener('click', function(e) {

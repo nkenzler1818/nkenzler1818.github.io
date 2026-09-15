@@ -205,11 +205,11 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 @media (min-width: 921px) {
     /* Strip passing BEHIND the word. Sits in .nav-link's own stacking
        context (it already sets z-index: 0), so -1 stays above the pill. */
-    .nav-link-wip .nav-wip-deco {
+.nav-link-wip .nav-wip-deco {
         position: absolute;
         z-index: -1;
-        left: 1px;
-        right: 3px;
+        left: 2px;
+        right: 2px;
         top: 50%;
         height: 10px;
         margin-top: -8px;
@@ -225,12 +225,12 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 
     /* Strip passing in FRONT of the word: the two together read as wound
        around the letters rather than laid flat on top. */
-    .nav-link-wip .nav-wip-deco::before {
+.nav-link-wip .nav-wip-deco::before {
         content: "";
         position: absolute;
         z-index: 3;
-        left: -4px;
-        right: -13px;
+        left: -2px;
+        right: -5px;
         top: 50%;
         height: 12px;
         margin-top: -3px;
@@ -244,13 +244,13 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     }
 
     /* The loose end past the "s". The only piece that moves. */
-    .nav-link-wip .nav-wip-deco::after {
+.nav-link-wip .nav-wip-deco::after {
         content: "";
         position: absolute;
         z-index: 3;
-        left: calc(100% - 6px);
+        left: calc(100% - 3px);
         top: 50%;
-        width: 17px;
+        width: 8px;
         height: 12px;
         margin-top: -3px;
         background:
@@ -378,6 +378,12 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     text-underline-offset: 4px;
 }
 
+.btn-home-cta:hover {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
 /* Full-width strip pinned behind the floating nav so scrolling content
    never collides with it: solid page background up top, fading out
    toward transparent (same idea as the carousel edge fade) rather than
@@ -484,6 +490,10 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .icon-btn img {
     width: 24px;
     height: 24px;
+}
+
+.hero-container .flex.flex-wrap > .flex {
+    align-items: center;
 }
 
 .project-pane, .project-card, .hero-container, .blog-card {
@@ -721,10 +731,9 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     font-size: 0.72rem;
     line-height: 1;
     color: rgba(255, 255, 255, 0.35);
-    /* Pulled up under the track's new bottom padding (see .carousel-track)
-       so it still sits just beneath the cards. */
-    margin-top: -26px;
-    margin-bottom: -14px;
+    /* Keep the counter below the carousel so it does not overlap the edge fade. */
+    margin-top: 8px;
+    margin-bottom: 0;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.08em;
     user-select: none;
@@ -839,6 +848,20 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     margin-bottom: 0;
 }
 
+.footer-bg .social-icons .resume-pdf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    margin-bottom: 0;
+    border: 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 .footer-bg .social-icons img {
     width: 22px;
     height: 22px;
@@ -847,6 +870,16 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .footer-bg .social-icons a:hover {
     color: var(--accent-purple);
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer-bg .social-icons .resume-pdf-btn:hover {
+    color: var(--accent-purple);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer-bg .social-icons .resume-pdf-btn:focus-visible {
+    outline: 2px solid var(--accent-purple);
+    outline-offset: 2px;
 }
 
 /* Content text color overrides */
@@ -988,6 +1021,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     position: relative;
     width: 100%;
     max-width: 900px;
+    height: min(80vh, calc(100vh - 2rem));
     max-height: 80vh;
     margin: auto;
     background: #141414;

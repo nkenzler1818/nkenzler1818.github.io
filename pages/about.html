@@ -54,6 +54,7 @@
       rel="stylesheet"
     />
     <script src="../js/nav-transition.js" defer></script>
+    <script src="../js/resume-viewer.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script>
     <script src="../js/about-motion.js" defer></script>
@@ -114,7 +115,7 @@
           <a href="about.html" class="nav-link" aria-current="page">About</a>
           <a href="projects.html" class="nav-link">Projects</a>
           <a href="blog.html" class="nav-link">Blog</a>
-          <a href="uses.html" class="nav-link nav-link-wip" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A Blender-built PC model breaking down the tech stack I use, part by part.</span></span></a>
+          <a href="uses.html" class="nav-link nav-link-wip" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A practical look at the hardware, software, and workflows behind my work.</span></span></a>
         </div>
         <!-- Mobile nav -->
         <div class="nav-mobile items-center ml-4 translate-y-px">
@@ -123,7 +124,7 @@
             <a href="about.html" class="nav-link" aria-current="page">About</a>
             <a href="projects.html" class="nav-link">Projects</a>
             <a href="blog.html" class="nav-link">Blog</a>
-            <a href="uses.html" class="nav-link nav-link-wip" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A Blender-built PC model breaking down the tech stack I use, part by part.</span></span></a>
+            <a href="uses.html" class="nav-link nav-link-wip" aria-label="Uses (coming soon)">Uses<span class="nav-wip-deco" aria-hidden="true"></span><span class="nav-wip-tip" role="tooltip">Coming soon<span>A practical look at the hardware, software, and workflows behind my work.</span></span></a>
           </div>
           <div class="relative ml-1 mobile-more-trigger">
             <button
@@ -181,16 +182,18 @@
         <section class="about-card" id="who" aria-labelledby="ab-hero-h"><div class="card-scroll" tabindex="0" aria-label="Who I Am"><div class="ab-hero-grid">
             <div>
               <h1 class="ab-h1" id="ab-hero-h" tabindex="-1">
-                <span class="ab-line">I take things apart.</span>
+                <span class="ab-line">Curiosity is where I start.</span>
               </h1>
               <p class="ab-lede">
-                First gen MS Marketing student at Arizona, focused on
-                analytics and AI. Digital marketing consultant for oncology
-                KOLs.
+                I am a first-generation MS in Marketing candidate at the
+                University of Arizona and a Digital Marketing Consultant at
+                SignifyMD. I am building toward teams that make advanced
+                technology and concepts understandable, usable, and valuable.
               </p>
               <p class="ab-lede">
-                Headed toward partner marketing, with the technical side
-                built in.
+                I am working towards digital and/or partner marketing roles where
+                strategy, communication, and emerging technology come together
+                to create real impact.
               </p>
             </div>
             <figure class="ab-hero-figure">
@@ -216,9 +219,9 @@
               <div class="timeline-position">
                 <div class="chronology-rail" aria-hidden="true"><span class="chronology-fill"></span></div>
                 <ol class="timeline" aria-label="Chronology from 2019">
-    <li class="timeline-event" id="event-2019" data-year="2019" data-proof="Nordstrom fulfillment · Consistent execution">
+    <li class="timeline-event" id="event-2019" data-year="2019" data-proof="Nordstrom's · Teamwork + shared outcomes">
       <time datetime="2019">2019</time><span class="event-node" aria-hidden="true"></span>
-      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">The first job</h3><p>Nordstrom fulfillment. Learned what consistent execution under pressure costs.</p><div class="ab-skills">
+      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">The first job</h3><p>At Nordstrom's I learned how much I enjoyed working in a team toward a shared outcome. It showed me that I wanted a career built around collaborative work.</p><div class="ab-skills">
                   <div class="ab-skill">
                     <span>Execution</span>
                     <span class="ab-skill-rail"
@@ -239,11 +242,11 @@
                   </div>
                 </div>
               </div>
-      <button type="button" class="event-compact" hidden><strong>The first job</strong><span>Nordstrom fulfillment · Consistent execution</span></button></div>
+      <button type="button" class="event-compact" hidden><strong>The first job</strong><span>Nordstrom's · Teamwork + shared outcomes</span></button></div>
     </li>
 <li class="timeline-event" id="event-2021" data-year="2021" data-proof="Training venture · Teaching + ownership">
       <time datetime="2021">2021</time><span class="event-node" aria-hidden="true"></span>
-      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">Dogs, and a payroll</h3><p>Ran a training venture to pay for school. Teaching was the part that stuck.</p><div class="ab-skills">
+      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">Dogs, and a payroll</h3><p>Building a dog-training venture while financing my education made me comfortable explaining a process, earning trust, and taking responsibility for the outcome.</p><div class="ab-skills">
                   <div class="ab-skill">
                     <span>Execution</span>
                     <span class="ab-skill-rail"
@@ -266,9 +269,9 @@
               </div>
       <button type="button" class="event-compact" hidden><strong>Dogs, and a payroll</strong><span>Training venture · Teaching + ownership</span></button></div>
     </li>
-<li class="timeline-event" id="event-2023" data-year="2023" data-proof="Personal training · Client independence">
+    <li class="timeline-event" id="event-2023" data-year="2023" data-proof="Personal training · Client communication">
       <time datetime="2023">2023</time><span class="event-node" aria-hidden="true"></span>
-      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">The gym floor</h3><p>Personal training. Same lesson, louder: the win is when they do it without me.</p><div class="ab-skills">
+      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">The gym floor</h3><p>Working directly with clients taught me to listen, tailor communication, and help people make progress toward goals that mattered to them. It was the moment I realized that the exchange and implementation of information is what I enjoy most about business.</p><div class="ab-skills">
                   <div class="ab-skill">
                     <span>Execution</span>
                     <span class="ab-skill-rail"
@@ -289,11 +292,11 @@
                   </div>
                 </div>
               </div>
-      <button type="button" class="event-compact" hidden><strong>The gym floor</strong><span>Personal training · Client independence</span></button></div>
+      <button type="button" class="event-compact" hidden><strong>The gym floor</strong><span>Personal training · Client communication</span></button></div>
     </li>
-<li class="timeline-event" id="event-2026" data-year="2026" data-proof="Oncology marketing · Communication + systems">
+    <li class="timeline-event" id="event-2026" data-year="2026" data-proof="Oncology marketing · Strategy + communication">
       <time datetime="2026">2026</time><span class="event-node" aria-hidden="true"></span>
-      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">Where I am now</h3><p>Marketing for oncology KOLs. Same teaching instinct, a much larger room.</p><div class="ab-skills">
+      <div class="event-copy"><div class="event-full"><h3 tabindex="-1">Where I am now</h3><p>At SignifyMD, I took that interest to the next step, bringing research, coordination, and communication together for a specialized audience. It confirmed that I want to keep building a career where strategy, technology, and meaningful impact meet.</p><div class="ab-skills">
                   <div class="ab-skill">
                     <span>Execution</span>
                     <span class="ab-skill-rail"
@@ -314,7 +317,7 @@
                   </div>
                 </div>
               </div>
-      <button type="button" class="event-compact" hidden><strong>Where I am now</strong><span>Oncology marketing · Communication + systems</span></button></div>
+      <button type="button" class="event-compact" hidden><strong>Where I am now</strong><span>Oncology marketing · Strategy + communication</span></button></div>
     </li>
    </ol>
               </div>
@@ -329,10 +332,10 @@
             <li><strong>BS Business Administration</strong><p>University of Arizona, May 2025</p></li>
             <li><strong>AA Economics, AA Liberal Arts</strong><p>Santa Barbara City College, May 2023</p></li>
             <li><strong>High School Diploma</strong><p>Bellarmine College Preparatory, May 2021</p></li>
-          </ul><div class="honors"><h3 class="column-label">Honors and Certifications <span class="caption">Placeholder</span></h3><ul class="education">
-            <li><strong>Honor title goes here</strong><p>Awarding body, year</p></li>
-            <li><strong>Certification name here</strong><p>Issuing organization, year</p></li>
-            <li><strong>Certification name here</strong><p>Issuing organization, year</p></li>
+          </ul><div class="honors"><h3 class="column-label">Honors and Certifications</h3><ul class="education">
+            <li><strong>Phi Theta Kappa Honor Society Member</strong><p>Beta Gamma Upsilon Chapter, Santa Barbara City College, Apr 2023</p></li>
+            <li><strong>Phi Theta Kappa Scholarship Recipient</strong><p>Phi Theta Kappa, University of Arizona Eller College of Management</p></li>
+            <li><strong>Social and Behavioral Research Investigators</strong><p>CITI Program, issued Jan 2026, expires Jan 2030, Credential ID 74924643</p></li>
           </ul></div></div>
           <div><h3 class="column-label">Selected Work</h3><div class="work-window" tabindex="0" aria-label="Selected Work. Rotation pauses on hover or focus."><div class="work-track"><a class="project-card tile-work-card" href="projects.html">
                       <h3>Pharmacovigilance RAG Pipeline</h3>
@@ -415,6 +418,13 @@
                 width="22"
                 height="22"
             /></a>
+            <button type="button" class="resume-pdf-btn" title="Resume" aria-label="Open resume"
+              ><img
+                src="../Project Files/Link Icons/icons8-download-resume-50 (1).png"
+                alt=""
+                width="22"
+                height="22"
+            /></button>
           </div>
         </div>
         <div class="footer-section">
