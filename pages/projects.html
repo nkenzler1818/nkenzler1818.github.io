@@ -1005,19 +1005,19 @@
                     </button>
                     <div class="carousel-track-outer">
                         <div class="carousel-track" id="wip-carousel">
-                            <div class="project-pane p-6 rounded-lg">
-                                <h3 class="text-xl font-semibold mb-2">Building My Website</h3>
+                            <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="wip-website-modal" role="button" tabindex="0" aria-haspopup="dialog">
+                                <h3 class="text-xl font-semibold mb-2">Building My First Website</h3>
                                 <p class="text-white">Design &amp; Development Iterations</p>
                                 <p class="text-accent-muted text-sm mt-3">In Progress</p>
                             </div>
-                            <div class="project-pane p-6 rounded-lg">
+                            <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="wip-sql-modal" role="button" tabindex="0" aria-haspopup="dialog">
                                 <h3 class="text-xl font-semibold mb-2">SQL Practice</h3>
                                 <p class="text-white">Query Building &amp; Data Modeling</p>
                                 <p class="text-accent-muted text-sm mt-3">In Progress</p>
                             </div>
-                            <div class="project-pane p-6 rounded-lg">
-                                <h3 class="text-xl font-semibold mb-2">Tableau Project</h3>
-                                <p class="text-white">Dashboard Design &amp; Storytelling</p>
+                            <div class="project-pane p-6 rounded-lg graduate-card" data-graduate-modal="wip-olympus-modal" role="button" tabindex="0" aria-haspopup="dialog">
+                                <h3 class="text-xl font-semibold mb-2">Project Olympus</h3>
+                                <p class="text-white">Personal AI Operating System</p>
                                 <p class="text-accent-muted text-sm mt-3">In Progress</p>
                             </div>
                         </div>
@@ -1068,6 +1068,69 @@
     </footer>
 
     <!-- Graduate Work Modals -->
+    <div id="wip-website-modal" class="graduate-focus-overlay graduate-modal hidden" role="dialog" aria-modal="true" aria-labelledby="wip-website-modal-title">
+        <div class="graduate-focus-content project-brief">
+            <button class="graduate-close-btn" aria-label="Close modal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="graduate-scroll-inner">
+                <div class="graduate-focus-header">
+                    <h2 id="wip-website-modal-title" class="text-3xl font-bold mb-3 accent-purple text-center">Building My First Website</h2>
+                    <p class="project-brief-sub">Design &amp; Development Iterations</p>
+                </div>
+                <div class="graduate-focus-article">
+                    <p class="text-gray-300 leading-relaxed">One of the first projects I took on while learning about programming and AI. The site has grown more sophisticated as I've learned more about web design, system design, coding, and machine learning. Building it myself also keeps me close to the technology that's changing how marketing works.</p>
+                    <p class="project-brief-soon">More information is coming soon.</p>
+                    <div class="project-brief-status"><span>In Progress</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="wip-sql-modal" class="graduate-focus-overlay graduate-modal hidden" role="dialog" aria-modal="true" aria-labelledby="wip-sql-modal-title">
+        <div class="graduate-focus-content project-brief">
+            <button class="graduate-close-btn" aria-label="Close modal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="graduate-scroll-inner">
+                <div class="graduate-focus-header">
+                    <h2 id="wip-sql-modal-title" class="text-3xl font-bold mb-3 accent-purple text-center">SQL Practice</h2>
+                    <p class="project-brief-sub">Query Building &amp; Data Modeling</p>
+                </div>
+                <div class="graduate-focus-article">
+                    <p class="text-gray-300 leading-relaxed">I'm building fluency in SQL: writing queries, joining tables, and structuring data so I can pull answers from a dataset myself.</p>
+                    <p class="project-brief-soon">More information is coming soon.</p>
+                    <div class="project-brief-status"><span>In Progress</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="wip-olympus-modal" class="graduate-focus-overlay graduate-modal hidden" role="dialog" aria-modal="true" aria-labelledby="wip-olympus-modal-title">
+        <div class="graduate-focus-content project-brief">
+            <button class="graduate-close-btn" aria-label="Close modal">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div class="graduate-scroll-inner">
+                <div class="graduate-focus-header">
+                    <h2 id="wip-olympus-modal-title" class="text-3xl font-bold mb-3 accent-purple text-center">Project Olympus</h2>
+                    <p class="project-brief-sub">Personal AI Operating System</p>
+                </div>
+                <div class="graduate-focus-article">
+                    <p class="text-gray-300 leading-relaxed">Olympus is the personal AI system I'm developing and hosting on my own computer. A team of AI agents handles tasks, a local database keeps shared memory, and a dashboard brings my calendar, coursework, and notes into one place. You can see the machine it runs on over on my <a href="uses.html" class="project-brief-link">Uses page</a>.</p>
+                    <p class="project-brief-soon">More information is coming soon.</p>
+                    <div class="project-brief-status"><span>In Progress</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="agentic-rag-modal" class="graduate-focus-overlay graduate-modal hidden">
         <div class="graduate-focus-content">
             <button class="graduate-close-btn" aria-label="Close modal">
@@ -2839,6 +2902,15 @@
             document.querySelectorAll('.graduate-card[data-graduate-modal]').forEach(function(card) {
                 card.addEventListener('click', function(e) {
                     if (card.closest('.carousel-track') && card.closest('.carousel-track').classList.contains('is-dragging')) return;
+                    openGraduateModal(card.getAttribute('data-graduate-modal'));
+                });
+            });
+
+            // Keyboard activation for cards exposed as buttons
+            document.querySelectorAll('.graduate-card[data-graduate-modal][role="button"]').forEach(function(card) {
+                card.addEventListener('keydown', function(e) {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
                     openGraduateModal(card.getAttribute('data-graduate-modal'));
                 });
             });

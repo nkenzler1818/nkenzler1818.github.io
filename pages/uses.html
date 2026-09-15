@@ -20,6 +20,13 @@
             } catch (err) {}
         })();
     </script>
+    <script>
+        // Collapse the sneak peek before first paint. Without JS it stays open.
+        document.documentElement.classList.add('pc-js');
+        setTimeout(function () {
+            if (!window.pcPreviewReady) document.documentElement.classList.remove('pc-js');
+        }, 4000);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2A2A2A" />
     <title>Uses - Nathanael Kenzler</title>
@@ -146,17 +153,36 @@
                     best place to see what I have built.
                 </p>
             </div>
-            <section class="pc-preview" aria-labelledby="pc-preview-title">
-                <h2 id="pc-preview-title" class="uses-soon-head">A little sneak peek.</h2>
-                <p class="uses-soon-body">While I put the rest together, explore this Blender model of my PC.</p>
-                <div class="pc-preview-stage" id="pc-preview-stage">
-                    <img class="pc-preview-poster" src="../assets/models/pc-preview.webp" width="640" height="520" loading="lazy" decoding="async" alt="My PC, with glass panels, purple lighting, a vertical graphics card, and a portrait display.">
+            <section class="pc-preview" id="pc-preview">
+                <h2 class="pc-preview-title">
+                    <button type="button" class="pc-preview-toggle" id="pc-preview-toggle" aria-expanded="true" aria-controls="pc-preview-panel">
+                        <span>A little sneak peek.</span><span class="pc-preview-chevron" aria-hidden="true"></span>
+                    </button>
+                </h2>
+                <div class="pc-preview-panel" id="pc-preview-panel">
+                    <div class="pc-preview-panel-inner">
+                        <div class="pc-preview-body">
+                            <p class="pc-preview-copy">While I put the rest together, take a look inside my PC. I built it by hand in fall 2025, then designed a 3D version of it in Blender.</p>
+                            <p class="pc-preview-copy">It's the machine behind Olympus, the personal AI system I'm developing and hosting on my own network. I think the next stage of tech belongs to people who own their setup, hardware and software, so this is where I'm starting. It will keep growing as I do.</p>
+                            <p class="pc-preview-copy"><span class="pc-preview-controls">
+                                <button type="button" class="pc-preview-button" id="pc-preview-load" hidden>Explore in 3D</button>
+                                <button type="button" class="pc-preview-button" id="pc-preview-reset" hidden>Reset view</button>
+                            </span>More stories like this, plus details on my personal stack and workflows, are on the way.</p>
+                            <div class="pc-preview-stage" id="pc-preview-stage">
+                                <img class="pc-preview-poster" src="../assets/models/pc-preview.webp" width="640" height="520" loading="lazy" decoding="async" alt="My PC, with glass panels, purple lighting, a vertical graphics card, and a portrait display.">
+                            </div>
+                            <p class="pc-preview-status" id="pc-preview-status" role="status">A preview of my personal workstation.</p>
+                            <dl class="pc-specs" aria-label="What's inside">
+                                <div><dt>Processor</dt><dd>AMD Ryzen 9 9950X3D</dd></div>
+                                <div><dt>Graphics</dt><dd>ASUS ROG Astral RTX 5080</dd></div>
+                                <div><dt>Memory</dt><dd>G.Skill Trident Z5 Royal Neo DDR5</dd></div>
+                                <div><dt>Motherboard</dt><dd>ASUS ROG Crosshair X870E Hero</dd></div>
+                                <div><dt>Cooling</dt><dd>TRYX 360mm liquid cooler, Lian Li fans in push-pull</dd></div>
+                                <div><dt>Case</dt><dd>HYTE Y70</dd></div>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
-                <div class="pc-preview-controls">
-                    <button type="button" class="pc-preview-button" id="pc-preview-load" hidden>Explore in 3D</button>
-                    <button type="button" class="pc-preview-button" id="pc-preview-reset" hidden>Reset view</button>
-                </div>
-                <p class="pc-preview-status" id="pc-preview-status" role="status">A preview of my personal workstation.</p>
             </section>
         </section>
     </main>

@@ -1,3 +1,28 @@
+// Sneak peek disclosure. Open without JS; the head guard collapses it before paint.
+(() => {
+    window.pcPreviewReady = true;
+    const section = document.getElementById('pc-preview');
+    const toggle = document.getElementById('pc-preview-toggle');
+    const panel = document.getElementById('pc-preview-panel');
+    if (!section || !toggle || !panel) {
+        document.documentElement.classList.remove('pc-js');
+        return;
+    }
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let settleTimer;
+    const setOpen = (open) => {
+        clearTimeout(settleTimer);
+        section.classList.toggle('is-open', open);
+        section.classList.remove('is-settled');
+        toggle.setAttribute('aria-expanded', String(open));
+        panel.inert = !open;
+        // Let shadows and focus rings show once the panel has finished opening.
+        if (open) settleTimer = setTimeout(() => section.classList.add('is-settled'), reduce.matches ? 0 : 560);
+    };
+    toggle.addEventListener('click', () => setOpen(!section.classList.contains('is-open')));
+    setOpen(false);
+})();
+
 // Load the 3D engine and model only when a visitor chooses to explore.
 (() => {
     const stage = document.getElementById('pc-preview-stage');
