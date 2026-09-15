@@ -1093,6 +1093,26 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     color: #e5e5e5;
 }
 
+.rag-strategy-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 480px) {
+    .graduate-scroll-inner {
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .graduate-focus-header h2 {
+        font-size: clamp(1.25rem, 6vw, 1.875rem);
+        overflow-wrap: anywhere;
+    }
+
+    .rag-strategy-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        overflow-wrap: anywhere;
+    }
+}
+
 .graduate-close-btn {
     position: absolute;
     top: 12.5px;
@@ -1165,6 +1185,14 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+}
+
+/* Reserve room for the existing close button on short phone viewports. */
+@media (max-height: 600px) {
+    .pdf-popup-content {
+        height: calc(100vh - 7rem);
+        height: calc(100dvh - 7rem);
+    }
 }
 
 .pdf-popup-close {
@@ -2964,6 +2992,16 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     font-size: var(--heading-size, 72px);
 }
 
+/* Keep page titles within phone widths after the web font finishes loading. */
+@media (max-width: 480px) {
+    .projects-heading,
+    .projects-heading.auto-fit {
+        font-size: clamp(2rem, 10vw, 3rem);
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+}
+
 /* Mobile navbar starts shrunk */
 @media (max-width: 768px) {
     .floating-nav.mobile-shrunk {
@@ -3518,3 +3556,59 @@ html.about-active .card-navigation {top:min(calc(50svh - 52px),calc(var(--dock) 
     text-decoration: underline;
     text-underline-offset: 3px;
 }
+
+/* The Uses preview stays independent of existing cards, buttons, and icons. */
+.pc-preview {
+    max-width: 40rem;
+    margin: 3rem auto 0;
+    text-align: center;
+}
+
+.pc-preview-stage {
+    position: relative;
+    width: 100%;
+    height: clamp(300px, 80vw, 520px);
+    margin-top: 1.5rem;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: #1f1f1f;
+}
+
+.pc-preview-poster,
+.pc-preview-stage model-viewer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.pc-preview-stage model-viewer { opacity: 0; }
+.pc-preview-stage:focus-within { outline: 2px solid #c084fc; outline-offset: 3px; }
+.pc-preview-stage.is-ready model-viewer { opacity: 1; }
+.pc-preview-stage.is-ready .pc-preview-poster { visibility: hidden; }
+
+.pc-preview-controls {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.pc-preview-button {
+    min-height: 44px;
+    padding: 0.625rem 1rem;
+    border: 1px solid rgba(192, 132, 252, 0.4);
+    border-radius: 6px;
+    background: #1f1f1f;
+    color: #e9d5ff;
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.pc-preview-button[hidden] { display: none; }
+.pc-preview-button:hover { background: #30243c; }
+.pc-preview-button:focus-visible { outline: 2px solid #c084fc; outline-offset: 3px; }
+.pc-preview-button:disabled { cursor: progress; opacity: 0.7; }
+.pc-preview-status { color: #b8b8b8; font-size: 0.875rem; line-height: 1.6; margin-top: 0.75rem; }

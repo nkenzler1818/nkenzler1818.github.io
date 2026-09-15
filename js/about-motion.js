@@ -46,7 +46,7 @@
   }
   const lastIndex = () => events.length + 1;
   function label(index) {
-    return index === 0 ? 'Who I Am' : index === lastIndex() ? 'The Details' : 'How I Got Here, ' + events[index - 1].dataset.year;
+    return index === 0 ? 'Who I Am' : index === lastIndex() ? 'The Details' : 'What Led Me to Marketing, ' + events[index - 1].dataset.year;
   }
   function targetElement(index) {
     return index === 0 ? $('#ab-hero-h') : index === lastIndex() ? $('#details-heading') : $('.event-year', events[index - 1]);
