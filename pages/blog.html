@@ -128,6 +128,7 @@
           if (articleEl && blogData.template) {
             articleEl.innerHTML = "";
             articleEl.appendChild(blogData.template.content.cloneNode(true));
+            articleEl.querySelectorAll("[data-post-carousel]").forEach(initPostCarousel);
           } else if (articleEl) {
             articleEl.innerHTML = "";
             const paragraphs = blogData.articleText.split("\n\n");
@@ -197,6 +198,34 @@
 
           // Restore hover state
           updateHoverState();
+        }
+
+        // Long-form posts: one-photo-at-a-time carousel
+        function initPostCarousel(root) {
+          const track = root.querySelector(".post-carousel-track");
+          const slides = track.querySelectorAll(".post-slide");
+          const counter = root.querySelector(".post-carousel-counter");
+          const prev = root.querySelector('[data-carousel-step="-1"]');
+          const next = root.querySelector('[data-carousel-step="1"]');
+          function current() { return track.clientWidth ? Math.round(track.scrollLeft / track.clientWidth) : 0; }
+          function update() {
+            const i = current();
+            counter.textContent = (i + 1) + " / " + slides.length;
+            prev.style.opacity = i === 0 ? "0.25" : "1";
+            prev.style.pointerEvents = i === 0 ? "none" : "";
+            next.style.opacity = i === slides.length - 1 ? "0.25" : "1";
+            next.style.pointerEvents = i === slides.length - 1 ? "none" : "";
+          }
+          root.addEventListener("click", function (e) {
+            const step = e.target.closest("[data-carousel-step]");
+            if (!step) return;
+            const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const i = Math.max(0, Math.min(slides.length - 1, current() + Number(step.getAttribute("data-carousel-step"))));
+            track.scrollTo({ left: i * track.clientWidth, behavior: reduce ? "auto" : "smooth" });
+          });
+          track.addEventListener("scroll", update, { passive: true });
+          window.addEventListener("resize", update);
+          update();
         }
 
         // Long-form posts: section chips scroll inside the modal
@@ -600,10 +629,7 @@
         <h3 class="blog-course-heading">Spring Semester</h3>
         <p class="text-white leading-relaxed mb-4">I started in the MS in Marketing program at the University of Arizona, focusing on Analytics and Gen AI. From market research methods to RAG pipelines. This time completely changed how I looked at the business and marketing process; I learned more about where marketing and technology has been, and began to understand the direction it is heading. Less about the concrete definition or which tool to use, but more about where technology and AI actually belongs in a process (and where it does not). And I ended with a 4.0!</p>
         <p class="text-white leading-relaxed mb-4">In April, I began working with SignifyMD as a digital marketing and comms intern facilitating the exchange of information within the healthcare space, specifically focused on oncologist and clinical insights. This gave me a space to apply the concepts I was learning and get a real understanding of how the new era of technology is propagating throughout industries.</p>
-        <div class="post-photos post-photos-2">
-          <button type="button" class="post-photo" data-full="../images/blog/semester-2026/deans-list.jpg" data-caption="Dean's List, Spring 2026"><img src="../images/blog/semester-2026/deans-list.jpg" alt="Eller College of Management Dean's List certificate, Spring 2026" loading="lazy"></button>
-          <button type="button" class="post-photo" data-full="../images/blog/semester-2026/cohort-celebration.jpg" data-caption=""><img src="../images/blog/semester-2026/cohort-celebration.jpg" alt="Group photo holding up letters that spell Eller" loading="lazy"></button>
-        </div>
+        <button type="button" class="post-photo post-single" data-full="../images/blog/semester-2026/deans-list.jpg" data-caption="Dean's List, Spring 2026"><img src="../images/blog/semester-2026/deans-list.jpg" alt="Eller College of Management Dean's List certificate, Spring 2026" loading="lazy"></button>
       </section>
 
       <section class="post-section" id="su-summer">
@@ -619,10 +645,22 @@
         <h3 class="blog-course-heading">Fall Semester</h3>
         <p class="text-white leading-relaxed mb-4">This semester marks the end of my academic career. While I may return down the line for an MBA and/or a PhD, it definitely will be after some time in the workforce if at all. So I am trying to really make the most of the opportunity to simply soak up information and learn. So this semester, I am diving even deeper into how businesses can put AI into practice and see tangible results. For me, this means diving deeper into GenAI, ML, Neural networks etc. to understand and think at the level of abstraction where efforts will survive the latest Anthropic updates.</p>
         <p class="text-white leading-relaxed mb-4">I have also been taking the opportunity to give back. I began volunteering as a mock interviewer for graduate students preparing for the real thing. It is easily one of my favorite experiences of the semester and something I will absolutely continue to do. But I am also subjecting myself to the same process and having as many informational or real interviews as possible. Not to get just any opportunity for a job (exciting news to come actually), but to continue to develop my own interpersonal skills and my network so I can help others and also have folks to rely on for given projects in the future.</p>
-        <div class="post-photos post-photos-3">
-          <button type="button" class="post-photo" data-full="../images/blog/semester-2026/mock-interviews.jpg" data-caption=""><img src="../images/blog/semester-2026/mock-interviews.jpg" alt="Overhead view of people at tables in a large atrium" loading="lazy"></button>
-          <button type="button" class="post-photo" data-full="../images/blog/semester-2026/eller-cohort.jpg" data-caption="Eller College of Management"><img src="../images/blog/semester-2026/eller-cohort.jpg" alt="Group photo in front of the Eller College of Management sign" loading="lazy"></button>
-          <button type="button" class="post-photo" data-full="../images/blog/semester-2026/eller-faculty.jpg" data-caption="Eller College of Management"><img src="../images/blog/semester-2026/eller-faculty.jpg" alt="Four people in front of the Eller College of Management sign" loading="lazy"></button>
+        <div class="post-carousel" data-post-carousel>
+          <div class="post-carousel-row">
+            <button type="button" class="carousel-arrow" data-carousel-step="-1" aria-label="Previous photo">
+              <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="post-carousel-track">
+              <button type="button" class="post-photo post-slide" data-full="../images/blog/semester-2026/eller-cohort.jpg" data-caption=""><img src="../images/blog/semester-2026/eller-cohort.jpg" alt="Group photo in front of the Eller College of Management sign" loading="lazy"></button>
+              <button type="button" class="post-photo post-slide" data-full="../images/blog/semester-2026/eller-faculty.jpg" data-caption=""><img src="../images/blog/semester-2026/eller-faculty.jpg" alt="Four people in front of the Eller College of Management sign" loading="lazy"></button>
+              <button type="button" class="post-photo post-slide" data-full="../images/blog/semester-2026/cohort-celebration.jpg" data-caption=""><img src="../images/blog/semester-2026/cohort-celebration.jpg" alt="Group photo holding up letters that spell Eller" loading="lazy"></button>
+              <button type="button" class="post-photo post-slide" data-full="../images/blog/semester-2026/mock-interviews.jpg" data-caption=""><img src="../images/blog/semester-2026/mock-interviews.jpg" alt="Overhead view of people at tables in a large atrium" loading="lazy"></button>
+            </div>
+            <button type="button" class="carousel-arrow" data-carousel-step="1" aria-label="Next photo">
+              <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M5 3L9 7L5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <p class="carousel-counter post-carousel-counter">1 / 4</p>
         </div>
       </section>
 
@@ -631,8 +669,8 @@
         <p class="text-white leading-relaxed mb-4">I'm a marketer who builds the AI tools I use. Not to automate my thinking, but to augment it. And to truly understand how technology works, and why it should or shouldn't be implemented in production.</p>
         <p class="text-white leading-relaxed mb-4">If you're working where business and AI meet, I'd like to hear what you're seeing. My email is linked in the footer of this page. I would love to talk about business, AI, or just any general experiences you might want to discuss (I love meeting new people!).</p>
         <div class="post-cta">
-          <a href="mailto:nkenzler@arizona.edu">Email me</a>
-          <a href="https://www.linkedin.com/in/nathanaelkenzler/" target="_blank" rel="noopener">Connect on LinkedIn</a>
+          <a href="mailto:nkenzler@arizona.edu" class="btn-dark-purple btn-home-cta">Email me</a>
+          <a href="https://www.linkedin.com/in/nathanaelkenzler/" target="_blank" rel="noopener" class="btn-dark-purple btn-home-cta">Connect on LinkedIn</a>
         </div>
       </section>
     </template>
