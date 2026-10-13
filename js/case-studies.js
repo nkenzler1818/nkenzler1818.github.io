@@ -1,5 +1,5 @@
 // Projects page: interactive pieces inside the case-study modals.
-// Phase stepper, the "bridge" direction flip, screenshot lightbox,
+// Phase stepper, screenshot lightbox,
 // the site-history slider and the sample SQL console. No dependencies.
 (function () {
     'use strict';
@@ -32,21 +32,6 @@
                 if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
                 if (next) { e.preventDefault(); select(next, true); }
             });
-        });
-    }
-
-    /* Bridge: flip which side is "said" and which is "built" */
-    function initBridge(root) {
-        var btn = root.querySelector('.case-bridge-flip');
-        if (!btn) return;
-        var from = root.querySelector('[data-from]');
-        var to = root.querySelector('[data-to]');
-        btn.addEventListener('click', function () {
-            var flipped = btn.getAttribute('aria-pressed') !== 'true';
-            btn.setAttribute('aria-pressed', flipped ? 'true' : 'false');
-            root.classList.toggle('is-flipped', flipped);
-            from.textContent = flipped ? 'Engineering says' : 'Leadership says';
-            to.textContent = flipped ? 'Leadership hears' : 'Engineering builds';
         });
     }
 
@@ -191,7 +176,6 @@
 
     onReady(function () {
         Array.prototype.forEach.call(document.querySelectorAll('[data-steps]'), initSteps);
-        Array.prototype.forEach.call(document.querySelectorAll('.case-bridge'), initBridge);
         Array.prototype.forEach.call(document.querySelectorAll('[data-site-history]'), initHistory);
         Array.prototype.forEach.call(document.querySelectorAll('[data-sql-console]'), initSql);
         initLightbox();
