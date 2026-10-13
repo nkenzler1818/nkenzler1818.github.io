@@ -24,10 +24,10 @@
     <meta name="theme-color" content="#2A2A2A" />
     <title>Projects - Nathanael Kenzler</title>
     <meta name="description" content="Explore Nathanael Kenzler's featured projects in marketing, AI, and operations.">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.css">
-    <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/simplebar@6.3.3/dist/simplebar.css">
+    <script src="https://unpkg.com/simplebar@6.3.3/dist/simplebar.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3366,7 +3366,34 @@
             track.addEventListener('scroll', function() {
                 if (!isDragging && !rafId) updateFocus();
                 updateArrows();
+                if (touchMoved) scheduleTouchSnap();
             });
+
+            // Touch: after a swipe (and its momentum) settles, center the nearest
+            // card, the same way a mouse drag does. Mouse and arrows are unchanged.
+            var touching = false, touchMoved = false, touchSnapTimer = null;
+            function scheduleTouchSnap() {
+                clearTimeout(touchSnapTimer);
+                touchSnapTimer = setTimeout(function() {
+                    if (touching || rafId) return;
+                    touchMoved = false;
+                    snapToNearest();
+                }, 160);
+            }
+            track.addEventListener('touchstart', function() {
+                touching = true;
+                touchMoved = true;
+                clearTimeout(touchSnapTimer);
+                if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+            }, { passive: true });
+            track.addEventListener('touchend', function() {
+                touching = false;
+                scheduleTouchSnap();
+            }, { passive: true });
+            track.addEventListener('touchcancel', function() {
+                touching = false;
+                scheduleTouchSnap();
+            }, { passive: true });
         });
     </script>
     <script>
@@ -3507,7 +3534,34 @@
             track.addEventListener('scroll', function() {
                 if (!isDragging && !rafId) updateFocus();
                 updateArrows();
+                if (touchMoved) scheduleTouchSnap();
             });
+
+            // Touch: after a swipe (and its momentum) settles, center the nearest
+            // card, the same way a mouse drag does. Mouse and arrows are unchanged.
+            var touching = false, touchMoved = false, touchSnapTimer = null;
+            function scheduleTouchSnap() {
+                clearTimeout(touchSnapTimer);
+                touchSnapTimer = setTimeout(function() {
+                    if (touching || rafId) return;
+                    touchMoved = false;
+                    snapToNearest();
+                }, 160);
+            }
+            track.addEventListener('touchstart', function() {
+                touching = true;
+                touchMoved = true;
+                clearTimeout(touchSnapTimer);
+                if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+            }, { passive: true });
+            track.addEventListener('touchend', function() {
+                touching = false;
+                scheduleTouchSnap();
+            }, { passive: true });
+            track.addEventListener('touchcancel', function() {
+                touching = false;
+                scheduleTouchSnap();
+            }, { passive: true });
         }
 
         document.addEventListener('DOMContentLoaded', function() {

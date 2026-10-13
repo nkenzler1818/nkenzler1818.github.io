@@ -98,6 +98,7 @@ button:focus-visible,
 }
 
 .backdrop-blur-sm {
+    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
 }
 
@@ -1005,6 +1006,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -1022,7 +1024,9 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     width: 100%;
     max-width: 900px;
     height: min(80vh, calc(100vh - 2rem));
+    height: min(80dvh, calc(100dvh - 2rem));
     max-height: 80vh;
+    max-height: 80dvh;
     margin: auto;
     background: #141414;
     border-radius: 24px;
@@ -1181,6 +1185,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .pdf-popup-content {
     width: 100%;
     height: 85vh;
+    height: 85dvh;
     background: #1a1a1a;
     border-radius: 16px;
     overflow: hidden;
@@ -1191,6 +1196,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 @media (max-height: 600px) {
     .pdf-popup-content {
         height: calc(100vh - 7rem);
+        height: calc(100dvh - 7rem);
         height: calc(100dvh - 7rem);
     }
 }
@@ -1508,6 +1514,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -1525,6 +1532,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     width: 100%;
     max-width: 1100px;
     max-height: 85vh;
+    max-height: 85dvh;
     margin: auto;
     background: #141414;
     border-radius: 24px;
@@ -1707,6 +1715,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     z-index: 1000;
     display: flex;
@@ -1725,6 +1734,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     width: 100%;
     max-width: 800px;
     max-height: 70vh;
+    max-height: 70dvh;
     margin: auto;
     background: #141414;
     border-radius: 24px;
@@ -1799,7 +1809,9 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 /* Home project modals: definite height so flex children don't collapse */
 .home-project-modal .blog-focus-content {
     height: 85vh;
+    height: 85dvh;
     max-height: 85vh;
+    max-height: 85dvh;
 }
 
 .blog-focus-header {
@@ -1899,6 +1911,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         margin: 1rem;
         padding: 1.5rem;
         max-height: 90vh;
+        max-height: 90dvh;
     }
 }
 
@@ -1911,6 +1924,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     z-index: 1100;
     display: flex;
     align-items: center;
@@ -1931,6 +1945,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     padding: 4.5rem 1rem 2rem 1rem;
     max-width: 90vw;
     max-height: 90vh;
+    max-height: 90dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1949,6 +1964,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .image-lightbox-content img {
     max-width: 100%;
     max-height: calc(90vh - 7.5rem);
+    max-height: calc(90dvh - 7.5rem);
     object-fit: contain;
     border-radius: 0.25rem;
 }
@@ -2019,6 +2035,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     z-index: 1000;
     display: flex;
@@ -2037,7 +2054,9 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     width: 100%;
     max-width: 1000px;
     height: 85vh;
+    height: 85dvh;
     max-height: 85vh;
+    max-height: 85dvh;
     margin: auto;
     background: #141414;
     border-radius: 24px;
@@ -2198,6 +2217,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -2215,6 +2235,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     width: 100%;
     max-width: 1000px;
     max-height: 85vh;
+    max-height: 85dvh;
     margin: auto;
     background: #141414;
     border-radius: 24px;
@@ -2341,6 +2362,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -2358,6 +2380,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     width: 100%;
     max-width: 1000px;
     max-height: 85vh;
+    max-height: 85dvh;
     margin: auto;
     background: #141414;
     border-radius: 24px;
@@ -2647,6 +2670,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     left: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     z-index: 1100;
     display: flex;
     align-items: center;
@@ -2663,6 +2687,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     position: relative;
     width: min(90vw, 720px);
     max-height: 80vh;
+    max-height: 80dvh;
     background: #141414;
     border-radius: 20px;
     padding: 2.5rem 2rem 2rem;
@@ -2679,6 +2704,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
 .csv-preview-table-wrap {
     overflow: auto;
     max-height: 45vh;
+    max-height: 45dvh;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(20, 20, 20, 0.6);
@@ -2746,10 +2772,12 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
     .csv-preview-content {
         padding: 2.25rem 1.5rem 1.5rem;
         max-height: 85vh;
+        max-height: 85dvh;
     }
 
     .csv-preview-table-wrap {
         max-height: 50vh;
+        max-height: 50dvh;
     }
 }
 
@@ -2878,6 +2906,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         margin: 1rem;
         padding: 1.5rem;
         max-height: 95vh;
+        max-height: 95dvh;
     }
 }
 
@@ -3180,6 +3209,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         margin: 1rem;
         padding: 1rem;
         max-height: 90vh;
+        max-height: 90dvh;
     }
 
     .capstone-scroll-inner,
@@ -3205,6 +3235,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         margin: 1rem;
         padding: 1rem;
         max-height: 90vh;
+        max-height: 90dvh;
     }
 
     .persona-scroll-inner {
@@ -3219,6 +3250,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         margin: 1rem;
         padding: 1rem;
         max-height: 90vh;
+        max-height: 90dvh;
     }
 
     .case-comp-scroll-inner {
@@ -3233,6 +3265,7 @@ html.nav-pill-pending .nav-link[aria-current="page"]::before {
         margin: 1rem;
         padding: 1rem;
         max-height: 90vh;
+        max-height: 90dvh;
     }
 
     .case-study-scroll-inner {
@@ -3821,7 +3854,7 @@ html:not(.pc-js) .pc-preview-panel-inner,
 }
 .post-lightbox.hidden { display: none; }
 .post-lightbox figure { margin: 0; max-width: min(1100px, 100%); }
-.post-lightbox img { max-width: 100%; max-height: 80vh; border-radius: 14px; display: block; margin: 0 auto; }
+.post-lightbox img { max-width: 100%; max-height: 80vh; max-height: 80dvh; border-radius: 14px; display: block; margin: 0 auto; }
 .post-lightbox figcaption { color: #b8b8b8; text-align: center; font-size: 0.9rem; margin-top: 0.75rem; min-height: 1em; }
 .post-lightbox-close {
     position: absolute;
@@ -3857,7 +3890,9 @@ html:not(.pc-js) .pc-preview-panel-inner,
     width: calc(100% - 2rem);
     max-width: 980px;
     height: min(88vh, 940px);
+    height: min(88dvh, 940px);
     max-height: 88vh;
+    max-height: 88dvh;
     padding-right: 0;
 }
 .project-case .graduate-scroll-inner { padding: 0 3rem 2.5rem; }
@@ -3965,7 +4000,7 @@ html:not(.pc-js) .pc-preview-panel-inner,
     .case-specs { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
-    .graduate-focus-content.project-case { width: calc(100% - 1rem); height: 92vh; max-height: 92vh; }
+    .graduate-focus-content.project-case { width: calc(100% - 1rem); height: 92vh; height: 92dvh; max-height: 92vh; max-height: 92dvh; }
     .case-demo-frame { height: 560px; border-radius: 12px; }
 }
 
@@ -3975,6 +4010,7 @@ html:not(.pc-js) .pc-preview-panel-inner,
     max-width: 760px;
     height: auto;
     max-height: 88vh;
+    max-height: 88dvh;
     padding-right: 0;
 }
 .project-mid .graduate-scroll-inner { padding: 0 2.5rem 2.25rem; }
@@ -4164,3 +4200,178 @@ html:not(.pc-js) .pc-preview-panel-inner,
 
 /* Interactive demos inside site-standard modal articles */
 .graduate-focus-article .case-demo { margin: 0 0 1.25rem; }
+
+/* --------------------------------------------------------------------------
+   Cross-device pass (Oct 2026): consistent behavior across phones, tablets,
+   desktops and browsers. Additive only; earlier rules stay as they were.
+   -------------------------------------------------------------------------- */
+
+/* iOS Safari inflates text in landscape without this; keeps sizes identical
+   across Safari, Chrome and Firefox. */
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Same subtle tap feedback on every touch browser instead of the default
+   grey flash on iOS and blue flash on Android. */
+a, button, [role="button"], summary, label {
+    -webkit-tap-highlight-color: rgba(192, 132, 252, 0.15);
+}
+
+/* Modals keep a margin on every screen between phone and desktop widths
+   (landscape phones and small tablets were edge to edge). */
+.graduate-focus-content,
+.capstone-focus-content,
+.blog-focus-content,
+.persona-focus-content,
+.case-comp-focus-content,
+.case-study-focus-content {
+    width: calc(100% - 2rem);
+}
+
+/* Long single-word titles wrap instead of running out of the modal. */
+.graduate-focus-header h2,
+.blog-focus-header h2,
+.capstone-focus-header h2,
+.persona-focus-header h2,
+.case-comp-focus-header h2,
+.case-study-focus-header h2 {
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+@media (max-width: 480px) {
+    .graduate-focus-content,
+    .capstone-focus-content,
+    .blog-focus-content,
+    .persona-focus-content,
+    .case-comp-focus-content,
+    .case-study-focus-content {
+        width: calc(100% - 1rem);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .graduate-focus-header h2,
+    .blog-focus-header h2,
+    .capstone-focus-header h2,
+    .persona-focus-header h2,
+    .case-comp-focus-header h2,
+    .case-study-focus-header h2 {
+        font-size: clamp(1.4rem, 6.5vw, 1.875rem);
+    }
+}
+
+/* Touch screens: 44px minimum tap areas (Apple and Google guidance). Done with
+   an invisible ::after hit area so nothing moves or changes size visually. */
+@media (pointer: coarse) {
+    .more-btn,
+    .nav-brand,
+    .icon-btn,
+    .footer-bg .social-icons a,
+    .footer-bg .social-icons button,
+    .carousel-arrow,
+    .breadcrumb a {
+        position: relative;
+    }
+
+    .more-btn::after,
+    .nav-brand::after,
+    .icon-btn::after,
+    .footer-bg .social-icons a::after,
+    .footer-bg .social-icons button::after,
+    .carousel-arrow::after,
+    .breadcrumb a::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: max(100%, 44px);
+        height: max(100%, 44px);
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Touch screens have no real hover. Without this, a tapped card stays lifted
+   after its modal closes (iOS and Android keep :hover until the next tap). */
+@media (hover: none) {
+    .project-pane:hover,
+    .project-card:hover,
+    .blog-card:hover {
+        transform: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .project-pane:active,
+    .project-card:active,
+    .blog-card:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Phones in landscape: keep About's "skip" prompt from covering the text. */
+@media (max-height: 520px) {
+    html.about-navigation .about-controls {
+        bottom: 12px;
+    }
+
+    html.about-navigation .timeline-skip {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (hover: none) {
+    .carousel-track .project-pane.carousel-dimmed:hover {
+        opacity: 0.62;
+        transform: scale(0.97);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .carousel-track .project-pane.carousel-focused:hover {
+        transform: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .grid:hover .project-pane:not(:hover),
+    .undergrad-work-grid:hover .project-pane:not(:hover) {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+/* "Uses" is the last nav item, so its "Coming soon" tip opens leftward from
+   the right edge. Centered, the hidden tip poked past the window at ~1024px
+   with a classic (Windows) scrollbar and caused a horizontal scrollbar. */
+@media (min-width: 921px) {
+    .nav-wip-tip {
+        left: auto;
+        right: -8px;
+        transform: translateY(-4px);
+    }
+
+    .nav-wip-tip::before {
+        left: auto;
+        right: 28px;
+        margin-left: 0;
+    }
+
+    .nav-link-wip:hover .nav-wip-tip,
+    .nav-link-wip:focus-visible .nav-wip-tip {
+        transform: translateY(0);
+    }
+}
+
+/* The footer already spans the page (it sits directly in <body>), so the
+   100vw full-bleed trick only added the scrollbar's width on Windows and
+   Linux browsers and caused a sideways scroll below 768px. */
+@media (max-width: 768px) {
+    .footer-bg {
+        width: auto;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+

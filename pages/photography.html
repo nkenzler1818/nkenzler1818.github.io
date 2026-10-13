@@ -9,14 +9,14 @@
       name="description"
       content="Photography collection and visual work."
     />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script src="../js/photography-nav.js" defer></script>
     <link rel="stylesheet" href="../css/style.css" />
     <link
       rel="stylesheet"
-      href="https://unpkg.com/simplebar@latest/dist/simplebar.css"
+      href="https://unpkg.com/simplebar@6.3.3/dist/simplebar.css"
     />
-    <script src="https://unpkg.com/simplebar@latest/dist/simplebar.min.js"></script>
+    <script src="https://unpkg.com/simplebar@6.3.3/dist/simplebar.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -206,7 +206,9 @@
         border-radius: 0.5rem;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         height: 85vh;
+        height: 85dvh;
         max-height: 85vh;
+        max-height: 85dvh;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -325,8 +327,8 @@
         white-space: normal;
       }
 
-      /* Responsive modal */
-      @media (max-width: 768px) {
+      /* Responsive modal (also phones in landscape, where the floating close button would sit off screen) */
+      @media (max-width: 768px), (max-height: 520px) {
         .photography-focus-overlay {
           padding: 0;
           align-items: stretch;
@@ -336,11 +338,14 @@
           width: 100vw;
           max-width: 100vw;
           height: 100vh;
+          height: 100dvh;
         }
 
         .photography-focus-content {
           height: 100vh;
+          height: 100dvh;
           max-height: 100vh;
+          max-height: 100dvh;
           border-radius: 0;
         }
 
