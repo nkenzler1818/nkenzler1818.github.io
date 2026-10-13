@@ -42,7 +42,7 @@
       const full = $('.event-full', event); full.id = event.id + '-detail';
       [$('.event-year', event), compact].forEach(button => button.setAttribute('aria-controls', full.id));
     });
-    $('[data-end-year]').textContent = events.at(-1)?.dataset.year || '2019';
+    $('[data-end-year]').textContent = events[events.length - 1]?.dataset.year || '2019';
   }
   const lastIndex = () => events.length + 1;
   function label(index) {
@@ -209,7 +209,7 @@
     const point = state.point || 0, index = Math.round(point);
     const centers = events.map(e => e.offsetTop + e.offsetHeight / 2);
     const lower = Math.floor(point), upper = Math.min(centers.length - 1, lower + 1);
-    const center = centers[lower] + (centers[upper] - centers[lower]) * (point - lower), span = Math.max(1, centers.at(-1) - centers[0]);
+    const center = centers[lower] + (centers[upper] - centers[lower]) * (point - lower), span = Math.max(1, centers[centers.length - 1] - centers[0]);
     // Keep the focused copy near the heading, without the previous half-card void. The focus
     // height blends the two rows either side of the point, so it stays continuous when the
     // open year switches mid-move (at rest it is exactly the open row's height).
