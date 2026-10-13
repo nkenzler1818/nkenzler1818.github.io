@@ -1,6 +1,13 @@
 {
   "blog": [
     {
+      "title": "Visibility Is Now My Bottleneck",
+      "slug": "semester-update",
+      "link": "https://nathanaelkenzler.org/pages/blog.html#semester-update",
+      "pubDate": "2026-10-13",
+      "description": "A recap of the year so far: the MS program, SignifyMD, building my own AI system, and my final semester."
+    },
+    {
       "title": "What I'm Building This Summer (And Why It Might Be the Most Important Thing I've Done)",
       "slug": "building-this-summer",
       "link": "https://nathanaelkenzler.org/pages/blog.html",
@@ -30,6 +37,27 @@
     }
   ],
   "projects": [
+    {
+      "title": "Project Olympus",
+      "slug": "project-olympus",
+      "link": "https://nathanaelkenzler.org/pages/projects.html#olympus",
+      "pubDate": "2026-10-13",
+      "description": "A personal AI operating system I run and maintain myself, with a clickable demo of the dashboard."
+    },
+    {
+      "title": "Airbnb Listing Assistant",
+      "slug": "airbnb-listing-assistant",
+      "link": "https://nathanaelkenzler.org/pages/projects.html#airbnb-assistant",
+      "pubDate": "2026-10-13",
+      "description": "MIS 556 semester project: an assistant that recommends Airbnb listings grounded in real listing data, updated as it develops."
+    },
+    {
+      "title": "OncUpdates v2 Relaunch",
+      "slug": "oncupdates-v2-relaunch",
+      "link": "https://nathanaelkenzler.org/pages/projects.html#oncupdates",
+      "pubDate": "2026-10-13",
+      "description": "Case study of my SignifyMD internship capstone, from the first usability audit through launch and beta testing."
+    },
     {
       "title": "Capstone – Business Strategy Game",
       "slug": "capstone-bsg",

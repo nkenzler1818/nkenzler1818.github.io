@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Listing assistant demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family: "Plus Jakarta Sans"; src: url("../../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Plus Jakarta Sans"; src: url("../../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Plus Jakarta Sans"; src: url("../../Project Files/Fonts/Plus_Jakarta_Sans/static/PlusJakartaSans-Bold.ttf") format("truetype"); font-weight: 700; font-display: swap; }
+/* Sample-data walkthrough of the MIS 556 listing assistant's target design. */
+:root {
+  --bg: #1F1F1F; --deep: #141414; --raise: #262626; --line: rgba(255,255,255,.08);
+  --purple: #c084fc; --purple-dim: rgba(192,132,252,.12); --purple-b: rgba(192,132,252,.35);
+  --code: #22d3ee; --code-dim: rgba(34,211,238,.12); --model: #fbbf24; --model-dim: rgba(251,191,36,.12);
+  --ok: #4ade80; --bad: #f472b6;
+  --t1: #f5f5f5; --t2: #e5e5e5; --t3: #bdbdbd; --faint: rgba(255,255,255,.45);
+  --ui: "Plus Jakarta Sans", system-ui, sans-serif; --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--bg); color: var(--t2); font-family: var(--ui); font-size: 13.5px; -webkit-font-smoothing: antialiased; overflow: hidden; }
+button { font: inherit; color: inherit; }
+.wrap { height: 100vh; display: grid; grid-template-rows: auto 1fr; }
+.top { display: flex; align-items: center; gap: 4px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--deep); }
+.tab { border: 0; background: none; padding: 7px 12px; border-radius: 8px; color: var(--t3); cursor: pointer; font-weight: 600; font-size: 12.5px; }
+.tab[aria-selected="true"] { background: var(--purple-dim); color: var(--t1); box-shadow: inset 0 0 0 1px var(--purple-b); }
+.tab:hover { color: var(--t1); }
+.pill { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--model); background: var(--model-dim); border: 1px solid rgba(251,191,36,.35); padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.pane { display: none; overflow-y: auto; padding: 16px 16px 20px; min-height: 0; scrollbar-width: thin; scrollbar-color: #555 transparent; }
+.pane.on { display: block; }
+:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
+
+/* Try it */
+.ask { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; align-items: center; }
+.ask .lab { width: 100%; font-size: 12px; color: var(--faint); }
+.q { border: 0; background: var(--deep); border-radius: 999px; padding: 8px 13px; cursor: pointer; font-size: 12.5px; box-shadow: inset 0 0 0 1px var(--line); }
+.q:hover { box-shadow: inset 0 0 0 1px var(--purple-b); color: var(--t1); }
+.q[aria-pressed="true"] { background: var(--purple-dim); box-shadow: inset 0 0 0 1px var(--purple-b); color: var(--t1); }
+.pipe { display: grid; grid-template-columns: 1fr 1fr 1.25fr; gap: 10px; }
+.stage { background: var(--deep); border-radius: 14px; padding: 12px; min-height: 300px; opacity: .45; transition: opacity .35s, box-shadow .35s; box-shadow: inset 0 0 0 1px var(--line); }
+.stage.live { opacity: 1; }
+.stage.live.code { box-shadow: inset 0 0 0 1px rgba(34,211,238,.35); }
+.stage.live.model { box-shadow: inset 0 0 0 1px rgba(251,191,36,.35); }
+.stage h4 { margin: 0 0 2px; font-size: 13px; color: var(--t1); display: flex; align-items: center; gap: 8px; }
+.stage h4 .n { font-family: var(--mono); font-size: 11px; color: var(--faint); font-weight: 400; }
+.who { font-family: var(--mono); font-size: 10px; padding: 2px 7px; border-radius: 5px; margin-left: auto; }
+.who.code { background: var(--code-dim); color: var(--code); }
+.who.model { background: var(--model-dim); color: var(--model); }
+.stage .sub { margin: 0 0 10px; font-size: 11.5px; color: var(--faint); line-height: 1.4; }
+.fl { display: flex; flex-direction: column; gap: 6px; }
+.f { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 7px 9px; border-radius: 8px; background: var(--raise); opacity: 0; transform: translateY(4px); transition: opacity .3s, transform .3s; }
+.f.show { opacity: 1; transform: none; }
+.f .k { font-family: var(--mono); font-size: 10px; padding: 1px 6px; border-radius: 4px; flex: none; }
+.f.exact .k { background: var(--code-dim); color: var(--code); }
+.f.judge .k { background: var(--model-dim); color: var(--model); }
+.count { font-family: var(--mono); font-size: 30px; color: var(--t1); line-height: 1; margin: 2px 0 2px; }
+.count small { font-size: 11px; color: var(--faint); margin-left: 4px; }
+.dots { display: grid; grid-template-columns: repeat(28, 1fr); gap: 2px; margin-top: 10px; }
+.dots i { aspect-ratio: 1; border-radius: 50%; background: var(--code); opacity: .85; transition: opacity .5s, background-color .5s; }
+.dots i.out { opacity: .1; background: #fff; }
+.res { display: flex; flex-direction: column; gap: 8px; }
+.r { background: var(--raise); border-radius: 10px; padding: 9px 10px; opacity: 0; transform: translateY(4px); transition: opacity .3s, transform .3s; }
+.r.show { opacity: 1; transform: none; }
+.r .h { display: flex; gap: 8px; align-items: baseline; }
+.r b { color: var(--t1); font-size: 12.5px; font-weight: 600; }
+.r .rank { font-family: var(--mono); color: var(--model); font-size: 11px; }
+.r .meta { margin-left: auto; font-family: var(--mono); font-size: 10.5px; color: var(--t3); white-space: nowrap; }
+.r p { margin: 4px 0 0; font-size: 11.5px; color: var(--t3); line-height: 1.45; }
+.hint { text-align: center; color: var(--faint); font-size: 12px; margin-top: 70px; line-height: 1.5; }
+.note { margin-top: 12px; font-size: 11.5px; color: var(--faint); line-height: 1.5; }
+
+/* Why */
+.bug { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0 14px; }
+.col { background: var(--deep); border-radius: 14px; padding: 12px; box-shadow: inset 0 0 0 1px var(--line); }
+.col h4 { margin: 0 0 8px; font-size: 13px; color: var(--t1); display: flex; align-items: center; gap: 8px; }
+.term { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.term button { border: 0; padding: 6px 12px; border-radius: 999px; background: var(--deep); cursor: pointer; font-family: var(--mono); font-size: 12px; box-shadow: inset 0 0 0 1px var(--line); }
+.term button[aria-pressed="true"] { background: var(--purple-dim); color: var(--t1); box-shadow: inset 0 0 0 1px var(--purple-b); }
+.m { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 12.5px; border-bottom: 1px solid var(--line); }
+.m:last-child { border: 0; }
+.m mark { background: rgba(244,114,182,.25); color: var(--t1); border-radius: 3px; padding: 0 1px; }
+.m .v { margin-left: auto; font-family: var(--mono); font-size: 10.5px; }
+.m .v.y { color: var(--ok); } .m .v.n { color: var(--bad); }
+.principle { background: var(--deep); border-radius: 14px; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; box-shadow: inset 0 0 0 1px var(--line); }
+.principle div b { display: block; margin-bottom: 4px; font-size: 13px; }
+.principle .c b { color: var(--code); } .principle .md b { color: var(--model); }
+.principle p { margin: 0; font-size: 12px; color: var(--t3); line-height: 1.5; }
+.lead { margin: 0 0 4px; font-size: 13px; line-height: 1.55; color: var(--t2); }
+.fix { margin-top: 14px; font-size: 12px; color: var(--t3); line-height: 1.55; }
+.fix code { font-family: var(--mono); font-size: 11px; color: var(--t1); background: var(--deep); padding: 1px 5px; border-radius: 4px; }
+
+/* Progress */
+.steps { list-style: none; margin: 0; padding: 0; position: relative; }
+.steps li { display: grid; grid-template-columns: 26px 1fr; gap: 12px; padding: 0 0 16px; position: relative; }
+.steps li::before { content: ""; position: absolute; left: 12px; top: 26px; bottom: 0; width: 2px; background: var(--line); }
+.steps li:last-child::before { display: none; }
+.steps .mk { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-family: var(--mono); font-size: 11px; background: var(--deep); box-shadow: inset 0 0 0 1.5px var(--line); color: var(--faint); position: relative; z-index: 1; }
+.steps li.done .mk { background: var(--ok); color: #0f2016; box-shadow: none; }
+.steps li.now .mk { background: var(--purple-dim); color: var(--purple); box-shadow: inset 0 0 0 1.5px var(--purple); }
+.steps li.now .mk::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; box-shadow: 0 0 0 1.5px var(--purple-b); animation: ring 1.8s ease-out infinite; }
+@keyframes ring { from { opacity: 1; transform: scale(.8); } to { opacity: 0; transform: scale(1.25); } }
+.steps b { color: var(--t1); font-size: 13px; display: block; margin: 3px 0 2px; }
+.steps p { margin: 0; font-size: 12px; color: var(--t3); line-height: 1.5; }
+.steps .tag { font-family: var(--mono); font-size: 10px; color: var(--faint); margin-left: 6px; font-weight: 400; }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.facts div { background: var(--deep); border-radius: 12px; padding: 10px 12px; box-shadow: inset 0 0 0 1px var(--line); }
+.facts b { display: block; font-family: var(--mono); font-size: 20px; color: var(--t1); font-weight: 500; }
+.facts span { font-size: 11.5px; color: var(--faint); }
+
+@media (max-width: 640px) {
+  .pipe, .bug, .principle { grid-template-columns: 1fr; }
+  .stage { min-height: 0; }
+  .hint { margin-top: 10px; }
+  .pill { display: none; }
+  .dots { grid-template-columns: repeat(35, 1fr); }
+  .facts b { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top" role="tablist" aria-label="Demo sections">
+    <button class="tab" role="tab" aria-selected="true" data-pane="try">Try it</button>
+    <button class="tab" role="tab" aria-selected="false" data-pane="why">Why it's built this way</button>
+    <button class="tab" role="tab" aria-selected="false" data-pane="progress">Progress</button>
+    <span class="pill" title="Listings and counts here are invented">Demo · sample data</span>
+  </div>
+
+  <section class="pane on" data-p="try" role="tabpanel">
+    <div class="ask">
+      <span class="lab">Pick a request a guest might type</span>
+      <button class="q" data-q="0">2 bedrooms under $150 with AC</button>
+      <button class="q" data-q="1">Best homes for this summer weather</button>
+      <button class="q" data-q="2">Quiet place to work remotely, under $120</button>
+    </div>
+    <div class="pipe">
+      <div class="stage code" id="s1"><h4><span class="n">1</span>Turn it into filters</h4><p class="sub">Exact needs become hard filters. Anything that takes judgment is flagged for the model.</p><div class="fl" id="filters"></div></div>
+      <div class="stage code" id="s2"><h4><span class="n">2</span>Apply in code<span class="who code">code</span></h4><p class="sub">Deterministic. A listing either matches or it doesn't.</p><div class="count" id="count">490<small>listings</small></div><div class="dots" id="dots"></div></div>
+      <div class="stage model" id="s3"><h4><span class="n">3</span>Rank and explain<span class="who model">model</span></h4><p class="sub">The model only sees listings that already pass, then ranks them and says why.</p><div class="res" id="res"><div class="hint">Pick a request above to run it.</div></div></div>
+    </div>
+    <p class="note">This is the flow we're wiring together now. The demo shows the target design with made-up listings.</p>
+  </section>
+
+  <section class="pane" data-p="why" role="tabpanel">
+    <p class="lead">Our first amenity search matched text, not meaning. Pick a search term to see what went wrong.</p>
+    <div class="term" id="terms">
+      <button aria-pressed="true" data-t="0">AC</button>
+      <button aria-pressed="false" data-t="1">dryer</button>
+      <button aria-pressed="false" data-t="2">pool</button>
+    </div>
+    <div class="bug">
+      <div class="col"><h4>Matching text</h4><div id="kw"></div></div>
+      <div class="col"><h4>Matching meaning</h4><div id="mn"></div></div>
+    </div>
+    <div class="principle">
+      <div class="c"><b>Code for exact requirements</b><p>Price, bedrooms, and amenities are checked in code, so the answer is the same every time.</p></div>
+      <div class="md"><b>The model for judgment</b><p>"Good for summer weather" needs interpretation. That's where the model earns its place, for example by surfacing a listing with a pool.</p></div>
+    </div>
+    <p class="fix">A second lesson: on test listings the model reasoned correctly but got stuck in loops, and adding more prompt rules made it worse. The fix came from Qwen's own documentation: switching to its recommended sampling settings (<code>temperature 1.0</code>, <code>top_p 0.95</code>, <code>top_k 20</code>).</p>
+  </section>
+
+  <section class="pane" data-p="progress" role="tabpanel">
+    <div class="facts">
+      <div><b>490</b><span>listings in the Inside Airbnb Albany snapshot</span></div>
+      <div><b>90 to 28</b><span>columns after cleaning</span></div>
+      <div><b>471</b><span>unique amenity labels parsed</span></div>
+    </div>
+    <ol class="steps">
+      <li class="done"><span class="mk">✓</span><div><b>Data</b><p>Cleaned prices and parsed every amenity into its own label.</p></div></li>
+      <li class="done"><span class="mk">✓</span><div><b>Model</b><p>Qwen 3.5-4B in 4-bit on Colab GPU inference. No paid API.</p></div></li>
+      <li class="now"><span class="mk">3</span><div><b>Connect filters to the model<span class="tag">in progress</span></b><p>A request becomes filters first, then the model ranks and explains what passes.</p></div></li>
+      <li><span class="mk">4</span><div><b>Test more scenarios</b><p>Run more queries, find where it fails, and fix it.</p></div></li>
+      <li><span class="mk">5</span><div><b>Report and share the code</b><p>Write up results at the end of the semester and keep refining.</p></div></li>
+    </ol>
+  </section>
+</div>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function (s) { return document.querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, reduce ? 0 : ms); }); }
+
+  /* Tabs */
+  $$('.tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      $$('.tab').forEach(function (x) { x.setAttribute('aria-selected', x === t); });
+      $$('.pane').forEach(function (p) { p.classList.toggle('on', p.dataset.p === t.dataset.pane); });
+    });
+  });
+
+  /* 490 dots, one per listing */
+  var TOTAL = 490, dotsEl = $('#dots'), html = '';
+  for (var i = 0; i < TOTAL; i++) html += '<i></i>';
+  dotsEl.innerHTML = html;
+  var dots = Array.prototype.slice.call(dotsEl.children);
+  // deterministic shuffle so the same request always keeps the same dots
+  function keepSet(n, seed) {
+    var idx = dots.map(function (_, i) { return i; }), s = seed;
+    for (var i = idx.length - 1; i > 0; i--) { s = (s * 9301 + 49297) % 233280; var j = Math.floor(s / 233280 * (i + 1)); var t = idx[i]; idx[i] = idx[j]; idx[j] = t; }
+    var keep = {}; idx.slice(0, n).forEach(function (k) { keep[k] = 1; }); return keep;
+  }
+
+  var runs = [
+    { filters: [['exact', 'bedrooms', 'at least 2'], ['exact', 'price', '$150 or less per night'], ['exact', 'amenity', 'Air conditioning']], n: 37,
+      res: [['Brick rowhouse near the park', '$138 · 2 bd', 'Meets every filter. Highest rated of the matches, and guests mention it stays cool.'], ['Updated 2-bed by the river', '$129 · 2 bd', 'Cheapest match with AC in every room.'], ['Garden-level apartment', '$145 · 3 bd', 'Extra bedroom at no premium. AC plus a ceiling fan.']] },
+    { filters: [['judge', 'summer', 'Read as: pool, AC, outdoor space'], ['exact', 'amenity', 'Pool, AC, or patio (any)']], n: 112,
+      res: [['Cottage with a backyard pool', '$184 · 3 bd', 'Has a pool, which fits summer weather best. Also has a shaded patio.'], ['Loft with rooftop deck', '$121 · 1 bd', 'Outdoor space for warm evenings, plus central air.'], ['Craftsman with screened porch', '$156 · 2 bd', 'Porch and AC. No pool, so it ranks below the cottage.']] },
+    { filters: [['exact', 'price', '$120 or less per night'], ['exact', 'amenity', 'Dedicated workspace, Wifi'], ['judge', 'quiet', 'Judged from the description']], n: 54,
+      res: [['Studio on a dead-end street', '$96 · 1 bd', 'Description calls out a quiet street and a desk by the window.'], ['Top-floor flat', '$112 · 1 bd', 'Top floor with no upstairs neighbors. Workspace and fast wifi listed.'], ['Carriage house', '$118 · 1 bd', 'Detached from the main house. Ranked third because it is farther out.']] }
+  ];
+
+  var running = false;
+  $$('.q').forEach(function (b) {
+    b.addEventListener('click', async function () {
+      if (running) return; running = true;
+      $$('.q').forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+      var run = runs[+b.dataset.q];
+      // reset
+      ['#s1', '#s2', '#s3'].forEach(function (s) { $(s).classList.remove('live'); });
+      $('#filters').innerHTML = ''; $('#res').innerHTML = ''; $('#count').innerHTML = '490<small>listings</small>';
+      dots.forEach(function (d) { d.classList.remove('out'); });
+
+      $('#s1').classList.add('live');
+      var fEls = run.filters.map(function (f) {
+        var d = document.createElement('div'); d.className = 'f ' + f[0];
+        d.innerHTML = '<span class="k">' + (f[0] === 'exact' ? f[1] : 'judgment') + '</span>' + (f[0] === 'judge' ? '<span><b style="color:var(--t1)">"' + f[1] + '"</b>: ' + f[2] + '</span>' : '<span>' + f[2] + '</span>');
+        $('#filters').appendChild(d); return d;
+      });
+      for (var i = 0; i < fEls.length; i++) { await wait(380); fEls[i].classList.add('show'); }
+
+      await wait(450);
+      $('#s2').classList.add('live');
+      var keep = keepSet(run.n, run.n * 7 + 3);
+      dots.forEach(function (d, i) { if (!keep[i]) d.classList.add('out'); });
+      var from = 490, to = run.n, steps = reduce ? 1 : 24;
+      for (var k = 1; k <= steps; k++) { await wait(28); $('#count').innerHTML = Math.round(from + (to - from) * k / steps) + '<small>listings</small>'; }
+
+      await wait(450);
+      $('#s3').classList.add('live');
+      var rEls = run.res.map(function (r, i) {
+        var d = document.createElement('div'); d.className = 'r';
+        d.innerHTML = '<div class="h"><span class="rank">#' + (i + 1) + '</span><b>' + r[0] + '</b><span class="meta">' + r[1] + '</span></div><p>' + r[2] + '</p>';
+        $('#res').appendChild(d); return d;
+      });
+      for (var j = 0; j < rEls.length; j++) { await wait(380); rEls[j].classList.add('show'); }
+      running = false;
+    });
+  });
+
+  /* Keyword vs meaning */
+  var bugs = [
+    { kw: [['Air conditioning', true], ['B<mark>ac</mark>kyard', false]], mn: [['Air conditioning', true]] },
+    { kw: [['<mark>Dryer</mark>', true], ['Hair <mark>dryer</mark>', false]], mn: [['Dryer', true]] },
+    { kw: [['<mark>Pool</mark>', true], ['Whirl<mark>pool</mark>', false]], mn: [['Pool', true]] }
+  ];
+  function showBug(i) {
+    var b = bugs[i];
+    $('#kw').innerHTML = b.kw.map(function (r) {
+      return '<div class="m"><span>' + r[0] + '</span><span class="v ' + (r[1] ? 'y' : 'n') + '">' + (r[1] ? 'correct' : 'wrong match') + '</span></div>';
+    }).join('');
+    $('#mn').innerHTML = b.mn.map(function (r) { return '<div class="m"><span>' + r[0] + '</span><span class="v y">correct</span></div>'; }).join('');
+    $$('#terms button').forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.t == i); });
+  }
+  $$('#terms button').forEach(function (x) { x.addEventListener('click', function () { showBug(+x.dataset.t); }); });
+  showBug(0);
+})();
+</script>
+</body>
+</html>

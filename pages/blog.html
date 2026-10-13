@@ -27,6 +27,15 @@
       name="description"
       content="Read Nathanael Kenzler's thoughts on marketing, AI, and business."
     />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Nathanael Kenzler" />
+    <meta property="og:title" content="Visibility Is Now My Bottleneck | Nathanael Kenzler" />
+    <meta property="og:description" content="A recap of the year so far: the MS program, SignifyMD, building my own AI system, and my final semester." />
+    <meta property="og:url" content="https://nathanaelkenzler.org/pages/blog.html#semester-update" />
+    <meta property="og:image" content="https://nathanaelkenzler.org/images/blog/semester-2026/og-semester-update.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="627" />
+    <meta name="twitter:card" content="summary_large_image" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/style.css" />
     <link
@@ -116,7 +125,11 @@
           if (titleEl) titleEl.textContent = blogData.title;
           if (descEl) descEl.textContent = blogData.description;
           if (readTimeEl) readTimeEl.textContent = blogData.readTime;
-          if (articleEl) {
+          if (articleEl && blogData.template) {
+            articleEl.innerHTML = "";
+            articleEl.appendChild(blogData.template.content.cloneNode(true));
+            articleEl.querySelectorAll("[data-post-carousel]").forEach(initPostCarousel);
+          } else if (articleEl) {
             articleEl.innerHTML = "";
             const paragraphs = blogData.articleText.split("\n\n");
             paragraphs.forEach((p) => {
@@ -178,9 +191,87 @@
           // Re-enable scroll
           document.body.style.overflow = "";
 
+          // Drop a post deep link from the address bar once the post closes
+          if (location.hash && history.replaceState) {
+            history.replaceState(null, "", location.pathname + location.search);
+          }
+
           // Restore hover state
           updateHoverState();
         }
+
+        // Long-form posts: one-photo-at-a-time carousel
+        function initPostCarousel(root) {
+          const track = root.querySelector(".post-carousel-track");
+          const slides = track.querySelectorAll(".post-slide");
+          const counter = root.querySelector(".post-carousel-counter");
+          const prev = root.querySelector('[data-carousel-step="-1"]');
+          const next = root.querySelector('[data-carousel-step="1"]');
+          function current() { return track.clientWidth ? Math.round(track.scrollLeft / track.clientWidth) : 0; }
+          function update() {
+            const i = current();
+            counter.textContent = (i + 1) + " / " + slides.length;
+            prev.style.opacity = i === 0 ? "0.25" : "1";
+            prev.style.pointerEvents = i === 0 ? "none" : "";
+            next.style.opacity = i === slides.length - 1 ? "0.25" : "1";
+            next.style.pointerEvents = i === slides.length - 1 ? "none" : "";
+          }
+          root.addEventListener("click", function (e) {
+            const step = e.target.closest("[data-carousel-step]");
+            if (!step) return;
+            const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            const i = Math.max(0, Math.min(slides.length - 1, current() + Number(step.getAttribute("data-carousel-step"))));
+            track.scrollTo({ left: i * track.clientWidth, behavior: reduce ? "auto" : "smooth" });
+          });
+          track.addEventListener("scroll", update, { passive: true });
+          window.addEventListener("resize", update);
+          update();
+        }
+
+        // Long-form posts: section chips scroll inside the modal
+        blogOverlay.addEventListener("click", function (e) {
+          const chip = e.target.closest("[data-jump]");
+          if (!chip) return;
+          const target = blogOverlay.querySelector("#" + chip.getAttribute("data-jump"));
+          if (!target) return;
+          const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          // Scroll only the modal's own scroller. scrollIntoView would also scroll the
+          // overflow-hidden modal box when the last section can't reach the top.
+          const scroller = blogOverlay.querySelector(".blog-scroll-inner .simplebar-content-wrapper") || blogOverlay.querySelector(".blog-scroll-inner");
+          const chips = blogOverlay.querySelector(".post-chips");
+          const offset = chips ? chips.offsetHeight + 8 : 0;
+          const top = target.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - offset;
+          scroller.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
+        });
+
+        // Long-form posts: photo lightbox
+        const postLightbox = document.querySelector(".post-lightbox");
+        function closePostLightbox() {
+          if (!postLightbox || postLightbox.classList.contains("hidden")) return false;
+          postLightbox.classList.add("hidden");
+          return true;
+        }
+        blogOverlay.addEventListener("click", function (e) {
+          const photo = e.target.closest(".post-photo");
+          if (!photo || !postLightbox) return;
+          const img = postLightbox.querySelector("img");
+          const cap = postLightbox.querySelector("figcaption");
+          img.src = photo.getAttribute("data-full");
+          img.alt = photo.querySelector("img").alt;
+          cap.textContent = photo.getAttribute("data-caption") || "";
+          postLightbox.classList.remove("hidden");
+          postLightbox.querySelector(".post-lightbox-close").focus();
+        });
+        if (postLightbox) {
+          postLightbox.addEventListener("click", function (e) {
+            if (e.target === postLightbox || e.target.closest(".post-lightbox-close")) closePostLightbox();
+          });
+        }
+        document.addEventListener("keydown", function (e) {
+          if (e.key !== "Escape") return;
+          if (closePostLightbox()) return;
+          if (isBlogOpen) closeBlog();
+        });
 
         // Card click to open
         blogCards.forEach((card, index) => {
@@ -193,6 +284,16 @@
               const description = this.querySelector("p").textContent;
               const readTime = this.querySelector("span").textContent;
               const isPublished = this.hasAttribute("data-published");
+              const templateId = this.getAttribute("data-post-template");
+              if (templateId) {
+                const template = document.getElementById(templateId);
+                const slug = this.getAttribute("data-post-slug");
+                if (slug && history.replaceState) {
+                  history.replaceState(null, "", "#" + slug);
+                }
+                showBlog({ title, description, readTime, template });
+                return;
+              }
               let articleText;
               if (isPublished) {
                 if (title.includes("Building This Site")) {
@@ -239,6 +340,13 @@
 
         // Initialize
         updateHoverState();
+
+        // Deep link: blog.html#<slug> opens that post directly (LinkedIn CTA)
+        if (location.hash) {
+          const slug = location.hash.slice(1);
+          const linked = document.querySelector('.blog-card[data-post-slug="' + CSS.escape(slug) + '"]');
+          if (linked) linked.click();
+        }
       });
 
       window.addEventListener("scroll", function () {
@@ -359,6 +467,19 @@
           <h1 class="projects-heading text-center text-white mb-12">Blog</h1>
         </div>
         <div class="space-y-8">
+          <article class="blog-card p-6 rounded-lg" data-published="true" data-post-template="post-semester-update" data-post-slug="semester-update" id="semester-update">
+            <h3 class="text-xl font-semibold mb-2">
+              Visibility Is Now My Bottleneck
+            </h3>
+            <p class="text-white mb-2">
+              A recap of the year so far: the MS program, SignifyMD, building
+              my own AI system, and my final semester.
+            </p>
+            <span class="text-sm text-gray-500 text-accent-muted"
+              >October 2026 &bull; ~5 min read</span
+            >
+          </article>
+
           <article class="blog-card p-6 rounded-lg" data-published="true">
             <h3 class="text-xl font-semibold mb-2">
               What I'm Building This Summer (And Why It Might Be the Most
@@ -497,6 +618,75 @@
         </div>
       </div>
     </footer>
+
+    <!-- Long-form post bodies. Injected into the blog modal by data-post-template. -->
+    <template id="post-semester-update">
+      <nav class="post-chips" aria-label="Jump to a section">
+        <button type="button" data-jump="su-spring">Spring</button>
+        <button type="button" data-jump="su-summer">Summer</button>
+        <button type="button" data-jump="su-fall">Fall</button>
+        <button type="button" data-jump="su-next">What's next</button>
+      </nav>
+
+      <p class="text-white leading-relaxed mb-4">Over the last few years, I have become the type of person who, when learning something new or changing direction, prefers to get busy doing, rather than talking. But so much has changed this year that the quiet has become the bottleneck. My work is there, people just can't see it.</p>
+      <p class="post-lede">Visibility is now my bottleneck, so this post is me going after it.</p>
+
+      <section class="post-section" id="su-spring">
+        <h3 class="blog-course-heading">Spring Semester</h3>
+        <p class="text-white leading-relaxed mb-4">I started in the MS in Marketing program at the University of Arizona, focusing on Analytics and Gen AI. From market research methods to RAG pipelines. This time completely changed how I looked at the business and marketing process; I learned more about where marketing and technology has been, and began to understand the direction it is heading. Less about the concrete definition or which tool to use, but more about where technology and AI actually belongs in a process (and where it does not). And I ended with a 4.0!</p>
+        <p class="text-white leading-relaxed mb-4">In April, I began working with SignifyMD as a digital marketing and comms intern facilitating the exchange of information within the healthcare space, specifically focused on oncologist and clinical insights. This gave me a space to apply the concepts I was learning and get a real understanding of how the new era of technology is propagating throughout industries.</p>
+        <button type="button" class="post-photo post-single" data-full="../images/blog/semester-2026/deans-list.jpg" data-caption="Dean's List, Spring 2026"><img src="../images/blog/semester-2026/deans-list.jpg" alt="Eller College of Management Dean's List certificate, Spring 2026" loading="lazy"></button>
+      </section>
+
+      <section class="post-section" id="su-summer">
+        <h3 class="blog-course-heading">Summer</h3>
+        <p class="text-white leading-relaxed mb-4">This is also when I began prototyping my own local open-weight/source AI OS running on an NVIDIA and AMD powered system. I began experimenting with the different models and applying the methods I was learning from the MIS department to create my own application that helped me visualize my workflows and test new tech. It's become my personal repository of information relating to all aspects of my life from AI workflows, new education concepts, my workouts, finances, and much more.</p>
+        <p class="text-white leading-relaxed mb-4">This project integrated many different technologies including NVIDIA's Nemotron models connected to an Obsidian mind vault which is ingested periodically to a local Supabase pgvector DB running in a Docker container. On the frontend, a custom React 19, Vite, and Tailwind dashboard routed my queries and actions through a Hermes agent which connects to the backend and can delegate work to sub agents which communicate in a Discord server for observability and constantly update me on different projects and cron jobs.</p>
+        <p class="text-white leading-relaxed mb-4">While I have grown up building PCs, this is the first time my PC genuinely turned into a server. Now I SSH into my setup from anywhere I want to and have constant connection to my repository running for no other cost than the power going to my PC. While I am sure there are more robust solutions, as they say, there's no better solution than the one you make and works for you.</p>
+        <p class="text-white leading-relaxed mb-4">Then came the end of the summer which concluded with the V2 relaunch of <a class="post-link" href="https://oncupdates.com" target="_blank" rel="noopener">OncUpdates.com</a>, the capstone of my internship, and with the end of our beta testing, my internship came to a close. Though this also marked the beginning of a new role with SignifyMD as a Digital Marketing Consultant where the projects were just getting started. Since then, I have worked across virtually every discipline of DM, from advertising, to SEO, to competitor research and more (one of the major benefits of working at a growth stage company).</p>
+        <a class="post-aside" href="projects.html#olympus">See a clickable demo of the AI system on the Projects page</a>
+      </section>
+
+      <section class="post-section" id="su-fall">
+        <h3 class="blog-course-heading">Fall Semester</h3>
+        <p class="text-white leading-relaxed mb-4">This semester marks the end of my academic career. While I may return down the line for an MBA and/or a PhD, it definitely will be after some time in the workforce if at all. So I am trying to really make the most of the opportunity to simply soak up information and learn. So this semester, I am diving even deeper into how businesses can put AI into practice and see tangible results. For me, this means diving deeper into GenAI, ML, Neural networks etc. to understand and think at the level of abstraction where efforts will survive the latest Anthropic updates.</p>
+        <p class="text-white leading-relaxed mb-4">I have also been taking the opportunity to give back. I began volunteering as a mock interviewer for graduate students preparing for the real thing. It is easily one of my favorite experiences of the semester and something I will absolutely continue to do. But I am also subjecting myself to the same process and having as many informational or real interviews as possible. Not to get just any opportunity for a job (exciting news to come actually), but to continue to develop my own interpersonal skills and my network so I can help others and also have folks to rely on for given projects in the future.</p>
+        <div class="post-carousel" data-post-carousel>
+          <div class="post-carousel-row">
+            <button type="button" class="carousel-arrow" data-carousel-step="-1" aria-label="Previous photo">
+              <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="post-carousel-track">
+              <button type="button" class="post-photo post-slide" data-full="../images/blog/semester-2026/eller-cohort.jpg" data-caption=""><img src="../images/blog/semester-2026/eller-cohort.jpg" alt="Group photo in front of the Eller College of Management sign" loading="lazy"></button>
+              <button type="button" class="post-photo post-slide" data-full="../images/blog/semester-2026/eller-faculty.jpg" data-caption=""><img src="../images/blog/semester-2026/eller-faculty.jpg" alt="Four people in front of the Eller College of Management sign" loading="lazy"></button>
+              <button type="button" class="post-photo post-slide" data-full="../images/blog/semester-2026/cohort-celebration.jpg" data-caption=""><img src="../images/blog/semester-2026/cohort-celebration.jpg" alt="Group photo holding up letters that spell Eller" loading="lazy"></button>
+              <button type="button" class="post-photo post-slide" data-full="../images/blog/semester-2026/mock-interviews.jpg" data-caption=""><img src="../images/blog/semester-2026/mock-interviews.jpg" alt="Overhead view of people at tables in a large atrium" loading="lazy"></button>
+            </div>
+            <button type="button" class="carousel-arrow" data-carousel-step="1" aria-label="Next photo">
+              <svg width="16" height="16" viewBox="0 0 14 14" fill="none"><path d="M5 3L9 7L5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <p class="carousel-counter post-carousel-counter">1 / 4</p>
+        </div>
+      </section>
+
+      <section class="post-section" id="su-next">
+        <h3 class="blog-course-heading">Future and the thread through all of it</h3>
+        <p class="text-white leading-relaxed mb-4">I'm a marketer who builds the AI tools I use. Not to automate my thinking, but to augment it. And to truly understand how technology works, and why it should or shouldn't be implemented in production.</p>
+        <p class="text-white leading-relaxed mb-4">If you're working where business and AI meet, I'd like to hear what you're seeing. My email is linked in the footer of this page. I would love to talk about business, AI, or just any general experiences you might want to discuss (I love meeting new people!).</p>
+        <div class="post-cta">
+          <a href="mailto:nkenzler@arizona.edu" class="btn-dark-purple btn-home-cta">Email me</a>
+          <a href="https://www.linkedin.com/in/nathanaelkenzler/" target="_blank" rel="noopener" class="btn-dark-purple btn-home-cta">Connect on LinkedIn</a>
+        </div>
+      </section>
+    </template>
+
+    <div class="post-lightbox hidden" role="dialog" aria-modal="true" aria-label="Photo">
+      <button type="button" class="post-lightbox-close" aria-label="Close photo">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <figure><img alt=""><figcaption></figcaption></figure>
+    </div>
 
     <!-- Blog Modal (outside main, position fixed) -->
     <div class="blog-focus-overlay blog-modal hidden">
