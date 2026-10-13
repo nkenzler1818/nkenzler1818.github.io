@@ -254,11 +254,23 @@
                 updateHoverState();
             }
 
+            document.querySelectorAll('.blog-card[data-href]').forEach(function(card) {
+                card.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.location.href = card.getAttribute('data-href'); }
+                });
+            });
+
             // Card click to open
             blogCards.forEach((card, index) => {
                 card.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
+
+                    // Long-form posts live on the Blog page; send the visitor there
+                    if (this.hasAttribute('data-href')) {
+                        window.location.href = this.getAttribute('data-href');
+                        return;
+                    }
 
                     if (!isBlogOpen && !blogOverlay.contains(e.target)) {
                         const title = this.querySelector('h3').textContent;
@@ -388,6 +400,11 @@
         <section id="blog" class="mb-16">
             <h2 class="text-3xl font-bold mb-8">From the Blog</h2>
             <div class="space-y-6">
+                <article class="blog-card p-6 rounded-lg" data-published="true" data-href="pages/blog.html#semester-update" role="link" tabindex="0">
+                    <h3 class="text-xl font-semibold mb-2">Visibility Is Now My Bottleneck</h3>
+                    <p class="text-white mb-2">A recap of the year so far: the MS program, SignifyMD, building my own AI system, and my final semester.</p>
+                    <span class="text-sm text-gray-500 text-accent-muted">October 2026 • ~5 min read</span>
+                </article>
                 <article class="blog-card p-6 rounded-lg" data-published="true">
                     <h3 class="text-xl font-semibold mb-2">Building This Site: Bringing My Creative Side Into Marketing</h3>
                     <p class="text-white mb-2">Read my first post on why I built this site and what I hope it becomes.</p>
