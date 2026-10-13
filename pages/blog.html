@@ -235,7 +235,13 @@
           const target = blogOverlay.querySelector("#" + chip.getAttribute("data-jump"));
           if (!target) return;
           const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+          // Scroll only the modal's own scroller. scrollIntoView would also scroll the
+          // overflow-hidden modal box when the last section can't reach the top.
+          const scroller = blogOverlay.querySelector(".blog-scroll-inner .simplebar-content-wrapper") || blogOverlay.querySelector(".blog-scroll-inner");
+          const chips = blogOverlay.querySelector(".post-chips");
+          const offset = chips ? chips.offsetHeight + 8 : 0;
+          const top = target.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - offset;
+          scroller.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
         });
 
         // Long-form posts: photo lightbox
