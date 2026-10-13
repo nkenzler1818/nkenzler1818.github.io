@@ -7,8 +7,18 @@
     <description>New projects and blog posts from my personal portfolio.</description>
     <language>en-us</language>
     <generator>Automated Portfolio RSS</generator>
-    <lastBuildDate>Tue, 16 Jun 2026 00:32:03 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 13 Oct 2026 04:35:44 GMT</lastBuildDate>
 
+    <item>
+      <title>Blog: Visibility Is Now My Bottleneck</title>
+      <link>https://nathanaelkenzler.org/pages/blog.html#semester-update</link>
+      <guid>https://nathanaelkenzler.org/pages/blog.html#semester-update#semester-update</guid>
+      <pubDate>Tue, 13 Oct 2026 00:00:00 GMT</pubDate>
+      <category>Blog</category>
+      <description><![CDATA[
+        A recap of the year so far: the MS program, SignifyMD, building my own AI system, and my final semester.
+      ]]></description>
+    </item>
     <item>
       <title>Blog: What I'm Building This Summer (And Why It Might Be the Most Important Thing I've Done)</title>
       <link>https://nathanaelkenzler.org/pages/blog.html</link>
@@ -47,6 +57,36 @@
       <category>Blog</category>
       <description><![CDATA[
         My first post explaining why I built this website, how I approached it as a project, and what I want it to become over time.
+      ]]></description>
+    </item>
+    <item>
+      <title>Project: Project Olympus</title>
+      <link>https://nathanaelkenzler.org/pages/projects.html#olympus</link>
+      <guid>https://nathanaelkenzler.org/pages/projects.html#olympus#project-olympus</guid>
+      <pubDate>Tue, 13 Oct 2026 00:00:00 GMT</pubDate>
+      <category>Projects</category>
+      <description><![CDATA[
+        A personal AI operating system I run and maintain myself, with a clickable demo of the dashboard.
+      ]]></description>
+    </item>
+    <item>
+      <title>Project: Airbnb Listing Assistant</title>
+      <link>https://nathanaelkenzler.org/pages/projects.html#airbnb-assistant</link>
+      <guid>https://nathanaelkenzler.org/pages/projects.html#airbnb-assistant#airbnb-listing-assistant</guid>
+      <pubDate>Tue, 13 Oct 2026 00:00:00 GMT</pubDate>
+      <category>Projects</category>
+      <description><![CDATA[
+        MIS 556 semester project: an assistant that recommends Airbnb listings grounded in real listing data, updated as it develops.
+      ]]></description>
+    </item>
+    <item>
+      <title>Project: OncUpdates v2 Relaunch</title>
+      <link>https://nathanaelkenzler.org/pages/projects.html#oncupdates</link>
+      <guid>https://nathanaelkenzler.org/pages/projects.html#oncupdates#oncupdates-v2-relaunch</guid>
+      <pubDate>Tue, 13 Oct 2026 00:00:00 GMT</pubDate>
+      <category>Projects</category>
+      <description><![CDATA[
+        Case study of my SignifyMD internship capstone, from the first usability audit through launch and beta testing.
       ]]></description>
     </item>
     <item>
