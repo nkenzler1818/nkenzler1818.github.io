@@ -19,7 +19,7 @@
     var overlay = document.getElementById('resume-pdf-overlay');
     var frame = document.getElementById('resume-pdf-frame');
     var closeBtn = document.getElementById('resume-pdf-close');
-    var resumeSrc = '../assets/docs/Kenzler_CV2026.pdf#view=FitH';
+    var resumeSrc = '../assets/docs/Kenzler_CV.pdf#view=FitH';
 
     function isIOS() {
       return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
